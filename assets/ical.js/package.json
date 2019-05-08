@@ -1,0 +1,140 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "ical.js",
+        "scope": null,
+        "escapedName": "ical.js",
+        "name": "ical.js",
+        "rawSpec": "",
+        "spec": "latest",
+        "type": "tag"
+      },
+      "C:\\Users\\Werner\\temp"
+    ]
+  ],
+  "_from": "ical.js@latest",
+  "_hasShrinkwrap": false,
+  "_id": "ical.js@1.3.0",
+  "_inCache": true,
+  "_location": "/ical.js",
+  "_nodeVersion": "8.11.3",
+  "_npmOperationalInternal": {
+    "host": "s3://npm-registry-packages",
+    "tmp": "tmp/ical.js_1.3.0_1541762494954_0.6554913952948542"
+  },
+  "_npmUser": {
+    "name": "kewisch",
+    "email": "npmjs@kewis.ch"
+  },
+  "_npmVersion": "5.6.0",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "ical.js",
+    "scope": null,
+    "escapedName": "ical.js",
+    "name": "ical.js",
+    "rawSpec": "",
+    "spec": "latest",
+    "type": "tag"
+  },
+  "_requiredBy": [
+    "#USER"
+  ],
+  "_resolved": "https://registry.npmjs.org/ical.js/-/ical.js-1.3.0.tgz",
+  "_shasum": "9db1800bfd8d7c003d1baec61441dd7186011768",
+  "_shrinkwrap": null,
+  "_spec": "ical.js",
+  "_where": "C:\\Users\\Werner\\temp",
+  "author": {
+    "name": "Philipp Kewisch"
+  },
+  "bugs": {
+    "url": "https://github.com/mozilla-comm/ical.js/issues"
+  },
+  "contributors": [
+    {
+      "name": "Github Contributors",
+      "url": "https://github.com/mozilla-comm/ical.js/graphs/contributors"
+    }
+  ],
+  "dependencies": {},
+  "description": "Javascript parser for ics (rfc5545) and vcard (rfc6350) data",
+  "devDependencies": {
+    "benchmark": "^2.1.4",
+    "biased-opener": "^0.2.8",
+    "chai": "^4.1.2",
+    "coveralls": "^3.0.2",
+    "grunt": "^1.0.3",
+    "grunt-concurrent": "^2.3.1",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-uglify": "^3.3.0",
+    "grunt-coveralls": "^2.0.0",
+    "grunt-gh-pages": "^3.0.0",
+    "grunt-jsdoc": "^2.2.1",
+    "grunt-karma": "^2.0.0",
+    "grunt-mocha-cli": "^4.0.0",
+    "grunt-mocha-istanbul": "^5.0.2",
+    "grunt-release": "^0.14.0",
+    "gruntify-eslint": "^5.0.0",
+    "istanbul": "^0.4.5",
+    "karma": "^2.0.4",
+    "karma-chai": "^0.1.0",
+    "karma-mocha": "^1.3.0",
+    "karma-sauce-launcher": "^1.2.0",
+    "karma-spec-reporter": "^0.0.32",
+    "minami": "^1.2.3",
+    "mocha": "^5.2.0"
+  },
+  "directories": {},
+  "dist": {
+    "integrity": "sha512-wQ0w77MGOe6vNhZMBQuZAtZoTzDEOQ/QoCDofWL7yfkQ/HYWX5NyWPYjN+yj+4JahOvTkhXjTlrZtiQKv+BSOA==",
+    "shasum": "9db1800bfd8d7c003d1baec61441dd7186011768",
+    "tarball": "https://registry.npmjs.org/ical.js/-/ical.js-1.3.0.tgz",
+    "fileCount": 25,
+    "unpackedSize": 661867,
+    "npm-signature": "-----BEGIN PGP SIGNATURE-----\r\nVersion: OpenPGP.js v3.0.4\r\nComment: https://openpgpjs.org\r\n\r\nwsFcBAEBCAAQBQJb5W2/CRA9TVsSAnZWagAAZ9YP/jOwEmATTzfUDW8DT69R\n5OJ+/KvIPLprrRg5llY8iuNnKuwSEHJanly9YucPFbBSMan4l4hxhjPWK3tr\nlwbwxazhmCCDR42/aGEz4BfjUKGK38ucrneXkWS1cY2k6qIX8eNBweacxF3M\nmoganhW7DVU4Rks4KcuI36u3d0EgFqAsOrbmeuIz3QNVd7aHYYAvQ+hQKbqR\nHfmaAUQHKPBY6mDZh9LXsSeZGa4xdcYcZQX1Sx/bVKpfcvm7rkTc9iLZ20IA\nqEkHNiU2kxsR1pBELwuy8hnDQ9QMHQzb8jFdV/T4hZFVln6HBDYYhjMMxzS/\nF0I5PGZ9tI+9cl7HHyW0ampNe3iaWbzcF2bKg9ORjhSdDrYlfFKIp4/1hQTQ\nlflYZdroPN/5JBLzz8091mSVAVLhRtZGJV9krLoSP23VzK1It8A4wWuX9PsF\n/ZidLia3oY4v6CfaWrGrG1636L6j2q3sElkyd+gR9c2rMywNYpmLFuJTxfF3\n6i/j3+tGRD7R2MUFHxKAoxgYqfDF+E+ew2P89kUYdNgJ8olxi2OzGTqZlRCv\ngd41Mp9RCyVak1ZTFpGcXuIGPDRnj+91PwdlKZZe2mzavON4hNla0gzKlfuD\n3S9lyopgY5SWKVy1oS0fGK5Bs8YJx1qUuD3f5E0CoCDA8UYQ7aWgP4vBQ5cR\nbxBi\r\n=xblY\r\n-----END PGP SIGNATURE-----\r\n"
+  },
+  "engine": {
+    "node": ">=6"
+  },
+  "gitHead": "3f219e04f238bcad6c964e8d93b21de49e5f5047",
+  "homepage": "https://github.com/mozilla-comm/ical.js#readme",
+  "keywords": [
+    "calendar",
+    "iCalendar",
+    "jCal",
+    "vCard",
+    "jCard",
+    "parser"
+  ],
+  "license": "MPL-2.0",
+  "main": "build/ical.js",
+  "maintainers": [
+    {
+      "name": "kewisch",
+      "email": "npmjs@kewis.ch"
+    }
+  ],
+  "name": "ical.js",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mozilla-comm/ical.js.git"
+  },
+  "saucelabs": {
+    "SL_Chrome": {
+      "base": "SauceLabs",
+      "browserName": "chrome"
+    },
+    "SL_Firefox": {
+      "base": "SauceLabs",
+      "browserName": "firefox"
+    }
+  },
+  "scripts": {
+    "test": "grunt test-node"
+  },
+  "version": "1.3.0"
+}

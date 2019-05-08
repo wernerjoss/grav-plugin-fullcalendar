@@ -1,0 +1,27 @@
+name: FullCalendar
+version: 0.1.0
+description: show Calendar Widget from ICS File, based on fullcalendar.io
+icon: calendar
+author:
+  name: Werner Joss
+  email: werner@hoernerfranzracing.de
+homepage: https://github.com/wernerjoss/grav-plugin-fullcalendar
+keywords: grav, plugin, ICS, Icalendar, fullcalendar.io
+bugs: https://github.com/wernerjoss/grav-plugin-fullcalendar/issues
+docs: https://github.com/wernerjoss/grav-plugin-fullcalendar/README.md
+license: MIT
+
+dependencies:
+    - shortcode-core
+
+form:
+    fields:
+        enabled:
+            type: toggle
+            label: Plugin status
+            highlight: 1
+            default: 0
+            options:
+                1: Enabled
+                0: Disabled
+ 
