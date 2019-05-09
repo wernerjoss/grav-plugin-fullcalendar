@@ -1,7 +1,5 @@
 <div id='actMonth'></div>
 <div id='calendar'></div>
-{#	put icsfile setting from shortcode into invisible paragraph:		#}
-{# <p id="icsfile" style="display:none;">{{icsfile}}</p>	-	unused since embedded script working ! #}
 
 <script>
 jQuery(function () {
@@ -12,9 +10,9 @@ jQuery(function () {
 		showNonCurrentDates: true,
 		fixedWeekCount: false,
 		events: function(start, end, timezone, callback) {
-			var verbose = true;	//	false;
+			var verbose = false;
 			// DONE: calendarUrl no more hardcoded :)
-			var cfgFile = '{{icsfile}}';	//	from FullCalendarShortCode.php
+			var cfgFile = '{{icsfile}}';	//	icsfile from FullCalendarShortCode.php
 			if (verbose)	console.log('yaml CFG File:' + cfgFile);
 			calendarUrl = getAbsolutePath() + 'user/data/calendars/' + cfgFile;
 			if (verbose)	console.log('Calendar URL:' + calendarUrl);
