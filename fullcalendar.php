@@ -31,7 +31,6 @@ class FullcalendarPlugin extends Plugin
         $assets->addJs('plugin://fullcalendar/assets/ical.js/build/ical.js');
         $assets->addJs('plugin://fullcalendar/assets/fullcalendar.js');
         $assets->addJs('plugin://fullcalendar/assets/dist/locale/de.js');
-        //	$assets->addJs('plugin://fullcalendar/assets/calendar.js');
         $assets->addJs('plugin://fullcalendar/assets/monthpic.js');
         $assets->addCss('plugin://fullcalendar/assets/fullcalendar.css');
         $assets->addCss('plugin://fullcalendar/assets/custom.css');
