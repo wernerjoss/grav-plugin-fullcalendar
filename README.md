@@ -52,6 +52,12 @@ in the appropriate page.
 As an addition, you can show a Picture for the current month above the calendar widget.
 Just put 12 Image Files named 'January.jpg', 'February.jpg', ... , 'December.jpg' in the Folder for your Page where the Calendar will be placed.
 
+### additional note on updated month pic feature:
+the plugin will now change the displayed image when visitor clicks prev/next/home button.
+this will only work when picture files are named correctly according to active locale.
+for locale 'en' , this means 'January.jpg, February.jpg, March.jpg ....'
+for locale 'de' , this means 'Januar.jpg, Februar.jpg, März.jpg ....' and so on...
+
 ## Credits
 
 This Plugin is built on [fullcalendar.io](https://fullcalendar.io)
@@ -59,4 +65,3 @@ This Plugin is built on [fullcalendar.io](https://fullcalendar.io)
 ## To Do
 
 - [ ] process multiple Calendar (ICS) Files
-- [ ] change Month Pic when user selects pev/next month :)
