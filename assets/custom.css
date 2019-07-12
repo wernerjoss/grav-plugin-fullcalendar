@@ -4,3 +4,10 @@
 .fc-day-grid-container {
 	height: 100%!important;
 }
+/* Anpassungen 09.07.19:	*/
+.fc-title {
+	color: white;
+}
+.fc-scroller {
+	overflow: hidden!important;
+}

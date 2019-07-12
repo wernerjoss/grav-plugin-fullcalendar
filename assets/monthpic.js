@@ -1,23 +1,47 @@
-// jquery required !
-$(document).ready(function(){
-	var debug = false;
-	var date = new Date();
-	var month = date.getMonth();
-	if (debug)  console.log('Month(nr.):', month);
-	var picnames = ['January.jpg', 'February.jpg', 'March.jpg', 'April.jpg', 'May.jpg', 'June.jpg', 'July.jpg', 'August.jpg', 'September.jpg', 'October.jpg', 'November.jpg', 'December.jpg'];
-	var path = document.location.pathname;
-	var mpic = path + '/' + picnames[month];
-	if (debug)  console.log('mpic:', mpic);
-	$.ajax({
-		type: "HEAD",
-		async: true,
-		url: window.location  + '/' + picnames[month]
-		}).done(function(){
-			if (debug)  console.log("mpic found");
-			if (document.getElementById('actMonth') != null)	document.getElementById('actMonth').innerHTML = "<img src=" + mpic + ">";
-		}).fail(function () {
-			if (debug)  console.log(window.location + '/' + picnames[month] + " not found");
-	})
+/*	new approach for update month picture upon next - prev - home click
+	evaluate Text in Month div fc-left: this is the Month name in current locale
+	build pic name from that.
+	pic files must be named like months in current locale !
+*/
+
+$(document).ready(function() {
+    setTimeout(function() { // ohne Timeout wird activemonth nicht belegt !
+        var debug = true;
+
+        var activemonth = $('div.fc-left h2').text();
+        if (debug) {
+            console.log('activemonth:', activemonth);
+        }
+        var monthname = activemonth.split(" ")[0];
+
+        var path = document.location.pathname;
+        var monthpic = path + '/' + monthname + '.jpg';
+        if (debug) console.log('monthpic:', monthpic);
+        $.ajax({
+            type: "HEAD",
+            async: true,
+            url: window.location + '/' + monthname + '.jpg'
+        }).done(function() {
+            if (debug) console.log("monthpic found");
+            if (document.getElementById('actMonth') != null) document.getElementById('actMonth').innerHTML = "<img src=" + monthpic + ">";
+        }).fail(function() {
+            if (debug) console.log(window.location + '/' + monthname + '.jpg' + ' not found');
+        })
+        $(".fc-button").click(function() { // fc-button ist für vor UND zurück !
+            activemonth = $('div.fc-left h2').text();
+            if (debug) console.log('button clicked, month:', activemonth);
+            monthname = activemonth.split(" ")[0];
+            $.ajax({
+                type: "HEAD",
+                async: true,
+                url: window.location + '/' + monthname + '.jpg'
+            }).done(function() {
+                if (debug) console.log("new monthpic found");
+                monthpic = path + '/' + monthname + '.jpg';
+                if (document.getElementById('actMonth') != null) document.getElementById('actMonth').innerHTML = "<img src=" + monthpic + ">";
+            }).fail(function() {
+                if (debug) console.log(window.location + '/' + monthname + '.jpg' + ' not found');
+            })
+        });
+    }, 10);
 })
-
-
