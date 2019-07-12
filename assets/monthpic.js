@@ -6,7 +6,7 @@
 
 $(document).ready(function() {
     setTimeout(function() { // ohne Timeout wird activemonth nicht belegt !
-        var debug = true;
+        var debug = false;
 
         var activemonth = $('div.fc-left h2').text();
         if (debug) {
