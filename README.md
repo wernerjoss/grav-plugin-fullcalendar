@@ -56,7 +56,7 @@ Just put 12 Image Files named 'January.jpg', 'February.jpg', ... , 'December.jpg
 The plugin will now change the displayed image when visitor clicks prev/next/home button.
 this will only work when picture files are named correctly according to active locale.
 for locale 'en' , this means 'January.jpg, February.jpg, March.jpg ....'
-for locale 'de' , this means 'Januar.jpg, Februar.jpg, M�rz.jpg ....' and so on...
+for locale 'de' , this means 'Januar.jpg, Februar.jpg, März.jpg ....' and so on...
 
 ### additional note on multiple calendar files (from v 0.1.2):
 As listed in the To Do section, the multiple calendar files option has now been implemented.
