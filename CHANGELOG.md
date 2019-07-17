@@ -1,3 +1,9 @@
+# v0.1.2
+##  07/17/2019
+
+1. [](#new)
+    * allow multiple ics Files in shortcode (comma separated)
+
 # v0.1.1
 ##  07/12/2019
 

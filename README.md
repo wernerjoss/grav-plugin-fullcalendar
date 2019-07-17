@@ -52,16 +52,21 @@ in the appropriate page.
 As an addition, you can show a Picture for the current month above the calendar widget.
 Just put 12 Image Files named 'January.jpg', 'February.jpg', ... , 'December.jpg' in the Folder for your Page where the Calendar will be placed.
 
-### additional note on updated month pic feature:
-the plugin will now change the displayed image when visitor clicks prev/next/home button.
+### additional note on updated month pic feature (from v 0.1.1):
+The plugin will now change the displayed image when visitor clicks prev/next/home button.
 this will only work when picture files are named correctly according to active locale.
 for locale 'en' , this means 'January.jpg, February.jpg, March.jpg ....'
-for locale 'de' , this means 'Januar.jpg, Februar.jpg, März.jpg ....' and so on...
+for locale 'de' , this means 'Januar.jpg, Februar.jpg, M�rz.jpg ....' and so on...
 
+### additional note on multiple calendar files (from v 0.1.2):
+As listed in the To Do section, the multiple calendar files option has now been implemented.
+That means, you can now display events from more than one ics file.
+just use a comma separated list of filenames in the shortcode, like
+
+    [fullcalendar icsfile=example1.ics,example2.ics,example3.ics][/fullcalendar]
+    
 ## Credits
 
 This Plugin is built on [fullcalendar.io](https://fullcalendar.io)
 
 ## To Do
-
-- [ ] process multiple Calendar (ICS) Files

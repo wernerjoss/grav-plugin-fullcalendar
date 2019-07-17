@@ -1,6 +1,6 @@
 name: FullCalendar
-version: 0.1.1
-description: show Calendar Widget from ICS File, based on fullcalendar.io
+version: 0.1.2
+description: show Calendar Widget from ICS File(s), based on fullcalendar.io
 icon: calendar
 author:
   name: Werner Joss
