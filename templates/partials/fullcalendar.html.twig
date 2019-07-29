@@ -10,7 +10,7 @@
             showNonCurrentDates: true,
             fixedWeekCount: false,
             events: function(start, end, timezone, callback) {
-                var verbose = false;
+                var verbose = true; //  false;
                 var cfgFilestring = '{{icsfile}}'; //	from FullCalendarShortCode.php, can now (from v 0.1.2) hold multiple ics Files, comma separated
                 if (verbose) console.log(cfgFilestring);
                 var cfgfiles = cfgFilestring.split(','); // split string into multiple ics files, if appropriate, see note above
@@ -21,7 +21,11 @@
                 cfgfiles.forEach(function(value, index) {
                     cfgFile = value;
                     if (verbose) console.log('yaml CFG File:' + cfgFile);
-                    calendarUrl = getAbsolutePath() + 'user/data/calendars/' + cfgFile;
+                    if (cfgFile.startsWith("https://") || cfgFile.startsWith("http://")) {
+                        calendarUrl = cfgFile;
+                    }   else    {
+                        calendarUrl = getAbsolutePath() + 'user/data/calendars/' + cfgFile;
+                    }
                     if (verbose) console.log('Calendar URL:' + calendarUrl);
                     var events = [];
                     var do_callback = false; // muss zwingend hier hin, nicht ausserhalb der foreach schleife !!
