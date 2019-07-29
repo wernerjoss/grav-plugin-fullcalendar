@@ -1,3 +1,9 @@
+# v0.1.4
+##  07/30/2019
+
+1. [](#new)
+    * allow remote ics file URL's in shortcode
+
 # v0.1.3
 ##  07/25/2019
 
