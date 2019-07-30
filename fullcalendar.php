@@ -2,6 +2,7 @@
 namespace Grav\Plugin;
 
 use Grav\Common\Plugin;
+use Grav\Common\Language;
 use RocketTheme\Toolbox\Event\Event;
 
 class FullcalendarPlugin extends Plugin
@@ -30,7 +31,9 @@ class FullcalendarPlugin extends Plugin
         $assets->addJs('plugin://fullcalendar/assets/lib/moment.min.js');
         $assets->addJs('plugin://fullcalendar/assets/ical.js/build/ical.js');
         $assets->addJs('plugin://fullcalendar/assets/fullcalendar.js');
-        $assets->addJs('plugin://fullcalendar/assets/dist/locale/de.js');
+        // do not load a predefined language, use system setting instead
+        $lang = $this->grav['language']->getLanguage();
+        $assets->addJs('plugin://fullcalendar/assets/dist/locale/'.$lang.'.js');
         $assets->addJs('plugin://fullcalendar/assets/monthpic.js');
         $assets->addCss('plugin://fullcalendar/assets/fullcalendar.css');
         $assets->addCss('plugin://fullcalendar/assets/custom.css');
