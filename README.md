@@ -44,7 +44,7 @@ Note that if you use the admin plugin, a file with your configuration, and named
 
 ## Usage
 
-Once installed and enabled, you can use this Plugin to parse an ICS Calendar File (must be found in user/data/calendars and set as  parameter in Plugin shortcut, without Path !) and display Events from that Calendar anywhere on your Site using this shortcut
+Once installed and enabled, you can use this Plugin to parse an ICS Calendar File (must be found in user/data/calendars and set as  parameter in Plugin shortcode, without Path !) and display Events from that Calendar anywhere on your Site using this shortcode:
 
     [fullcalendar icsfile=example.ics][/fullcalendar]
     
@@ -64,6 +64,12 @@ That means, you can now display events from more than one ics file.
 just use a comma separated list of filenames in the shortcode, like
 
     [fullcalendar icsfile=example1.ics,example2.ics,example3.ics][/fullcalendar]
+
+### additional note on remote calendar files (from v 0.1.4):
+Calendar files can now also be remote, on other servers, these can also be mixed with local calendar files.
+In this case, the complete absolute URL to the file(s) has to be provided in the shortcode, as well as enclosing quote signs (") around the whole icsfile= specification, like
+
+    [fullcalendar icsfile="https://calendar.google.com/calendar/ical/myname%40myorganization.com/public/basic.ics,example1.ics" ][/fullcalendar]
     
 ## Credits
 
