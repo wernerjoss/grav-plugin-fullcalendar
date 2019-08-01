@@ -14,34 +14,36 @@ $(document).ready(function() {
         }
         var monthname = activemonth.split(" ")[0];
 
-        var path = document.location.pathname;
-        var monthpic = path + '/' + monthname + '.jpg';
-        if (debug) console.log('monthpic:', monthpic);
-        $.ajax({
-            type: "HEAD",
-            async: true,
-            url: window.location + '/' + monthname + '.jpg'
-        }).done(function() {
-            if (debug) console.log("monthpic found");
-            if (document.getElementById('actMonth') != null) document.getElementById('actMonth').innerHTML = "<img src=" + monthpic + ">";
-        }).fail(function() {
-            if (debug) console.log(window.location + '/' + monthname + '.jpg' + ' not found');
-        })
-        $(".fc-button").click(function() { // fc-button ist für vor UND zurück !
-            activemonth = $('div.fc-left h2').text();
-            if (debug) console.log('button clicked, month:', activemonth);
-            monthname = activemonth.split(" ")[0];
+        if (monthname.length > 0)  {
+            var path = document.location.pathname;
+            var monthpic = path + '/' + monthname + '.jpg';
+            if (debug) console.log('monthpic:', monthpic);
             $.ajax({
                 type: "HEAD",
                 async: true,
                 url: window.location + '/' + monthname + '.jpg'
             }).done(function() {
-                if (debug) console.log("new monthpic found");
-                monthpic = path + '/' + monthname + '.jpg';
+                if (debug) console.log("monthpic found");
                 if (document.getElementById('actMonth') != null) document.getElementById('actMonth').innerHTML = "<img src=" + monthpic + ">";
             }).fail(function() {
                 if (debug) console.log(window.location + '/' + monthname + '.jpg' + ' not found');
             })
-        });
+            $(".fc-button").click(function() { // fc-button ist für vor UND zurück !
+                activemonth = $('div.fc-left h2').text();
+                if (debug) console.log('button clicked, month:', activemonth);
+                monthname = activemonth.split(" ")[0];
+                $.ajax({
+                    type: "HEAD",
+                    async: true,
+                    url: window.location + '/' + monthname + '.jpg'
+                }).done(function() {
+                    if (debug) console.log("new monthpic found");
+                    monthpic = path + '/' + monthname + '.jpg';
+                    if (document.getElementById('actMonth') != null) document.getElementById('actMonth').innerHTML = "<img src=" + monthpic + ">";
+                }).fail(function() {
+                    if (debug) console.log(window.location + '/' + monthname + '.jpg' + ' not found');
+                })
+            });
+        }
     }, 10);
 })
