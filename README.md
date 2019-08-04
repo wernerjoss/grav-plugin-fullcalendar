@@ -70,7 +70,9 @@ Calendar files can now also be remote, on other servers, these can also be mixed
 In this case, the complete absolute URL to the file(s) has to be provided in the shortcode, as well as enclosing quote signs (") around the whole icsfile= specification, like
 
     [fullcalendar icsfile="https://calendar.google.com/calendar/ical/myname%40myorganization.com/public/basic.ics,example1.ics" ][/fullcalendar]
-    
+
+Also note that this feature (absolute URLs for ics files) is mandatory if you enable "include default language" in your system configuration.
+Otherwise, local ics files will NOT be found, as the javascript getAbsolutePath() function will return an invalid path to local ics files in /user/data/calendars !
 ## Credits
 
 This Plugin is built on [fullcalendar.io](https://fullcalendar.io)
