@@ -73,8 +73,8 @@ In this case, the complete absolute URL to the file(s) has to be provided in the
 
 Also note that this feature (absolute URLs for ics files) is mandatory if you enable "include default language" in your system configuration.
 Otherwise, local ics files will NOT be found, as the javascript getAbsolutePath() function will return an invalid path to local ics files in /user/data/calendars !
-Additionally, using absolute URLs might result in running into (https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)[CORS Issues] if the ics files are on a remote server.
-This can be resolved by allowing CORS access on the server (if access to the server is available) or by using some CORS proxy. see (https://stackoverflow.com/questions/43871637/no-access-control-allow-origin-header-is-present-on-the-requested-resource-whe/43881141#43881141)[this] discussion on stackoverflow.
+Additionally, using absolute URLs might result in running into [CORS Issues](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) if the ics files are on a remote server.
+This can be resolved by allowing CORS access on the server (if access to the server is available) or by using some CORS proxy. see [this](https://stackoverflow.com/questions/43871637/no-access-control-allow-origin-header-is-present-on-the-requested-resource-whe/43881141#43881141) discussion on stackoverflow.
 ## Credits
 
 This Plugin is built on [fullcalendar.io](https://fullcalendar.io)
