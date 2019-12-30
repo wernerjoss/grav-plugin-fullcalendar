@@ -75,7 +75,7 @@ In this case, the complete absolute URL to the file(s) has to be provided in the
 Calendars can now be assigned custom colors for nicer display by adding an entry 'colors' to fullcalendar.yaml - this should be a comma-separated list of HTML
 colors (predifined Names like lightBlue can be used as well as HEX notation, like #ffaabc).
 If colors entry is not defined, standard fullcalendar.css color is used for all calendars, same behaviour as before.
-In Addition, al Legend (html List, css class cal_legend) can be enabled by adding showlegend: true
+In Addition, a Legend (html List, css class cal_legend) can be enabled by adding showlegend: true
 
 ## Credits
 
