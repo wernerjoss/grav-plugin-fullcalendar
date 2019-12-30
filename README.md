@@ -70,11 +70,13 @@ Calendar files can now also be remote, on other servers, these can also be mixed
 In this case, the complete absolute URL to the file(s) has to be provided in the shortcode, as well as enclosing quote signs (") around the whole icsfile= specification, like
 
     [fullcalendar icsfile="https://calendar.google.com/calendar/ical/myname%40myorganization.com/public/basic.ics,example1.ics" ][/fullcalendar]
+    
+### additional note on custom colors for multiple calendars (from v 0.1.5):
+Calendars can now be assigned custom colors for nicer display by adding an entry 'colors' to fullcalendar.yaml - this should be a comma-separated list of HTML
+colors (predifined Names like lightBlue can be used as well as HEX notation, like #ffaabc).
+If colors entry is not defined, standard fullcalendar.css color is used for all calendars, same behaviour as before.
+In Addition, al Legend (html List, css class cal_legend) can be enabled by adding showlegend: true
 
-Also note that this feature (absolute URLs for ics files) is mandatory if you enable "include default language" in your system configuration.
-Otherwise, local ics files will NOT be found, as the javascript getAbsolutePath() function will return an invalid path to local ics files in /user/data/calendars !
-Additionally, using absolute URLs might result in running into [CORS Issues](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) if the ics files are on a remote server.
-This can be resolved by allowing CORS access on the server (if access to the server is available) or by using some CORS proxy. see [this](https://stackoverflow.com/questions/43871637/no-access-control-allow-origin-header-is-present-on-the-requested-resource-whe/43881141#43881141) discussion on stackoverflow.
 ## Credits
 
 This Plugin is built on [fullcalendar.io](https://fullcalendar.io)

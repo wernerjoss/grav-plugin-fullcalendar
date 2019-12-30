@@ -1,3 +1,9 @@
+# v0.1.5
+##  12/30/2019
+
+1. [](#new)
+    * allow custom colors for multiple calendars
+
 # v0.1.4
 ##  07/30/2019
 

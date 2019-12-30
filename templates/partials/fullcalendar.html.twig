@@ -1,81 +1,131 @@
 <div id='actMonth'></div>
 <div id='calendar'></div>
+<div id='legend'></div>
 
 <script>
     jQuery(function() {
-        // page is now ready, initialize the calendar...
-        jQuery('#calendar').fullCalendar({
-            // put your options and callbacks here
-            displayEventTime: false,
-            showNonCurrentDates: true,
-            fixedWeekCount: false,
-            events: function(start, end, timezone, callback) {
-                var verbose = false;
-                var cfgFilestring = '{{icsfile}}'; //	from FullCalendarShortCode.php, can now (from v 0.1.2) hold multiple ics Files, comma separated
-                if (verbose) console.log('cfgfilestring:', cfgFilestring);
-                var cfgfiles = cfgFilestring.split(','); // split string into multiple ics files, if appropriate, see note above
-                var len = cfgfiles.length;
-                if (verbose) console.log('cfgfiles[]:', cfgfiles);
-                //  var do_callback = false;   // geht nicht, s.u. !
-                var allevents = [];
-                cfgfiles.forEach(function(value, index) {
-                    cfgFile = value;
-                    if (verbose) console.log('yaml CFG File:' + cfgFile);
-                    // allow remote ics files, full URL required
-                    if (cfgFile.startsWith("https://") || cfgFile.startsWith("http://")) {
-                        calendarUrl = cfgFile;
-                    }   else    {
-                        calendarUrl = getAbsolutePath() + 'user/data/calendars/' + cfgFile;
-                    }
-                    if (verbose) console.log('Calendar URL:' + calendarUrl);
-                    var events = [];
-                    var do_callback = false; // muss zwingend hier hin, nicht ausserhalb der foreach schleife !!
-                    if (index == (len - 1)) {
-                        do_callback = true;
-                    }
-                    if (verbose) console.log('index,do_callback:', index, do_callback);
-                    jQuery.get(calendarUrl, function(data) {
-                        var iCalendarData = [];
-                        var lines = data.split("\n");
-                        for (var i = 0, len = lines.length; i < len; i++) {
-                            if (jQuery.trim(lines[i]).length > 0) {
-                                //if (verbose) console.log(lines[i]);
-                                iCalendarData.push(jQuery.trim(lines[i]));
-                            }
-                        }
-                        iCalendarData = iCalendarData.join("\r\n");
-                        var jcalData = ICAL.parse(iCalendarData);
-                        var comp = new ICAL.Component(jcalData);
-                        var eventComps = comp.getAllSubcomponents("vevent");
-                        //	map them to FullCalendar events
-                        events = jQuery.map(eventComps, function(item) {
-                            if (item.getFirstPropertyValue("class") == "PRIVATE") {
-                                return null;
-                            } else {
-                                return {
-                                    "title": item.getFirstPropertyValue("summary"), // + ";",
-                                    "start": item.getFirstPropertyValue("dtstart").toJSDate(),
-                                    "url": item.getFirstPropertyValue("url"),
-                                    "end": item.getFirstPropertyValue("dtend").toJSDate(),
-                                    "location": item.getFirstPropertyValue("location")
-                                };
-                            }
-                        })
-                        jQuery.merge(allevents, events);
-                        if (do_callback) {
-                            callback(allevents);
-                        }
-                        if (verbose) console.log('index,do_callback:', index, do_callback);
-                        if (verbose) console.log('allevents:', allevents);
-                    }, 'text');
-                })
-            }
-        })
-    })
+		var verbose = false;
+		var cfgFilestring = '{{icsfile}}'; //	from FullCalendarShortCode.php, can now (from v 0.1.2) hold multiple ics Files, comma separated
+		if (verbose) console.log('cfgfilestring:', cfgFilestring);
+		var cfgfiles = cfgFilestring.split(','); // split string into multiple ics files, if appropriate, see note above
+		var len = cfgfiles.length;
+		if (verbose) console.log('cfgfiles[]:', cfgfiles);
+		var BgColstring = '{{ config.plugins.fullcalendar.colors }}'; 	
+		if (verbose) console.log('BgColstring:', BgColstring);
+		var colors = BgColstring.split(',');
+		var ncolors = colors.length;
+		if (ncolors < len)	{	// populate colors with default color from fullcalendar.css
+			colors = ['#3a87ad'];
+			for (i=0; i<(len);i++)
+				colors.push('#3a87ad');
+		}
+		if (verbose) console.log('colors[]:', colors);
+		var showlegend = '{{ config.plugins.fullcalendar.showlegend }}';
+		if (verbose)	console.log('showlegend:', showlegend);
+		events = function(start, end, timezone, callback) {
+			var allevents = [];
+			cfgfiles.forEach(function(value, index) {
+				cfgFile = value;
+				if (verbose) console.log('yaml CFG File:' + cfgFile);
+				// allow remote ics files, full URL required
+				if (cfgFile.startsWith("https://") || cfgFile.startsWith("http://")) {
+					calendarUrl = cfgFile;
+				}   else    {
+					calendarUrl = getAbsolutePath() + 'user/data/calendars/' + cfgFile;
+				}
+				if (verbose) console.log('Calendar URL:' + calendarUrl);
+				var events = [];
+				var do_callback = false; // muss zwingend hier hin, nicht ausserhalb der forEach schleife !!
+				if (index == (len - 1)) {
+					do_callback = true;
+				}
+				if (verbose) console.log('index,do_callback:', index, do_callback);
+				jQuery.get(calendarUrl, function(data) {
+					var iCalendarData = [];
+					var lines = data.split("\n");
+					for (var i = 0, len = lines.length; i < len; i++) {
+						if (jQuery.trim(lines[i]).length > 0) {
+							//if (verbose) console.log(lines[i]);
+							iCalendarData.push(jQuery.trim(lines[i]));
+						}
+					}
+					iCalendarData = iCalendarData.join("\r\n");
+					var jcalData = ICAL.parse(iCalendarData);
+					var comp = new ICAL.Component(jcalData);
+					var eventComps = comp.getAllSubcomponents("vevent");
+					//	map them to FullCalendar events
+					events = jQuery.map(eventComps, function(item) {
+						if (item.getFirstPropertyValue("class") == "PRIVATE") {
+							return null;
+						} else {
+							return {
+								"title": item.getFirstPropertyValue("summary"), // + ";",
+								"start": item.getFirstPropertyValue("dtstart").toJSDate(),
+								"url": item.getFirstPropertyValue("url"),
+								"end": item.getFirstPropertyValue("dtend").toJSDate(),
+								"location": item.getFirstPropertyValue("location"),
+								"backgroundColor": colors[index]
+							};
+						}
+					})
+					jQuery.merge(allevents, events);
+					if (do_callback) {
+						callback(allevents);
+					}
+					if (verbose) console.log('index,do_callback:', index, do_callback);
+					if (verbose) console.log('allevents:', allevents);
+				}, 'text');
+			})
+		}
+		// page is now ready, initialize the calendar...
+		cal = jQuery('#calendar').fullCalendar({
+			// put your options and callbacks here
+			displayEventTime: false,
+			showNonCurrentDates: true,
+			fixedWeekCount: false,
+			events: [],
+		})
+		// add events
+		jQuery('#calendar').fullCalendar('addEventSource', events);
+		// show legend, if enabled
+		if (showlegend) {
+			// Add the contents of cfgfiles to #legend:
+			document.getElementById('legend').appendChild(makeUL(cfgfiles, colors));
+		}
+	})
+	
+	function makeUL(array, colors) {
+		// Create the list element:
+		var list = document.createElement('ul');
+		// assign css class
+		list.classList.add('cal_legend');
+		for (var i = 0; i < array.length; i++) {
+			// Create the list item:
+			var item = document.createElement('li');
+			
+			// Set its contents:
+			item.appendChild(document.createTextNode(array[i]));
+			item.style.color = colors[i];
+			
+			// Add it to the list:
+			list.appendChild(item);
+		}
 
-    function getAbsolutePath() { // see https://www.sitepoint.com/jquery-current-page-url/
-        var loc = window.location;
-        var pathName = loc.pathname.substring(0, loc.pathname.lastIndexOf('/') + 1);
-        return loc.href.substring(0, loc.href.length - ((loc.pathname + loc.search + loc.hash).length - pathName.length));
-    }
+		// Finally, return the constructed list:
+		return list;
+	}
+
+	function getAbsolutePath() { // see https://www.sitepoint.com/jquery-current-page-url/
+		var loc = window.location;
+		/*	testing...
+		var absPath =  jQuery(location).attr('href');
+		console.log('absPath: ', absPath);
+		return absPath;
+		var test = location.origin;
+		console.log('location.origin: ', test);
+		*/
+		var pathName = loc.pathname.substring(0, loc.pathname.lastIndexOf('/') + 1);
+		return loc.href.substring(0, loc.href.length - ((loc.pathname + loc.search + loc.hash).length - pathName.length));
+	}
+	
 </script>

@@ -27,10 +27,10 @@ class FullcalendarPlugin extends Plugin
         ]);
         //add assets
         $assets = $this->grav['assets'];
-        $assets->addJs('plugin://fullcalendar/assets/lib/jquery.min.js');
+        // $assets->addJs('plugin://fullcalendar/assets/lib/jquery.min.js');	// geht auch ohne, da jquery 3.x schon da ist ! 27.11.19
         $assets->addJs('plugin://fullcalendar/assets/lib/moment.min.js');
         $assets->addJs('plugin://fullcalendar/assets/ical.js/build/ical.js');
-        $assets->addJs('plugin://fullcalendar/assets/fullcalendar.js');
+        $assets->addJs('plugin://fullcalendar/assets/fullcalendar.js');	//, {loading: 'inline', position: 'after'});
         // do not load a predefined language, use system setting instead
         $lang = $this->grav['language']->getLanguage();
         $assets->addJs('plugin://fullcalendar/assets/dist/locale/'.$lang.'.js');
