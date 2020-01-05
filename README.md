@@ -77,6 +77,12 @@ colors (predifined Names like lightBlue can be used as well as HEX notation, lik
 If colors entry is not defined, standard fullcalendar.css color is used for all calendars, same behaviour as before.
 In Addition, a Legend (html List, css class cal_legend) can be enabled by adding showlegend: true
 
+### additional note on repeating Events (from v 0.2.0):
+Repeating Events are now basically supported by incorporating the rrule Plugin from fullcalendar.io V 4.3.1.
+There are, however, some rrule Options left, that are not yet supported - should work for most common rrules, though.
+Additionaly, a new configuration Option has been introduced: locale - just set this to your Preferred value in fullcalendar.yaml.
+Default is en.
+
 ## Credits
 
 This Plugin is built on [fullcalendar.io](https://fullcalendar.io)

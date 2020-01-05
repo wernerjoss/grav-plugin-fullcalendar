@@ -1,3 +1,11 @@
+# v0.2.0
+##  01/06/2020
+
+1. [](#new)
+    * update fullcalendar.io to V 4.3.1, including rrule Plugin
+    * rewrite ICAL to fullcalendar.io Objects Mapping to support repeating Events (rrule)
+    * new locale configuration Option
+
 # v0.1.5
 ##  12/30/2019
 

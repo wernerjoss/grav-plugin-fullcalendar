@@ -1,13 +1,24 @@
+body {
+	padding: 0;
+}
 #actMonth img {
 	padding: 0 0 2rem 0;
 }
-.fc-day-grid-container {
+#calendar {
+	font-size: large;	/*	14px;	*/
+	margin: 0 auto;
+	line-height: 0.5em;
+}
+#calendar .fc-time {
+	display: none;
+}
+#calendar .fc-day-grid-container {
 	height: 100%!important;
 }
 /* Anpassungen 09.07.19:	*/
-.fc-title {
+#calendar .fc-title {
 	color: white;
 }
-.fc-scroller {
+#calendar .fc-scroller {
 	overflow: hidden!important;
 }

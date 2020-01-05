@@ -8,7 +8,8 @@ $(document).ready(function() {
     setTimeout(function() { // ohne Timeout wird activemonth nicht belegt !
         var debug = false;
 
-        var activemonth = $('div.fc-left h2').text();
+        //	var activemonth = $('div.fc-left h2').text();	// fc 3.x
+		var activemonth = $('div.fc-center h2').text();	// fc 4.3
         if (debug) {
             console.log('activemonth:', activemonth);
         }
@@ -29,7 +30,8 @@ $(document).ready(function() {
                 if (debug) console.log(window.location + '/' + monthname + '.jpg' + ' not found');
             })
             $(".fc-button").click(function() { // fc-button ist für vor UND zurück !
-                activemonth = $('div.fc-left h2').text();
+                //	activemonth = $('div.fc-left h2').text();	// fc 3.x
+				activemonth = $('div.fc-center h2').text();	// fc 4.3
                 if (debug) console.log('button clicked, month:', activemonth);
                 monthname = activemonth.split(" ")[0];
                 $.ajax({
