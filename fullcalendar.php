@@ -43,7 +43,7 @@ class FullcalendarPlugin extends Plugin
         $assets->addJs('plugin://fullcalendar/fc4/packages/core/locales/'.$language.'.js');
         $assets->addJs('plugin://fullcalendar/assets/monthpic.js');
         $assets->addCss('plugin://fullcalendar/assets/daygrid.css');	// default CSS for #calendar
-        $assets->addCss('plugin://fullcalendar/assets/custom.css');	// optional, not included in plugin by default
+        //	$assets->addCss('plugin://fullcalendar/assets/custom.css');	// don't use custom CSS in Plugin folder, better from Theme !
         
     }
 
