@@ -101,29 +101,39 @@
 							var rrules = item.getFirstPropertyValue("rrule");
 							var fcrrules = {};	// extra object for rrules
 							if (rrules !== null)	{
-								if (verbose)	console.log('rrules:', rrules);	
-								var parts = rrules["parts"];
-								if (verbose)	console.log('parts:', parts);
-								var byday = parts["BYDAY"];
-								if (Array.isArray(byday))	{byday = parts["BYDAY"];}	else	{byday = null;}
-								if (verbose)	console.log('byday:', byday);
-								var bymonth = parts["BYMONTH"];
-								if (Array.isArray(bymonth))	{bymonth = parts["BYMONTH"];}	else	{bymonth = null;}
-								if (verbose)	console.log('bymonth:', bymonth);
-								fcrrules["dtstart"] = fcevents["start"];
-								if (rrules.freq !== null)	{ fcrrules["freq"] = rrules.freq;}
-								if (byday !== null) { fcrrules["byweekday"] = byday;}
-								if (bymonth !== null) { fcrrules["bymonth"] = bymonth;}
-								if (rrules.interval != null) { fcrrules["interval"] = rrules.interval;}
-								if (rrules.count != null) { fcrrules["count"] = rrules.count;}
-								if (rrules.wkst != null) { fcrrules["wkst"] = rrules.wkst;}
-								if (rrules.until != null) { fcrrules["until"] = rrules.until.toJSDate();}
-								fcevents["rrule"] = fcrrules;
-								if (verbose)	console.log('fcrrules:', fcrrules);
+								if (rrules.freq !== null)	{	//	freq is required, do not continue if null
+									fcrrules["freq"] = rrules.freq;
+									if (verbose)	console.log('rrules:', rrules);	
+									var parts = rrules["parts"];
+									if (verbose)	console.log('parts:', parts);
+									var byweekday = parts["BYWEEK"];
+									if (Array.isArray(byweekday))	{byweekday = parts["BYDAY"];}	else	{byweekday = null;}
+									if (verbose)	console.log('byweekday:', byweekday);
+									var bymonth = parts["BYMONTH"];
+									if (Array.isArray(bymonth))	{bymonth = parts["BYMONTH"];}	else	{bymonth = null;}
+									if (verbose)	console.log('bymonth:', bymonth);
+									var bymonthday = parts["BYMONTHDAY"];
+									if (Array.isArray(bymonthday))	{bymonthday = parts["BYMONTHDAY"];}	else	{bymonthday = null;}
+									if (verbose)	console.log('bymonthday:', bymonthday);
+									var byyearday = parts["BYYEARDAY"];
+									if (Array.isArray(byyearday))	{byyearday = parts["BYYEARDAY"];}	else	{byyearday = null;}
+									if (verbose)	console.log('byyearday:', byyearday);
+									if (rrules.dtstart !== undefined)	{fcrrules["dtstart"] = rrules.dtstart;}	else	{fcrrules["dtstart"] = fcevents["start"];}
+									if (byweekday !== null) { fcrrules["byweekday"] = byweekday;}
+									if (bymonth !== null) { fcrrules["bymonth"] = bymonth;}
+									if (bymonthday !== null) { fcrrules["bymonthday"] = bymonthday;}
+									if (byyearday !== null) { fcrrules["byyearday"] = byyearday;}
+									if (rrules.interval != null) { fcrrules["interval"] = rrules.interval;}
+									if (rrules.count != null) { fcrrules["count"] = rrules.count;}
+									if (rrules.wkst != null) { fcrrules["wkst"] = rrules.wkst;}
+									if (rrules.until != null) { fcrrules["until"] = rrules.until.toJSDate();}
+									fcevents["rrule"] = fcrrules;
+									if (verbose)	console.log('fcrrules:', fcrrules);
+								}
 							}
 							fcevents["backgroundColor"] = colors[index];
 							if (verbose)	console.log('fcevents:', fcevents);
-							if (item.getFirstPropertyValue("class") == "PRIVATE") {
+							if (item.getFirstPropertyValue("class") === "PRIVATE") {
 								return null;
 							} else {
 								return fcevents;

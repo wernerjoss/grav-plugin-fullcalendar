@@ -27,22 +27,23 @@ class FullcalendarPlugin extends Plugin
         ]);
         //add assets
         $assets = $this->grav['assets'];
-        // $assets->addJs('plugin://fullcalendar/assets/lib/jquery.min.js');	// geht auch ohne, da jquery 3.x schon da ist ! 27.11.19
+        // $assets->addJs('plugin://fullcalendar/assets/lib/jquery.min.js');	// geht auch ohne, da jquery bereits in system/assets
         
         $assets->addJs('plugin://fullcalendar/assets/ical.js/build/ical.js');
         
         $assets->addCss('plugin://fullcalendar/fc4/packages/core/main.css');
 		$assets->addCss('plugin://fullcalendar/fc4/packages/daygrid/main.css');
-		$assets->addJs('plugin://fullcalendar/fc4/vendor/rrule.js');	// repeating events !
+		$assets->addJs('plugin://fullcalendar/fc4/vendor/rrule.js');
 		$assets->addJs('plugin://fullcalendar/fc4/packages/core/main.js');
 		$assets->addJs('plugin://fullcalendar/fc4/packages/interaction/main.js');
 		$assets->addJs('plugin://fullcalendar/fc4/packages/daygrid/main.js');
-		$assets->addJs('plugin://fullcalendar/fc4/packages/rrule/main.js');	// repeating events !
+		$assets->addJs('plugin://fullcalendar/fc4/packages/rrule/main.js');
 		// do not load a predefined language, use system setting instead
-        $lang = $this->grav['language']->getLanguage();
-        $assets->addJs('plugin://fullcalendar/fc4/packages/core/locales/'.$lang.'.js');
+        $language = $this->grav['language']->getLanguage();
+        $assets->addJs('plugin://fullcalendar/fc4/packages/core/locales/'.$language.'.js');
         $assets->addJs('plugin://fullcalendar/assets/monthpic.js');
-        $assets->addCss('plugin://fullcalendar/assets/custom.css');
+        $assets->addCss('plugin://fullcalendar/assets/daygrid.css');	// default CSS for #calendar
+        $assets->addCss('plugin://fullcalendar/assets/custom.css');	// optional, not included in plugin by default
         
     }
 

@@ -82,6 +82,7 @@ Repeating Events are now basically supported by incorporating the rrule Plugin f
 There are, however, some rrule Options left, that are not yet supported - should work for most common rrules, though.
 Additionaly, a new configuration Option has been introduced: locale - just set this to your Preferred value in fullcalendar.yaml.
 Default is en.
+Also note that file assets/custom.css has been renamed to daygrid.css - custom.css is for user adaptions and will also be used, if present (but is not provided with plugin) !
 
 ## Credits
 
