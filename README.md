@@ -86,6 +86,6 @@ Also note that file assets/custom.css has been renamed to daygrid.css - custom.c
 
 ## Credits
 
-This Plugin is built on [fullcalendar.io](https://fullcalendar.io)
+This Plugin is built on [fullcalendar.io](https://fullcalendar.io) and [jsical - Javascript parser for rfc5545](http://mozilla-comm.github.io/ical.js/api/index.html)
 
 ## To Do
