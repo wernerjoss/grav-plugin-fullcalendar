@@ -6,6 +6,8 @@
 	document.addEventListener('DOMContentLoaded', function() {
 		var verbose = false;
 		var defaultLocale = 'en';
+		var weekNums = '{{ config.plugins.fullcalendar.weekNumbers }}';
+		weekNums = (weekNums !== null) ? weekNums:false;
 		var cfgLocale = '{{ config.plugins.fullcalendar.locale }}';
 		var LocaleCode = (cfgLocale !== null) ? cfgLocale : defaultLocale;
 		var cfgFilestring = '{{icsfile}}'; //	from FullCalendarShortCode.php, can now (from v 0.1.2) hold multiple ics Files, comma separated
@@ -30,6 +32,7 @@
 		var calendar = new FullCalendar.Calendar(calendarEl, {
 			plugins: [ 'interaction', 'dayGrid', 'rrule' ],
 			locale: LocaleCode,
+			weekNumbers: weekNums,
 			header: {
 				left: 'prevYear,nextYear',
 				center: 'title',
@@ -70,16 +73,7 @@
 					}
 					if (verbose) console.log('index,do_callback:', index, do_callback);
 					jQuery.get(calendarUrl, function(data) {
-						var iCalendarData = [];
-						var lines = data.split("\n");
-						for (var i = 0, len = lines.length; i < len; i++) {
-							if (jQuery.trim(lines[i]).length > 0) {
-								//if (verbose) console.log(lines[i]);
-								iCalendarData.push(jQuery.trim(lines[i]));
-							}
-						}
-						iCalendarData = iCalendarData.join("\r\n");
-						var jcalData = ICAL.parse(iCalendarData);
+						var jcalData = ICAL.parse(data);	//	directly parse data, no need to split to lines first ! 14.02.20
 						var comp = new ICAL.Component(jcalData);
 						var eventComps = comp.getAllSubcomponents("vevent");
 						//	map them to FullCalendar events Objects
@@ -107,7 +101,17 @@
 									var parts = rrules["parts"];
 									if (verbose)	console.log('parts:', parts);
 									var byweekday = parts["BYDAY"];
-									if (Array.isArray(byweekday))	{byweekday = parts["BYDAY"];}	else	{byweekday = null;}
+									if (Array.isArray(byweekday))	{
+										byweekday = parts["BYDAY"];	
+										// DONE: check for valid entrys (only MO - SU allowed, no Digits!)		14.02.20
+										var validDays = ["MO","TU","WE","TH","FR","SA","SU"];
+										var ok = true;
+										for (i = 0; i < byweekday.length; i++) { 
+											ok  = (ok && validDays.includes(byweekday[i]));
+										}
+										if (ok == false) {byweekday = null;}
+										// TODO: implement BYDAY n+ or n- 
+									}	else	{byweekday = null;}
 									if (verbose)	console.log('byweekday:', byweekday);
 									var byweekno = parts["BYWEEKNO"];
 									if (Array.isArray(byweekno))	{byweekno = parts["BYWEEKNO"];}	else	{byweekno = null;}

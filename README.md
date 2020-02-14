@@ -89,3 +89,4 @@ Also note that file assets/custom.css has been renamed to daygrid.css - custom.c
 This Plugin is built on [fullcalendar.io](https://fullcalendar.io)
 
 ## To Do
+correct Implementation of rrule BYDAY n+- attribute (e.g. BYDAY=1MO for 1st Monday) 
