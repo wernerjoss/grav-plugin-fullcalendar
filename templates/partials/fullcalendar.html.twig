@@ -101,16 +101,20 @@
 									var parts = rrules["parts"];
 									if (verbose)	console.log('parts:', parts);
 									var byweekday = parts["BYDAY"];
+									var weekdays = [];	// must be empty array, otherwise, push() will not work !
+									var bysetpos = [];
 									if (Array.isArray(byweekday))	{
-										byweekday = parts["BYDAY"];	
-										// DONE: check for valid entrys (only MO - SU allowed, no Digits!)		14.02.20
-										var validDays = ["MO","TU","WE","TH","FR","SA","SU"];
-										var ok = true;
+										byweekday = parts["BYDAY"];
 										for (i = 0; i < byweekday.length; i++) { 
-											ok  = (ok && validDays.includes(byweekday[i]));
+											//	DONE: implement BYDAY n+ or n- 
+											if (byweekday[i].match(/\d+/g))	{	// entry contains digits, save them to setpos, strip from weekdays
+												var daynum = parseInt(byweekday[i]).toString();
+												//	console.log('daynum: ' + daynum) ;
+												bysetpos.push(daynum);
+												weekdays.push(byweekday[i].replace(/[0-9,+,-]/g, ''));
+											} else { weekdays.push(byweekday[i]); }	// no digits, just save to weekdays
 										}
-										if (ok == false) {byweekday = null;}
-										// TODO: implement BYDAY n+ or n- 
+										byweekday = weekdays;
 									}	else	{byweekday = null;}
 									if (verbose)	console.log('byweekday:', byweekday);
 									var byweekno = parts["BYWEEKNO"];
@@ -127,6 +131,7 @@
 									if (verbose)	console.log('byyearday:', byyearday);
 									if (rrules.dtstart !== undefined)	{fcrrules["dtstart"] = rrules.dtstart;}	else	{fcrrules["dtstart"] = fcevents["start"];}
 									if (byweekday !== null) { fcrrules["byweekday"] = byweekday;}
+									if (bysetpos !== null) { fcrrules["bysetpos"] = bysetpos;}
 									if (byweekno !== null) { fcrrules["byweekno"] = byweekno;}
 									if (bymonth !== null) { fcrrules["bymonth"] = bymonth;}
 									if (bymonthday !== null) { fcrrules["bymonthday"] = bymonthday;}
