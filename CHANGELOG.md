@@ -1,10 +1,10 @@
 # v0.2.1
-##  02/14/2020
+##  02/17/2020
 
 1. [](#new)
     * fix parsing long lines in ics File(s)
     * new config Option weekNumbers (show week Numbers in calendar grid)
-    * fix crash when BYDAY n+- Number present (still TODO: correct Implementation!)
+    * fix BYDAY n+- Bug (bysetpos)
 
 # v0.2.0
 ##  01/06/2020
