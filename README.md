@@ -37,6 +37,10 @@ Here is the default configuration and an explanation of available options:
 ```yaml
 
 enabled: true
+colors: #3a87ad # see additional Note on custom colors
+showlegend: false   # set to true to show calendar File Name(s) as Legend below grid
+locale: en  # use your own locale here, e.g. de
+weekNumbers: false  # set to true to show Week Numbers
 
 ```
 
