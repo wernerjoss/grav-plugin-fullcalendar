@@ -8,7 +8,7 @@ author:
 homepage: https://github.com/wernerjoss/grav-plugin-fullcalendar
 keywords: grav, plugin, ICS, Icalendar, fullcalendar.io
 bugs: https://github.com/wernerjoss/grav-plugin-fullcalendar/issues
-docs: https://github.com/wernerjoss/grav-plugin-fullcalendar/README.md
+docs: https://github.com/wernerjoss/grav-plugin-fullcalendar
 license: MIT
 
 dependencies:
