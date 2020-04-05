@@ -75,6 +75,14 @@ In this case, the complete absolute URL to the file(s) has to be provided in the
 
     [fullcalendar icsfile="https://calendar.google.com/calendar/ical/myname%40myorganization.com/public/basic.ics,example1.ics" ][/fullcalendar]
     
+#### In case remote calendar files do not work (events not shown in fullcalendar) this is most likely a [CORS](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing) issue
+to work around this, please read [issue #9](https://github.com/wernerjoss/grav-plugin-fullcalendar/issues/9).  
+A more detailed explanation on the topic can be found [here](https://en.wikipedia.org/wiki/Same_origin_policy).  
+Basically, there are 3 Options to overcome this Problem:  
+	1. configure the Server that holds the remote ics file(s) to accept your calling URL, see  (mostly, this will not be possible)
+	2. use a CORS proxy as outlined above
+	3. copy the remote ics file to your own site
+    
 ### additional note on custom colors for multiple calendars (from v 0.1.5):
 Calendars can now be assigned custom colors for nicer display by adding an entry 'colors' to fullcalendar.yaml - this should be a comma-separated list of HTML
 colors (predifined Names like lightBlue can be used as well as HEX notation, like #ffaabc).
