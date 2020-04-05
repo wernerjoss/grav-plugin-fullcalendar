@@ -81,8 +81,8 @@ A more detailed explanation on the topic can be found [here](https://en.wikipedi
 Basically, there are 3 Options to overcome this Problem:  
 
 + configure the Server that holds the remote ics file(s) to accept your calling URL, see  (mostly, this will not be possible)
-+ use a CORS proxy as outlined above
-+ copy the remote ics file to your own site
++ use a CORS proxy as outlined [above](https://github.com/wernerjoss/grav-plugin-fullcalendar/issues/9)
++ copy the remote ics file(s) to your own site
     
 ### additional note on custom colors for multiple calendars (from v 0.1.5):
 Calendars can now be assigned custom colors for nicer display by adding an entry 'colors' to fullcalendar.yaml - this should be a comma-separated list of HTML
