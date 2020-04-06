@@ -61,7 +61,22 @@
 					if (verbose) console.log('yaml CFG File:' + cfgFile);
 					// allow remote ics files, full URL required
 					if (cfgFile.startsWith("https://") || cfgFile.startsWith("http://")) {
-						calendarUrl = cfgFile;
+						var cors_api_host = 'cors-anywhere.herokuapp.com';
+						var cors_api_url = 'https://' + cors_api_host + '/';
+						var origin = window.location.protocol + '//' + window.location.host;
+						if (verbose) console.log('Origin:' + origin);
+						if (cfgFile.startsWith(origin)) {
+							if (verbose) console.log('remote is same Origin, do not use proxy');
+							calendarUrl = cfgFile;
+						}	else	{
+							if (cfgFile.startsWith(cors_api_url)) {
+								if (verbose) console.log('remote is different Origin, but cors URL already added, do not add in addition');
+								calendarUrl = cfgFile;
+							}	else	{
+								if (verbose) console.log('remote is different Origin, use proxy');
+								calendarUrl = cors_api_url + cfgFile;
+							}
+						}
 					}   else    {
 						calendarUrl = getAbsolutePath() + 'user/data/calendars/' + cfgFile;
 					}
