@@ -1,3 +1,9 @@
+# v0.2.2
+##  04/06/2020
+
+1. [](#new)
+    * automatically add CORS proxy URL for remote ics Files
+
 # v0.2.1
 ##  02/17/2020
 
