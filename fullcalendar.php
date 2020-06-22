@@ -30,6 +30,10 @@ class FullcalendarPlugin extends Plugin
         // $assets->addJs('plugin://fullcalendar/assets/lib/jquery.min.js');	// geht auch ohne, da jquery bereits in system/assets
         
         $assets->addJs('plugin://fullcalendar/assets/ical.js/build/ical.js');
+
+        // for Tooltip: (use unpkg cdn for now...)
+        $assets->addJs('https://unpkg.com/@popperjs/core@2');
+        $assets->addJs('https://unpkg.com/tippy.js@6');
         
         $assets->addCss('plugin://fullcalendar/fc4/packages/core/main.css');
 		$assets->addCss('plugin://fullcalendar/fc4/packages/daygrid/main.css');

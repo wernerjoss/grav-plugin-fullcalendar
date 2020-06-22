@@ -1,3 +1,9 @@
+# v0.2.3
+##  06/22/2020
+
+1. [](#new)
+    * add Event Description as Tooltip
+
 # v0.2.2
 ##  04/06/2020
 

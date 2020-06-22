@@ -41,6 +41,26 @@
 			editable: true,
 			eventLimit: false, // allow "more" link when too many events
 			fixedWeekCount: false,
+			//	Click: alert Description, open URL in new Window
+			eventClick: function(info) {
+				info.jsEvent.preventDefault(); // don't let the browser navigate
+				/* omit alert - see Tooltip below
+				if (info.event.extendedProps.description) {
+					alert(info.event.extendedProps.description);
+				}
+				*/
+				if (info.event.url) {
+					window.open(info.event.url);	// open url in new Window/Tab
+				}
+			},
+			//	Description as Tooltip (tippy.js) :
+			eventRender: function(info) {
+				if (info.event.extendedProps.description) {
+					tippy (info.el, {
+						content: info.event.extendedProps.description,
+					});
+				}
+			},
 			/*	this seems to work for test purposes:
 			events: [
 				{
@@ -104,6 +124,8 @@
 							if (entry !== null)	fcevents["start"] = entry.toJSDate();
 							var entry = item.getFirstPropertyValue("dtend");
 							if (entry !== null)	fcevents["end"] = entry.toJSDate();
+							var entry = item.getFirstPropertyValue("description");	// add description 22.06.20
+							if (entry !== null)	fcevents["description"] = entry;
 							
 							// not used options go here
 							
