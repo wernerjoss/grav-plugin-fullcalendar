@@ -1,6 +1,6 @@
 {
   "name": "@fullcalendar/moment",
-  "version": "4.3.0",
+  "version": "4.4.2",
   "title": "FullCalendar Moment Plugin",
   "description": "A connector to the MomentJS date library",
   "keywords": [
@@ -24,7 +24,7 @@
   },
   "copyright": "2019 Adam Shaw",
   "peerDependencies": {
-    "@fullcalendar/core": "~4.3.0",
+    "@fullcalendar/core": "~4.4.0",
     "moment": "^2.24.0"
   },
   "main": "main.js",

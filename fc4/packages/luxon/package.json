@@ -1,6 +1,6 @@
 {
   "name": "@fullcalendar/luxon",
-  "version": "4.3.0",
+  "version": "4.4.2",
   "title": "FullCalendar Luxon Plugin",
   "description": "A connector to the Luxon date library",
   "keywords": [
@@ -24,7 +24,7 @@
   },
   "copyright": "2019 Adam Shaw",
   "peerDependencies": {
-    "@fullcalendar/core": "~4.3.0",
+    "@fullcalendar/core": "~4.4.0",
     "luxon": "^1.12.1"
   },
   "main": "main.js",

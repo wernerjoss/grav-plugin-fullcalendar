@@ -1,5 +1,5 @@
 /*!
-FullCalendar List View Plugin v4.3.0
+FullCalendar List View Plugin v4.4.2
 Docs & License: https://fullcalendar.io/
 (c) 2019 Adam Shaw
 */
@@ -7,18 +7,18 @@ Docs & License: https://fullcalendar.io/
 import { getAllDayHtml, isMultiDayRange, htmlEscape, FgEventRenderer, memoize, memoizeRendering, ScrollComponent, subtractInnerElHeight, sliceEventStore, intersectRanges, htmlToElement, createFormatter, createElement, buildGotoAnchorHtml, View, startOfDay, addDays, createPlugin } from '@fullcalendar/core';
 
 /*! *****************************************************************************
-Copyright (c) Microsoft Corporation. All rights reserved.
-Licensed under the Apache License, Version 2.0 (the "License"); you may not use
-this file except in compliance with the License. You may obtain a copy of the
-License at http://www.apache.org/licenses/LICENSE-2.0
+Copyright (c) Microsoft Corporation.
 
-THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
-WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
-MERCHANTABLITY OR NON-INFRINGEMENT.
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted.
 
-See the Apache Version 2.0 License for specific language governing permissions
-and limitations under the License.
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
 ***************************************************************************** */
 /* global Reflect, Promise */
 
@@ -38,7 +38,7 @@ function __extends(d, b) {
 var ListEventRenderer = /** @class */ (function (_super) {
     __extends(ListEventRenderer, _super);
     function ListEventRenderer(listView) {
-        var _this = _super.call(this, listView.context) || this;
+        var _this = _super.call(this) || this;
         _this.listView = listView;
         return _this;
     }
@@ -54,7 +54,7 @@ var ListEventRenderer = /** @class */ (function (_super) {
     };
     // generates the HTML for a single event row
     ListEventRenderer.prototype.renderSegHtml = function (seg) {
-        var _a = this.context, view = _a.view, theme = _a.theme;
+        var _a = this.context, theme = _a.theme, options = _a.options;
         var eventRange = seg.eventRange;
         var eventDef = eventRange.def;
         var eventInstance = eventRange.instance;
@@ -64,7 +64,7 @@ var ListEventRenderer = /** @class */ (function (_super) {
         var bgColor = eventUi.backgroundColor;
         var timeHtml;
         if (eventDef.allDay) {
-            timeHtml = getAllDayHtml(view);
+            timeHtml = getAllDayHtml(options);
         }
         else if (isMultiDayRange(eventRange.range)) {
             if (seg.isStart) {
@@ -76,7 +76,7 @@ var ListEventRenderer = /** @class */ (function (_super) {
                 ));
             }
             else { // inner segment that lasts the whole day
-                timeHtml = getAllDayHtml(view);
+                timeHtml = getAllDayHtml(options);
             }
         }
         else {
@@ -122,41 +122,53 @@ Responsible for the scroller, and forwarding event-related actions into the "gri
 */
 var ListView = /** @class */ (function (_super) {
     __extends(ListView, _super);
-    function ListView(context, viewSpec, dateProfileGenerator, parentEl) {
-        var _this = _super.call(this, context, viewSpec, dateProfileGenerator, parentEl) || this;
+    function ListView(viewSpec, parentEl) {
+        var _this = _super.call(this, viewSpec, parentEl) || this;
         _this.computeDateVars = memoize(computeDateVars);
         _this.eventStoreToSegs = memoize(_this._eventStoreToSegs);
+        _this.renderSkeleton = memoizeRendering(_this._renderSkeleton, _this._unrenderSkeleton);
         var eventRenderer = _this.eventRenderer = new ListEventRenderer(_this);
-        _this.renderContent = memoizeRendering(eventRenderer.renderSegs.bind(eventRenderer), eventRenderer.unrender.bind(eventRenderer));
-        _this.el.classList.add('fc-list-view');
-        var listViewClassNames = (_this.theme.getClass('listView') || '').split(' '); // wish we didn't have to do this
-        for (var _i = 0, listViewClassNames_1 = listViewClassNames; _i < listViewClassNames_1.length; _i++) {
-            var listViewClassName = listViewClassNames_1[_i];
-            if (listViewClassName) { // in case input was empty string
-                _this.el.classList.add(listViewClassName);
-            }
-        }
-        _this.scroller = new ScrollComponent('hidden', // overflow x
-        'auto' // overflow y
-        );
-        _this.el.appendChild(_this.scroller.el);
-        _this.contentEl = _this.scroller.el; // shortcut
-        context.calendar.registerInteractiveComponent(_this, {
-            el: _this.el
-            // TODO: make aware that it doesn't do Hits
-        });
+        _this.renderContent = memoizeRendering(eventRenderer.renderSegs.bind(eventRenderer), eventRenderer.unrender.bind(eventRenderer), [_this.renderSkeleton]);
         return _this;
     }
-    ListView.prototype.render = function (props) {
+    ListView.prototype.firstContext = function (context) {
+        context.calendar.registerInteractiveComponent(this, {
+            el: this.el
+            // TODO: make aware that it doesn't do Hits
+        });
+    };
+    ListView.prototype.render = function (props, context) {
+        _super.prototype.render.call(this, props, context);
         var _a = this.computeDateVars(props.dateProfile), dayDates = _a.dayDates, dayRanges = _a.dayRanges;
         this.dayDates = dayDates;
-        this.renderContent(this.eventStoreToSegs(props.eventStore, props.eventUiBases, dayRanges));
+        this.renderSkeleton(context);
+        this.renderContent(context, this.eventStoreToSegs(props.eventStore, props.eventUiBases, dayRanges));
     };
     ListView.prototype.destroy = function () {
         _super.prototype.destroy.call(this);
+        this.renderSkeleton.unrender();
         this.renderContent.unrender();
+        this.context.calendar.unregisterInteractiveComponent(this);
+    };
+    ListView.prototype._renderSkeleton = function (context) {
+        var theme = context.theme;
+        this.el.classList.add('fc-list-view');
+        var listViewClassNames = (theme.getClass('listView') || '').split(' '); // wish we didn't have to do this
+        for (var _i = 0, listViewClassNames_1 = listViewClassNames; _i < listViewClassNames_1.length; _i++) {
+            var listViewClassName = listViewClassNames_1[_i];
+            if (listViewClassName) { // in case input was empty string
+                this.el.classList.add(listViewClassName);
+            }
+        }
+        this.scroller = new ScrollComponent('hidden', // overflow x
+        'auto' // overflow y
+        );
+        this.el.appendChild(this.scroller.el);
+        this.contentEl = this.scroller.el; // shortcut
+    };
+    ListView.prototype._unrenderSkeleton = function () {
+        // TODO: remove classNames
         this.scroller.destroy(); // will remove the Grid too
-        this.calendar.unregisterInteractiveComponent(this);
     };
     ListView.prototype.updateSize = function (isResize, viewHeight, isAuto) {
         _super.prototype.updateSize.call(this, isResize, viewHeight, isAuto);
@@ -172,7 +184,7 @@ var ListView = /** @class */ (function (_super) {
             subtractInnerElHeight(this.el, this.scroller.el); // everything that's NOT the scroller
     };
     ListView.prototype._eventStoreToSegs = function (eventStore, eventUiBases, dayRanges) {
-        return this.eventRangesToSegs(sliceEventStore(eventStore, eventUiBases, this.props.dateProfile.activeRange, this.nextDayThreshold).fg, dayRanges);
+        return this.eventRangesToSegs(sliceEventStore(eventStore, eventUiBases, this.props.dateProfile.activeRange, this.context.nextDayThreshold).fg, dayRanges);
     };
     ListView.prototype.eventRangesToSegs = function (eventRanges, dayRanges) {
         var segs = [];
@@ -183,7 +195,7 @@ var ListView = /** @class */ (function (_super) {
         return segs;
     };
     ListView.prototype.eventRangeToSegs = function (eventRange, dayRanges) {
-        var _a = this, dateEnv = _a.dateEnv, nextDayThreshold = _a.nextDayThreshold;
+        var _a = this.context, dateEnv = _a.dateEnv, nextDayThreshold = _a.nextDayThreshold;
         var range = eventRange.range;
         var allDay = eventRange.def.allDay;
         var dayIndex;
@@ -222,18 +234,19 @@ var ListView = /** @class */ (function (_super) {
             '<div class="fc-list-empty-wrap2">' + // TODO: try less wraps
                 '<div class="fc-list-empty-wrap1">' +
                 '<div class="fc-list-empty">' +
-                htmlEscape(this.opt('noEventsMessage')) +
+                htmlEscape(this.context.options.noEventsMessage) +
                 '</div>' +
                 '</div>' +
                 '</div>';
     };
     // called by ListEventRenderer
     ListView.prototype.renderSegList = function (allSegs) {
+        var theme = this.context.theme;
         var segsByDay = this.groupSegsByDay(allSegs); // sparse array
         var dayIndex;
         var daySegs;
         var i;
-        var tableEl = htmlToElement('<table class="fc-list-table ' + this.calendar.theme.getClass('tableList') + '"><tbody></tbody></table>');
+        var tableEl = htmlToElement('<table class="fc-list-table ' + theme.getClass('tableList') + '"><tbody></tbody></table>');
         var tbodyEl = tableEl.querySelector('tbody');
         for (dayIndex = 0; dayIndex < segsByDay.length; dayIndex++) {
             daySegs = segsByDay[dayIndex];
@@ -263,20 +276,20 @@ var ListView = /** @class */ (function (_super) {
     };
     // generates the HTML for the day headers that live amongst the event rows
     ListView.prototype.buildDayHeaderRow = function (dayDate) {
-        var dateEnv = this.dateEnv;
-        var mainFormat = createFormatter(this.opt('listDayFormat')); // TODO: cache
-        var altFormat = createFormatter(this.opt('listDayAltFormat')); // TODO: cache
+        var _a = this.context, theme = _a.theme, dateEnv = _a.dateEnv, options = _a.options;
+        var mainFormat = createFormatter(options.listDayFormat); // TODO: cache
+        var altFormat = createFormatter(options.listDayAltFormat); // TODO: cache
         return createElement('tr', {
             className: 'fc-list-heading',
             'data-date': dateEnv.formatIso(dayDate, { omitTime: true })
-        }, '<td class="' + (this.calendar.theme.getClass('tableListHeading') ||
-            this.calendar.theme.getClass('widgetHeader')) + '" colspan="3">' +
+        }, '<td class="' + (theme.getClass('tableListHeading') ||
+            theme.getClass('widgetHeader')) + '" colspan="3">' +
             (mainFormat ?
-                buildGotoAnchorHtml(this, dayDate, { 'class': 'fc-list-heading-main' }, htmlEscape(dateEnv.format(dayDate, mainFormat)) // inner HTML
+                buildGotoAnchorHtml(options, dateEnv, dayDate, { 'class': 'fc-list-heading-main' }, htmlEscape(dateEnv.format(dayDate, mainFormat)) // inner HTML
                 ) :
                 '') +
             (altFormat ?
-                buildGotoAnchorHtml(this, dayDate, { 'class': 'fc-list-heading-alt' }, htmlEscape(dateEnv.format(dayDate, altFormat)) // inner HTML
+                buildGotoAnchorHtml(options, dateEnv, dayDate, { 'class': 'fc-list-heading-alt' }, htmlEscape(dateEnv.format(dayDate, altFormat)) // inner HTML
                 ) :
                 '') +
             '</td>');

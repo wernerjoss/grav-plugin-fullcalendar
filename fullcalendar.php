@@ -27,9 +27,9 @@ class FullcalendarPlugin extends Plugin
         ]);
         //add assets
         $assets = $this->grav['assets'];
-        // $assets->addJs('plugin://fullcalendar/assets/lib/jquery.min.js');	// geht auch ohne, da jquery bereits in system/assets
+        // $assets->addJs('plugin://fullcalendar/assets/lib/jquery.min.js');	// jquery should already be in system/assets
         
-        $assets->addJs('plugin://fullcalendar/assets/ical.js/build/ical.js');
+        $assets->addJs('plugin://fullcalendar/assets/ical.js/build/ical.min.js');   // see also reamde.txt file there
 
         // for Tooltip: (use unpkg cdn for now...)
         $assets->addJs('https://unpkg.com/@popperjs/core@2');
@@ -37,7 +37,7 @@ class FullcalendarPlugin extends Plugin
         
         $assets->addCss('plugin://fullcalendar/fc4/packages/core/main.css');
 		$assets->addCss('plugin://fullcalendar/fc4/packages/daygrid/main.css');
-		$assets->addJs('plugin://fullcalendar/fc4/vendor/rrule.js');
+		$assets->addJs('plugin://fullcalendar/fc4/vendor/rrule.js');   // see also reamde.txt file there
 		$assets->addJs('plugin://fullcalendar/fc4/packages/core/main.js');
 		$assets->addJs('plugin://fullcalendar/fc4/packages/interaction/main.js');
 		$assets->addJs('plugin://fullcalendar/fc4/packages/daygrid/main.js');

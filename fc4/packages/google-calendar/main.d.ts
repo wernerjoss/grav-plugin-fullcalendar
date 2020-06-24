@@ -12,6 +12,7 @@ declare module '@fullcalendar/google-calendar' {
         interface ExtendedEventSourceInput {
             googleCalendarApiKey?: string;
             googleCalendarId?: string;
+            googleCalendarApiBase?: string;
         }
     }
     const _default: import("@fullcalendar/core").PluginDef;

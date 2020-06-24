@@ -10,15 +10,18 @@ declare module '@fullcalendar/list' {
 }
 
 declare module '@fullcalendar/list/ListView' {
-    import { View, ViewProps, ScrollComponent, DateMarker, DateRange, DateProfileGenerator, ComponentContext, ViewSpec, EventUiHash, EventRenderRange, EventStore, Seg } from '@fullcalendar/core';
+    import { View, ViewProps, ScrollComponent, DateMarker, DateRange, ComponentContext, EventUiHash, EventRenderRange, EventStore, Seg, ViewSpec } from '@fullcalendar/core';
     export { ListView as default, ListView };
     class ListView extends View {
         scroller: ScrollComponent;
         contentEl: HTMLElement;
         dayDates: DateMarker[];
-        constructor(context: ComponentContext, viewSpec: ViewSpec, dateProfileGenerator: DateProfileGenerator, parentEl: HTMLElement);
-        render(props: ViewProps): void;
+        constructor(viewSpec: ViewSpec, parentEl: HTMLElement);
+        firstContext(context: ComponentContext): void;
+        render(props: ViewProps, context: ComponentContext): void;
         destroy(): void;
+        _renderSkeleton(context: ComponentContext): void;
+        _unrenderSkeleton(): void;
         updateSize(isResize: any, viewHeight: any, isAuto: any): void;
         computeScrollerHeight(viewHeight: any): number;
         _eventStoreToSegs(eventStore: EventStore, eventUiBases: EventUiHash, dayRanges: DateRange[]): Seg[];
