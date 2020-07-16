@@ -11,12 +11,12 @@ fullcalendar:
  
 calendars: 
   - 
-    name: Hollidays
-    ics: 'https://cloud.guillaume-storchi.com/nextcloud/remote.php/dav/public-calendars/LBJDbGq7T8feHkeg/?export'
+    name: Holidays
+    ics: 'https://cloud.mydomain.com/nextcloud/remote.php/dav/public-calendars/holidays/?export'
     color: blue
   -
     name: Work
-    ics: 'https://cloud.guillaume-storchi.com/nextcloud/remote.php/dav/public-calendars/C9gQTjAYSmdnCGfL/?export'
+    ics: 'https://cloud.mydomain.com/nextcloud/remote.php/dav/public-calendars/work/?export'
     color: red
   -
     name: Personnal
