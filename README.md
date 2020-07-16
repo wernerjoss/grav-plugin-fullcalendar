@@ -37,11 +37,25 @@ Here is the default configuration and an explanation of available options:
 ```yaml
 
 enabled: true
-colors: #3a87ad # see additional Note on custom colors
+debug: false
 showlegend: false   # set to true to show calendar File Name(s) as Legend below grid
 locale: en  # use your own locale here, e.g. de
+timezone: 'Europe/Paris'
+proxy : 'https://cors-anywhere.herokuapp.com/'
 weekNumbers: false  # set to true to show Week Numbers
-
+calendars:
+ - 
+  name: 'Personnal'
+  ics: 'personnal.ics'
+  color: blue
+ -
+  name: 'Work'
+  ics: 'work.ics'
+  color: red
+ - 
+  name: 'Holidays'
+  ics: 'https://cloud.mydomain.com/calendar/holidays?export'
+  color: green
 ```
 
 Note that if you use the admin plugin, a file with your configuration, and named fullcalendar.yaml will be saved in the `user/config/plugins/` folder once the configuration is saved in the admin.

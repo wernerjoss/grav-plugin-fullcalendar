@@ -1,1 +1,24 @@
 enabled: true
+debug: true
+locale: en 
+timezone: 'Europe/Paris'
+proxy : 'https://cors-anywhere.herokuapp.com/'
+fullcalendar:
+  header:
+    left: ''
+    right: ''
+    center: ''
+ 
+calendars: 
+  - 
+    name: Hollidays
+    ics: 'https://cloud.guillaume-storchi.com/nextcloud/remote.php/dav/public-calendars/LBJDbGq7T8feHkeg/?export'
+    color: blue
+  -
+    name: Work
+    ics: 'https://cloud.guillaume-storchi.com/nextcloud/remote.php/dav/public-calendars/C9gQTjAYSmdnCGfL/?export'
+    color: red
+  -
+    name: Personnal
+    ics: 'personal-2020-07-15.ics'
+    color: green
