@@ -56,6 +56,8 @@
 1. [](#new)
     * add automatic month picture change upon prev/next/home click
 
+The plugin will now change the displayed image when visitor clicks prev/next/home button. this will only work when picture files are named correctly according to active locale. for locale 'en' , this means 'January.jpg, February.jpg, March.jpg ....' for locale 'de' , this means 'Januar.jpg, Februar.jpg, März.jpg ....' and so on...
+
 # v0.1.0
 ##  05/05/2019
 
