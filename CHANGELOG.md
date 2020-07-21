@@ -1,3 +1,9 @@
+# v0.2.4
+##  07/21/2020
+
+1. [](#new)
+    * add config Option cors_api_url (overrides default value, if present)
+
 # v0.2.3
 ##  06/22/2020
 

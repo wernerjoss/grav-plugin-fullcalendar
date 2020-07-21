@@ -41,6 +41,7 @@ colors: #3a87ad # see additional Note on custom colors
 showlegend: false   # set to true to show calendar File Name(s) as Legend below grid
 locale: en  # use your own locale here, e.g. de
 weekNumbers: false  # set to true to show Week Numbers
+cors_api_url: https://cors-anywhere.herokuapp.com/  # this is the default value, change if you like to use another
 
 ```
 
@@ -63,4 +64,3 @@ This Plugin is built on [fullcalendar.io](https://fullcalendar.io), [jakubroztoc
 ## To Do
 
 * Implement EXDATE/EXRULE rrule exceptions
-* Add CORS proxy override config parameter
