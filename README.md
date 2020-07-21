@@ -49,13 +49,15 @@ Note that if you use the admin plugin, a file with your configuration, and named
 
 ## Usage
 
-Once installed and enabled, you can use this Plugin to parse an ICS Calendar File (must be found in user/data/calendars and set as  parameter in Plugin shortcode, without Path !) and display Events from that Calendar anywhere on your Site using this shortcode:
+Once installed and enabled, you can use this Plugin to parse ICS Calendar File(s) (these must be found in user/data/calendars and set as parameter in Plugin shortcode, without Path !) and display Events from that Calendar anywhere on your Site using this shortcode:
 
-    [fullcalendar icsfile=example.ics][/fullcalendar]
+    [fullcalendar icsfile='example0.ics,example1.ics,...'][/fullcalendar]
     
 in the appropriate page.
+You can also provide absolute URL's to ICS Files, in which case a CORS proxy will be used to access them.
 As an addition, you can show a Picture for the current month above the calendar widget.
 Just put 12 Image Files named 'January.jpg', 'February.jpg', ... , 'December.jpg' in the Folder for your Page where the Calendar will be placed.
+(Note that Image Files must be named to Month names matching your locale setting, so, for locale: de, use 'Januar.jpg' ...)
 
 ## Credits
 
