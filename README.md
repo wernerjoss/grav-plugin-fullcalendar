@@ -62,4 +62,5 @@ This Plugin is built on [fullcalendar.io](https://fullcalendar.io), [jakubroztoc
 
 ## To Do
 
-Implement EXDATE/EXRULE rrule exceptions
+    -   Implement EXDATE/EXRULE rrule exceptions
+    -   Add CORS proxy override config parameter
