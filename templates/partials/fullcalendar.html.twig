@@ -17,6 +17,12 @@
 		if (verbose) console.log('cfgfiles[]:', cfgfiles);
 		var BgColstring = '{{ config.plugins.fullcalendar.colors }}'; 	
 		if (verbose) console.log('BgColstring:', BgColstring);
+		var default_cors_api_url = 'https://cors-anywhere.herokuapp.com/';	// set cors_api_url in config if you prefer another CORS proxy !
+		if (verbose) console.log('default CORS Url:', default_cors_api_url);
+		var cfg_cors_api_url = '{{ config.plugins.fullcalendar.cors_api_url }}';
+		if (!cfg_cors_api_url.endsWith('/')) cfg_cors_api_url = cfg_cors_api_url + '/'; // add trailing slash if not present
+		var cors_api_url = (cfg_cors_api_url !== '/') ? cfg_cors_api_url : default_cors_api_url;
+		if (verbose) console.log('CORS Url:', cors_api_url);
 		var colors = BgColstring.split(',');
 		var ncolors = colors.length;
 		if (ncolors < len)	{	// populate colors with default color from fullcalendar.css
@@ -82,7 +88,6 @@
 					// allow remote ics files, full URL required
 					if (cfgFile.startsWith("https://") || cfgFile.startsWith("http://")) {	// calendar URL is remote
 						// automatically add CORS proxy URL for remote calendars, if not yet done 06.04.20
-						var cors_api_url = 'https://cors-anywhere.herokuapp.com/';	// replace this if you prefer another CORS proxy !
 						var origin = window.location.protocol + '//' + window.location.host;
 						if (verbose) console.log('Origin:' + origin);
 						if (cfgFile.startsWith(origin)) {
