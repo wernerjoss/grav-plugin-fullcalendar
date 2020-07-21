@@ -25,12 +25,23 @@
     * update fullcalendar.io to V 4.3.1, including rrule Plugin
     * rewrite ICAL to fullcalendar.io Objects Mapping to support repeating Events (rrule)
     * new locale configuration Option
+    
+Repeating Events are now basically supported by incorporating the rrule Plugin from fullcalendar.io V 4.3.1.
+There are, however, some rrule Options left, that are not yet supported - should work for most common rrules, though.
+Additionaly, a new configuration Option has been introduced: locale - just set this to your Preferred value in fullcalendar.yaml.
+Default is en.
+Also note that file assets/custom.css has been renamed to daygrid.css - custom.css is for user adaptions and will also be used, if present (but is not provided with plugin) !
 
 # v0.1.5
 ##  12/30/2019
 
 1. [](#new)
     * allow custom colors for multiple calendars
+    
+Calendars can now be assigned custom colors for nicer display by adding an entry 'colors' to fullcalendar.yaml - this should be a comma-separated list of HTML
+colors (predifined Names like lightBlue can be used as well as HEX notation, like #ffaabc).
+If colors entry is not defined, standard fullcalendar.css color is used for all calendars, same behaviour as before.
+In Addition, a Legend (html List, css class cal_legend) can be enabled by adding showlegend: true
 
 # v0.1.4
 ##  07/30/2019
@@ -38,6 +49,14 @@
 1. [](#new)
     * allow remote ics file URL's in shortcode, fix automatic locale evaluation
 
+Calendar files can now also be remote, on other servers, these can also be mixed with local calendar files.
+In this case, the complete absolute URL to the file(s) has to be provided in the shortcode, as well as enclosing quote signs (") around the whole icsfile= specification, like
+
+    [fullcalendar icsfile="https://calendar.google.com/calendar/ical/myname%40myorganization.com/public/basic.ics" ][/fullcalendar]
+    
+As there have been multiple issues with remote Calendar Files not showing events as a result of [CORS](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing) Policy restrictions,
+an automatic addition of a [CORS Proxy URL](https://cors-anywhere.herokuapp.com/) has now been incorporated (from v 0.2.2)
+    
 # v0.1.3
 ##  07/25/2019
 
@@ -49,6 +68,12 @@
 
 1. [](#new)
     * allow multiple ics Files in shortcode (comma separated)
+    
+As listed in the To Do section, the multiple calendar files option has now been implemented.
+That means, you can now display events from more than one ics file.
+just use a comma separated list of filenames in the shortcode, like
+
+    [fullcalendar icsfile=example1.ics,example2.ics,example3.ics][/fullcalendar]
 
 # v0.1.1
 ##  07/12/2019
