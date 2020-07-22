@@ -31,14 +31,15 @@ If you use the admin plugin, you can install directly through the admin plugin b
 ## Configuration
 
 Before configuring this plugin, you should copy the `user/plugins/fullcalendar/fullcalendar.yaml` to `user/config/plugins/fullcalendar.yaml` and only edit that copy.  
-Note that if you use the admin plugin, the file with your configuration, named fullcalendar.yaml will be saved in the `user/config/plugins/` folder once the configuration is saved in the admin.
+Note that if you use the admin plugin, the file with your configuration, named fullcalendar.yaml will be saved in the `user/config/plugins/` folder once the configuration is saved in the admin.  
+There is, however, no UI in the admin Backend that provides any customizations other than enable/disable - you will have to edit the config file to do that.
 
 Here is the default configuration and an explanation of available options:
 
 ```yaml
 
 enabled: true
-colors: #3a87ad # see additional Note on custom colors
+colors: #3a87ad # see additional Note on custom colors in the Changelog
 showlegend: false   # set to true to show calendar File Name(s) as Legend below grid
 locale: en  # use your own locale here, e.g. de
 weekNumbers: false  # set to true to show Week Numbers
