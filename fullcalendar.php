@@ -29,12 +29,9 @@ class FullcalendarPlugin extends Plugin
         $assets = $this->grav['assets'];
         // $assets->addJs('plugin://fullcalendar/assets/lib/jquery.min.js');	// jquery should already be in system/assets
 
-        $assets->addJs('plugin://fullcalendar/assets/ical.js/build/ical.min.js');   // see also reamde.txt file there
+        $assets->addJs('plugin://fullcalendar/assets/bundle.js');   // see also reamde.txt file there
 
-        // for Tooltip: (use unpkg cdn for now...)
-        $assets->addJs('https://unpkg.com/@popperjs/core@2');
-        $assets->addJs('https://unpkg.com/tippy.js@6');
-
+        /*
         $assets->addCss('plugin://fullcalendar/fc4/packages/core/main.css');
     		$assets->addCss('plugin://fullcalendar/fc4/packages/daygrid/main.css');
     		$assets->addJs('plugin://fullcalendar/fc4/vendor/rrule.js');   // see also reamde.txt file there
@@ -45,10 +42,10 @@ class FullcalendarPlugin extends Plugin
     		// do not load a predefined language, use system setting instead
         $language = $this->grav['language']->getLanguage();
         $assets->addJs('plugin://fullcalendar/fc4/packages/core/locales/'.$language.'.js');
+         */
         $assets->addJs('plugin://fullcalendar/assets/monthpic.js');
         $assets->addCss('plugin://fullcalendar/assets/daygrid.css');	// default CSS for #calendar
-        //	$assets->addCss('plugin://fullcalendar/assets/custom.css');	// don't use custom CSS in Plugin folder, better from Theme !
-
+  
     }
 
     public function onTwigTemplatePaths()

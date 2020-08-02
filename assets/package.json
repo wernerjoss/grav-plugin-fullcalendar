@@ -1,0 +1,42 @@
+{
+  "name": "grav-plugin-fullcalendar",
+  "devDependencies": {
+    "browserify": "latest",
+    "css-loader": "^4.2.0",
+    "jshint": "latest",
+    "mocha": "latest",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12"
+  },
+  "scripts": {
+    "lint": "jshint **.js",
+    "test": "mocha test/",
+    "build": "webpack",
+    "watch": "webpack --watch",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@fullcalendar/core": "^5.2.1",
+    "@fullcalendar/daygrid": "^5.2.0",
+    "@fullcalendar/rrule": "^5.2.0",
+    "@popperjs/core": "^2.4.4",
+    "ical-expander": "^3.0.0",
+    "tippy.js": "^6.2.6"
+  },
+  "version": "1.0.0",
+  "description": "fullcalendar plugin for grav cms",
+  "main": "src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sherpadawan/grav-plugin-fullcalendar.git"
+  },
+  "keywords": [
+    "fullcalendar"
+  ],
+  "author": "Guillaume Storchi",
+  "license": "AGPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/sherpadawan/grav-plugin-fullcalendar/issues"
+  },
+  "homepage": "https://github.com/sherpadawan/grav-plugin-fullcalendar#readme"
+}
