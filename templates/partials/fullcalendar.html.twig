@@ -111,6 +111,7 @@
             var eventComps = comp.getAllSubcomponents("vevent");
             //  map them to FullCalendar events Objects
             events = jQuery.map(eventComps, function(item) {
+              console.log(item);
               var fcevents = {};
               var entry = item.getFirstPropertyValue("summary");
               if (entry !== null) fcevents["title"] = entry;
@@ -122,8 +123,10 @@
               if (entry !== null) fcevents["start"] = entry.toJSDate();
               var entry = item.getFirstPropertyValue("dtend");
               if (entry !== null) fcevents["end"] = entry.toJSDate();
-              var entry = item.getFirstPropertyValue("description");  // add description 22.06.20
+              var entry = item.getFirstPropertyValue("description");
               if (entry !== null) fcevents["description"] = entry;
+              var entry = item.getFirstPropertyValue("uid");
+              if (entry !== null) fcevents["uid"] = entry;
 
               // not used options go here
 
@@ -177,7 +180,11 @@
                   var byyearday = parts["BYYEARDAY"];
                   if (Array.isArray(byyearday)) {byyearday = parts["BYYEARDAY"];} else  {byyearday = null;}
                   if (verbose)  console.log('byyearday:', byyearday);
-                  if (rrules.dtstart !== undefined) {fcrrules["dtstart"] = rrules.dtstart;} else  {fcrrules["dtstart"] = fcevents["start"];}
+                  if (rrules.dtstart !== undefined) {
+                    fcrrules["dtstart"] = rrules.dtstart;
+                  } else  {
+                    fcrrules["dtstart"] = fcevents["start"];
+                  }
                   if (byweekday !== null) { fcrrules["byweekday"] = byweekday;}
                   if (bysetpos !== null) { fcrrules["bysetpos"] = bysetpos;}
                   if (byweekno !== null) { fcrrules["byweekno"] = byweekno;}
