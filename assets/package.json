@@ -2,9 +2,12 @@
   "name": "grav-plugin-fullcalendar",
   "devDependencies": {
     "browserify": "latest",
-    "css-loader": "^4.2.0",
     "jshint": "latest",
     "mocha": "latest",
+    "sass": "^1.26.10",
+    "sass-loader": "^9.0.2",
+    "style-loader": "^1.2.1",
+    "css-loader": "^4.2.0",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12"
   },
@@ -18,9 +21,11 @@
   "dependencies": {
     "@fullcalendar/core": "^5.2.1",
     "@fullcalendar/daygrid": "^5.2.0",
+    "@fullcalendar/interaction": "^5.2.0",
     "@fullcalendar/rrule": "^5.2.0",
     "@popperjs/core": "^2.4.4",
     "ical-expander": "^3.0.0",
+    "rrule": "^2.6.4",
     "tippy.js": "^6.2.6"
   },
   "version": "1.0.0",
