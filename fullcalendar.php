@@ -31,7 +31,10 @@ class FullcalendarPlugin extends Plugin
 
         $assets->addJs('plugin://fullcalendar/assets/monthpic.js');
         $assets->addCss('plugin://fullcalendar/assets/daygrid.css');	// default CSS for #calendar
-  
+
+        //map plugin config
+        $configJSON = json_encode($this->config());
+        $assets->addInlineJs("var GRAV = {};GRAV.config = JSON.parse('" . $configJSON . "');", ['loading'=>'inline', 'position'=>'before']); 
     }
 
     public function onTwigTemplatePaths()
