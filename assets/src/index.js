@@ -11,30 +11,31 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 document.addEventListener('DOMContentLoaded', function() {
   var verbose = GRAV.config.debug;
   var localeCode = GRAV.config.plugins.fullcalendar.locale;
-  var weekNums = '{{ config.plugins.fullcalendar.weekNumbers | default("") }}';
+  var weekNums = GRAV.config.plugins.fullcalendar.weekNumbers;
+  var icsfiles = GRAV.page.header.calendars; //TODO add shortcode string param support
   var calendarsConfig = [];
   var allevents = [];
 
   //icsfiles as shortcode parameter
-  if ( '{{icsfile}}' ) {
-    var icsFiles = '{{icsfile}}'; // from FullCalendarShortCode.php, can now (from v 0.1.2) hold multiple ics Files, comma separated
-    var icsFiles = icsFiles.split(','); // split string into multiple ics files, if appropriate, see note above
+  if ( icsfile ) {
+    var icsFiles = icsFiles.split(',');
     for (i in icsFiles) {
       //@todo generate colors
       calendarsConfig.push( [{ ics: icsFiles[i],  name: "", color: ""}]);
     }
   } else {
     //ics from yaml config
-    calendarsConfig = '{{config.plugins.fullcalendar.calendars | json_encode}}';
+    calendarsConfig = JSON.stringify(GRAV.config.plugins.fullcalendar.calendar);
     if (!calendarsConfig || calendarsConfig == 'null') {
-      calendarsConfig = '{{ page.header.calendars | json_encode }}';
+      calendarsConfig = JSON.stringify(GRAV.page.header.calendars);
     }
+    //convert config to object
     calendarsConfig = JSON.parse(calendarsConfig);
   }
   //@todo ics local file
   console.log(calendarsConfig);
 
-  var showlegend = '{{ config.plugins.fullcalendar.showlegend }}';
+  var showlegend = GRAV.config.plugins.fullcalendar.showlegend;
 
   // page is now ready, initialize the calendar...
   var calendarEl = document.getElementById('calendar');
@@ -42,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function() {
     plugins: [ 'interaction', 'dayGrid', 'rrule' ],
     locale: localeCode,
     weekNumbers: weekNums,
-    timeZone: '{{config.plugins.fullcalendar.timezone}}',
+    timeZone: GRAV.config.plugins.fullcalendar.timezone,
     header: {
       right: 'dayGridMonth,dayGridWeek',
       left: 'prevYear,prev,next,nextYear today',
