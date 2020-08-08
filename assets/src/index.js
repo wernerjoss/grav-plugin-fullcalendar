@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
   var allevents = [];
 
   //icsfiles as shortcode parameter
-  if ( icsfile ) {
+  if ( icsfiles ) {
     var icsFiles = icsFiles.split(',');
     for (i in icsFiles) {
       //@todo generate colors
@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (calendarUrl.startsWith("https://") || calendarUrl.startsWith("http://")) {  // calendar URL is remote
         //automatically add CORS proxy URL for remote calendars, if not yet done 06.04.20
         var origin = window.location.protocol + '//' + window.location.host;
-        var cors_api_url = '{{config.plugins.fullcalendar.proxy}}';  // replace this if you prefer another CORS proxy !
+        var cors_api_url = GRAV.config.plugins.fullcalendar.proxy;  // replace this if you prefer another CORS proxy !
         if (!calendarUrl.startsWith(origin)) {
           if (verbose) { 
             console.log('remote is different Origin, use proxy '+ cors_api_url);

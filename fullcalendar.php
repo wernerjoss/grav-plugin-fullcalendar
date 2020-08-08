@@ -10,7 +10,8 @@ class FullcalendarPlugin extends Plugin
     public static function getSubscribedEvents()
     {
         return [
-            'onPluginsInitialized' => ['onPluginsInitialized', 0]
+            'onPluginsInitialized' => ['onPluginsInitialized', 0],
+            'onTwigPageVariables' => ['onTwigPageVariables', 0]
         ];
     }
 
@@ -30,13 +31,23 @@ class FullcalendarPlugin extends Plugin
         $assets->addJs('plugin://fullcalendar/assets/dist/bundle.js'); 
 
         $assets->addJs('plugin://fullcalendar/assets/monthpic.js');
-        $assets->addCss('plugin://fullcalendar/assets/daygrid.css');	// default CSS for #calendar
+        $assets->addCss('plugin://fullcalendar/assets/daygrid.css');  // default CSS for #calendar
 
         //map plugin config
         $configJSON = json_encode($this->grav['config']);
         $assets->addInlineJs("var GRAV = {};GRAV.config = JSON.parse('" . addslashes($configJSON) . "');", ['loading'=>'inline', 'position'=>'before']); 
         //@TODO retrieve page.header ... (another event?)
-    } 
+    }
+
+
+    public function onTwigPageVariables() 
+    {
+      $assets = $this->grav['assets'];
+      $page = $this->grav['pages']->find('/evenements/_calendar');
+      $headers = json_encode($page->header());
+      //$configJSON = '[{"ics":"/user/data/calendars/darbatook-2020-07-11.ics", "color":"blue", "name":"darbatook"}]';
+      $assets->addInlineJs("GRAV.page = {header:''};  GRAV.page.header = JSON.parse('" . addslashes($headers) . "');", ['loading'=>'inline', 'position'=>'before']); 
+    }
 
     public function onTwigTemplatePaths()
     {
