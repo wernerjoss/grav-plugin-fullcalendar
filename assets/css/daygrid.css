@@ -13,7 +13,7 @@ body {
 	display: none;
 }
 #calendar .fc-view-harness,.fc-view-harness-active {
-	height: 100%!important;
+	/* height: 100%!important; */
 }
 /* Anpassungen 09.07.19:	*/
 #calendar .fc-title {

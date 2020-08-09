@@ -3,7 +3,9 @@ require('@fullcalendar/core');
 require('@fullcalendar/daygrid');
 require('@fullcalendar/interaction');
 require('@fullcalendar/rrule');
+require('moment');
 
+import moment from 'moment';
 import { Calendar } from '@fullcalendar/core';
 import interactionPlugin from '@fullcalendar/interaction';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -12,6 +14,7 @@ import rrulePlugin from '@fullcalendar/rrule';
 document.addEventListener('DOMContentLoaded', function() {
   var verbose = GRAV.config.system.debugger.enabled;
   var localeCode = GRAV.config.plugins.fullcalendar.locale;
+  moment.locale(localeCode);
   var weekNums = GRAV.config.plugins.fullcalendar.weekNumbers;
   //demo calendars
   var demoCalendars = GRAV.config.plugins.fullcalendar.calendars;
@@ -62,6 +65,8 @@ document.addEventListener('DOMContentLoaded', function() {
     navLinks: false, // can click day/week names to navigate views
     editable: true,
     fixedWeekCount: false,
+    contentHeight: 700,
+
     //click: alert Description, open URL in new Window
     eventClick: function(info) {
       info.jsEvent.preventDefault(); // don't let the browser navigate
