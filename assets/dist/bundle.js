@@ -57719,9 +57719,9 @@ document.addEventListener('DOMContentLoaded', function() {
           var entry = item.getFirstPropertyValue("url");
           if (entry !== null) fcevents["url"] = entry;
           var entry = item.getFirstPropertyValue("dtstart");
-          if (entry !== null) fcevents["start"] = entry.toLocal();
+          if (entry !== null) fcevents["start"] = entry.toJSDate();
           var entry = item.getFirstPropertyValue("dtend");
-          if (entry !== null) fcevents["end"] = entry.toLocal();
+          if (entry !== null) fcevents["end"] = entry.toJSDate();
           var entry = item.getFirstPropertyValue("description");
           if (entry !== null) fcevents["description"] = entry;
           var entry = item.getFirstPropertyValue("uid");
