@@ -12,7 +12,7 @@ body {
 #calendar .fc-time {
 	display: none;
 }
-#calendar .fc-day-grid-container {
+#calendar .fc-view-harness,.fc-view-harness-active {
 	height: 100%!important;
 }
 /* Anpassungen 09.07.19:	*/

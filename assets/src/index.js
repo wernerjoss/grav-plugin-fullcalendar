@@ -4,31 +4,39 @@ require('@fullcalendar/daygrid');
 require('@fullcalendar/interaction');
 require('@fullcalendar/rrule');
 
-import { FullCalendar } from '@fullcalendar/core';
+import { Calendar } from '@fullcalendar/core';
 import interactionPlugin from '@fullcalendar/interaction';
 import dayGridPlugin from '@fullcalendar/daygrid';
+import rrulePlugin from '@fullcalendar/rrule';
 
 document.addEventListener('DOMContentLoaded', function() {
-  var verbose = GRAV.config.debug;
+  var verbose = GRAV.config.system.debugger.enabled;
   var localeCode = GRAV.config.plugins.fullcalendar.locale;
   var weekNums = GRAV.config.plugins.fullcalendar.weekNumbers;
-  var icsfiles = GRAV.page.header.calendars; //TODO add shortcode string param support
+  //demo calendars
+  var demoCalendars = GRAV.config.plugins.fullcalendar.calendars;
+  var calendarHtmlTarget = GRAV.config.plugins.fullcalendar.fullcalendar.target || '#calendar';
   var calendarsConfig = [];
   var allevents = [];
 
-  //icsfiles as shortcode parameter
-  if ( icsfiles ) {
-    var icsFiles = icsFiles.split(',');
-    for (i in icsFiles) {
-      //@todo generate colors
-      calendarsConfig.push( [{ ics: icsFiles[i],  name: "", color: ""}]);
+  //ics from page frontmatter 
+  if(GRAV.page.header.calendars) {
+    calendarsConfig = JSON.stringify(GRAV.page.header.calendars);
+  }
+
+  if (GRAV.page.media) {
+    //@todo
+    if (calendarsConfig) {
+      calendarsConfig.calendars.push();
     }
+  }
+
+  //@todo look for local files (user/data/calendars/
+
+  //demo 
+  if (!calendarsConfig) {
+    calendarsConfig = JSON.stringify(demoCalendars);
   } else {
-    //ics from yaml config
-    calendarsConfig = JSON.stringify(GRAV.config.plugins.fullcalendar.calendar);
-    if (!calendarsConfig || calendarsConfig == 'null') {
-      calendarsConfig = JSON.stringify(GRAV.page.header.calendars);
-    }
     //convert config to object
     calendarsConfig = JSON.parse(calendarsConfig);
   }
@@ -38,22 +46,22 @@ document.addEventListener('DOMContentLoaded', function() {
   var showlegend = GRAV.config.plugins.fullcalendar.showlegend;
 
   // page is now ready, initialize the calendar...
+  var calendarEl = document.querySelector(calendarHtmlTarget);
   var calendarEl = document.getElementById('calendar');
-  var calendar = new FullCalendar.Calendar(calendarEl, {
-    plugins: [ 'interaction', 'dayGrid', 'rrule' ],
+  var calendar = new Calendar(calendarEl, {
+    plugins: [ interactionPlugin, dayGridPlugin, rrulePlugin ],
     locale: localeCode,
     weekNumbers: weekNums,
     timeZone: GRAV.config.plugins.fullcalendar.timezone,
-    header: {
+    headerToolbar: {
       right: 'dayGridMonth,dayGridWeek',
       left: 'prevYear,prev,next,nextYear today',
       center: 'title',
     },
+    firstDay: 1,
     navLinks: false, // can click day/week names to navigate views
     editable: true,
-    eventLimit: false, // allow "more" link when too many events
     fixedWeekCount: false,
-
     //click: alert Description, open URL in new Window
     eventClick: function(info) {
       info.jsEvent.preventDefault(); // don't let the browser navigate
@@ -67,22 +75,13 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     },
 
-    //  Description as Tooltip (tippy.js) :
-    eventRender: function(info) {
-      if (info.event.extendedProps.description) {
-        tippy (info.el, {
-          content: info.event.extendedProps.description,
-        });
-      }
-    },
-
     /**
      *
      */
       events: function(info, successCallback, failureCallback) {
 
     calendarsConfig.forEach((calendarConfig, index)=> {
-      calendarUrl = ''+ calendarConfig.ics;
+      var calendarUrl = ''+ calendarConfig.ics;
       //allow remote ics files, full URL required
       if (calendarUrl.startsWith("https://") || calendarUrl.startsWith("http://")) {  // calendar URL is remote
         //automatically add CORS proxy URL for remote calendars, if not yet done 06.04.20
@@ -95,12 +94,8 @@ document.addEventListener('DOMContentLoaded', function() {
           calendarUrl = cors_api_url + calendarConfig.ics;
         }
       }
-      else //ics local file
-      {
-        calendarUrl = '/user/data/calendars/' + calendarUrl;
-      }
       if (verbose) {
-        console.log('Calendar URL:' + calendarUrl);
+        console.log( calendarConfig);
       }
       var events = [];
       var do_callback = false;
