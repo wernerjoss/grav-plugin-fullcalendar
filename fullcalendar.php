@@ -44,7 +44,18 @@ class FullcalendarPlugin extends Plugin
       $pages = $this->grav['page']->evaluate(['@taxonomy.category'=>'calendar']);
       foreach($pages as $page) {
         $headers = json_encode($page->header());
-        $assets->addInlineJs("GRAV.page = {header:''};  GRAV.page.header = JSON.parse('" . addslashes($headers) . "');", ['loading'=>'inline', 'position'=>'before']); 
+        $media = $page->getMedia();
+        $fileUrls = [];
+        foreach($media->files() as $name=>$file) {
+           if (substr(strrchr($name, "."), 1) == 'ics') {
+            $fileUrls[] = ['ics'=>$file->url(), 'name'=>$name];
+           }
+        }
+        $assets->addInlineJs(
+          " GRAV.page = {header:'', media:''};" . 
+          " GRAV.page.header = JSON.parse('" . addslashes($headers) . "');" .
+          " GRAV.page.media = JSON.parse('" . addslashes(json_encode($fileUrls)). "');",
+          ['loading'=>'inline', 'position'=>'before']);
       }
     }
 

@@ -57001,6 +57001,285 @@ function __classPrivateFieldSet(receiver, privateMap, value) {
 
 /***/ }),
 
+/***/ "./node_modules/store2/dist/store2.js":
+/*!********************************************!*\
+  !*** ./node_modules/store2/dist/store2.js ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*! store2 - v2.11.2 - 2020-05-11
+* Copyright (c) 2020 Nathan Bubna; Licensed (MIT OR GPL-3.0) */
+;(function(window, define) {
+    var _ = {
+        version: "2.11.2",
+        areas: {},
+        apis: {},
+
+        // utilities
+        inherit: function(api, o) {
+            for (var p in api) {
+                if (!o.hasOwnProperty(p)) {
+                    Object.defineProperty(o, p, Object.getOwnPropertyDescriptor(api, p));
+                }
+            }
+            return o;
+        },
+        stringify: function(d) {
+            return d === undefined || typeof d === "function" ? d+'' : JSON.stringify(d);
+        },
+        parse: function(s, fn) {
+            // if it doesn't parse, return as is
+            try{ return JSON.parse(s,fn||_.revive); }catch(e){ return s; }
+        },
+
+        // extension hooks
+        fn: function(name, fn) {
+            _.storeAPI[name] = fn;
+            for (var api in _.apis) {
+                _.apis[api][name] = fn;
+            }
+        },
+        get: function(area, key){ return area.getItem(key); },
+        set: function(area, key, string){ area.setItem(key, string); },
+        remove: function(area, key){ area.removeItem(key); },
+        key: function(area, i){ return area.key(i); },
+        length: function(area){ return area.length; },
+        clear: function(area){ area.clear(); },
+
+        // core functions
+        Store: function(id, area, namespace) {
+            var store = _.inherit(_.storeAPI, function(key, data, overwrite) {
+                if (arguments.length === 0){ return store.getAll(); }
+                if (typeof data === "function"){ return store.transact(key, data, overwrite); }// fn=data, alt=overwrite
+                if (data !== undefined){ return store.set(key, data, overwrite); }
+                if (typeof key === "string" || typeof key === "number"){ return store.get(key); }
+                if (typeof key === "function"){ return store.each(key); }
+                if (!key){ return store.clear(); }
+                return store.setAll(key, data);// overwrite=data, data=key
+            });
+            store._id = id;
+            try {
+                var testKey = '_-bad-_';
+                area.setItem(testKey, 'wolf');
+                store._area = area;
+                area.removeItem(testKey);
+            } catch (e) {}
+            if (!store._area) {
+                store._area = _.storage('fake');
+            }
+            store._ns = namespace || '';
+            if (!_.areas[id]) {
+                _.areas[id] = store._area;
+            }
+            if (!_.apis[store._ns+store._id]) {
+                _.apis[store._ns+store._id] = store;
+            }
+            return store;
+        },
+        storeAPI: {
+            // admin functions
+            area: function(id, area) {
+                var store = this[id];
+                if (!store || !store.area) {
+                    store = _.Store(id, area, this._ns);//new area-specific api in this namespace
+                    if (!this[id]){ this[id] = store; }
+                }
+                return store;
+            },
+            namespace: function(namespace, singleArea) {
+                if (!namespace){
+                    return this._ns ? this._ns.substring(0,this._ns.length-1) : '';
+                }
+                var ns = namespace, store = this[ns];
+                if (!store || !store.namespace) {
+                    store = _.Store(this._id, this._area, this._ns+ns+'.');//new namespaced api
+                    if (!this[ns]){ this[ns] = store; }
+                    if (!singleArea) {
+                        for (var name in _.areas) {
+                            store.area(name, _.areas[name]);
+                        }
+                    }
+                }
+                return store;
+            },
+            isFake: function(){ return this._area.name === 'fake'; },
+            toString: function() {
+                return 'store'+(this._ns?'.'+this.namespace():'')+'['+this._id+']';
+            },
+
+            // storage functions
+            has: function(key) {
+                if (this._area.has) {
+                    return this._area.has(this._in(key));//extension hook
+                }
+                return !!(this._in(key) in this._area);
+            },
+            size: function(){ return this.keys().length; },
+            each: function(fn, fill) {// fill is used by keys(fillList) and getAll(fillList))
+                for (var i=0, m=_.length(this._area); i<m; i++) {
+                    var key = this._out(_.key(this._area, i));
+                    if (key !== undefined) {
+                        if (fn.call(this, key, this.get(key), fill) === false) {
+                            break;
+                        }
+                    }
+                    if (m > _.length(this._area)) { m--; i--; }// in case of removeItem
+                }
+                return fill || this;
+            },
+            keys: function(fillList) {
+                return this.each(function(k, v, list){ list.push(k); }, fillList || []);
+            },
+            get: function(key, alt) {
+                var s = _.get(this._area, this._in(key)),
+                    fn;
+                if (typeof alt === "function") {
+                    fn = alt;
+                    alt = null;
+                }
+                return s !== null ? _.parse(s, fn) :
+                    alt != null ? alt : s;
+            },
+            getAll: function(fillObj) {
+                return this.each(function(k, v, all){ all[k] = v; }, fillObj || {});
+            },
+            transact: function(key, fn, alt) {
+                var val = this.get(key, alt),
+                    ret = fn(val);
+                this.set(key, ret === undefined ? val : ret);
+                return this;
+            },
+            set: function(key, data, overwrite) {
+                var d = this.get(key);
+                if (d != null && overwrite === false) {
+                    return data;
+                }
+                return _.set(this._area, this._in(key), _.stringify(data), overwrite) || d;
+            },
+            setAll: function(data, overwrite) {
+                var changed, val;
+                for (var key in data) {
+                    val = data[key];
+                    if (this.set(key, val, overwrite) !== val) {
+                        changed = true;
+                    }
+                }
+                return changed;
+            },
+            add: function(key, data) {
+                var d = this.get(key);
+                if (d instanceof Array) {
+                    data = d.concat(data);
+                } else if (d !== null) {
+                    var type = typeof d;
+                    if (type === typeof data && type === 'object') {
+                        for (var k in data) {
+                            d[k] = data[k];
+                        }
+                        data = d;
+                    } else {
+                        data = d + data;
+                    }
+                }
+                _.set(this._area, this._in(key), _.stringify(data));
+                return data;
+            },
+            remove: function(key, alt) {
+                var d = this.get(key, alt);
+                _.remove(this._area, this._in(key));
+                return d;
+            },
+            clear: function() {
+                if (!this._ns) {
+                    _.clear(this._area);
+                } else {
+                    this.each(function(k){ _.remove(this._area, this._in(k)); }, 1);
+                }
+                return this;
+            },
+            clearAll: function() {
+                var area = this._area;
+                for (var id in _.areas) {
+                    if (_.areas.hasOwnProperty(id)) {
+                        this._area = _.areas[id];
+                        this.clear();
+                    }
+                }
+                this._area = area;
+                return this;
+            },
+
+            // internal use functions
+            _in: function(k) {
+                if (typeof k !== "string"){ k = _.stringify(k); }
+                return this._ns ? this._ns + k : k;
+            },
+            _out: function(k) {
+                return this._ns ?
+                    k && k.indexOf(this._ns) === 0 ?
+                        k.substring(this._ns.length) :
+                        undefined : // so each() knows to skip it
+                    k;
+            }
+        },// end _.storeAPI
+        storage: function(name) {
+            return _.inherit(_.storageAPI, { items: {}, name: name });
+        },
+        storageAPI: {
+            length: 0,
+            has: function(k){ return this.items.hasOwnProperty(k); },
+            key: function(i) {
+                var c = 0;
+                for (var k in this.items){
+                    if (this.has(k) && i === c++) {
+                        return k;
+                    }
+                }
+            },
+            setItem: function(k, v) {
+                if (!this.has(k)) {
+                    this.length++;
+                }
+                this.items[k] = v;
+            },
+            removeItem: function(k) {
+                if (this.has(k)) {
+                    delete this.items[k];
+                    this.length--;
+                }
+            },
+            getItem: function(k){ return this.has(k) ? this.items[k] : null; },
+            clear: function(){ for (var k in this.items){ this.removeItem(k); } }
+        }// end _.storageAPI
+    };
+
+    var store =
+        // safely set this up (throws error in IE10/32bit mode for local files)
+        _.Store("local", (function(){try{ return localStorage; }catch(e){}})());
+    store.local = store;// for completeness
+    store._ = _;// for extenders and debuggers...
+    // safely setup store.session (throws exception in FF for file:/// urls)
+    store.area("session", (function(){try{ return sessionStorage; }catch(e){}})());
+    store.area("page", _.storage("page"));
+
+    if (typeof define === 'function' && define.amd !== undefined) {
+        define('store2', [], function () {
+            return store;
+        });
+    } else if ( true && module.exports) {
+        module.exports = store;
+    } else {
+        // expose the primary store fn to the global object and save conflicts
+        if (window.store){ _.conflict = window.store; }
+        window.store = store;
+    }
+
+})(this, this && this.define);
+
+
+/***/ }),
+
 /***/ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js":
 /*!****************************************************************************!*\
   !*** ./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js ***!
@@ -57588,16 +57867,20 @@ module.exports = function(module) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _fullcalendar_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @fullcalendar/core */ "./node_modules/@fullcalendar/core/main.js");
-/* harmony import */ var _fullcalendar_interaction__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @fullcalendar/interaction */ "./node_modules/@fullcalendar/interaction/main.js");
-/* harmony import */ var _fullcalendar_daygrid__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @fullcalendar/daygrid */ "./node_modules/@fullcalendar/daygrid/main.js");
-/* harmony import */ var _fullcalendar_rrule__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @fullcalendar/rrule */ "./node_modules/@fullcalendar/rrule/main.js");
+/* harmony import */ var store2__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! store2 */ "./node_modules/store2/dist/store2.js");
+/* harmony import */ var store2__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(store2__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _fullcalendar_core__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @fullcalendar/core */ "./node_modules/@fullcalendar/core/main.js");
+/* harmony import */ var _fullcalendar_interaction__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @fullcalendar/interaction */ "./node_modules/@fullcalendar/interaction/main.js");
+/* harmony import */ var _fullcalendar_daygrid__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @fullcalendar/daygrid */ "./node_modules/@fullcalendar/daygrid/main.js");
+/* harmony import */ var _fullcalendar_rrule__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @fullcalendar/rrule */ "./node_modules/@fullcalendar/rrule/main.js");
 __webpack_require__(/*! ical-expander */ "./node_modules/ical-expander/index.js");
 __webpack_require__(/*! @fullcalendar/core */ "./node_modules/@fullcalendar/core/main.js");
 __webpack_require__(/*! @fullcalendar/daygrid */ "./node_modules/@fullcalendar/daygrid/main.js");
 __webpack_require__(/*! @fullcalendar/interaction */ "./node_modules/@fullcalendar/interaction/main.js");
 __webpack_require__(/*! @fullcalendar/rrule */ "./node_modules/@fullcalendar/rrule/main.js");
 __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+__webpack_require__(/*! store2 */ "./node_modules/store2/dist/store2.js");
+
 
 
 
@@ -57618,35 +57901,31 @@ document.addEventListener('DOMContentLoaded', function() {
 
   //ics from page frontmatter 
   if(GRAV.page.header.calendars) {
-    calendarsConfig = JSON.stringify(GRAV.page.header.calendars);
+    calendarsConfig = GRAV.page.header.calendars;
   }
-
+console.log(calendarsConfig);
+  //ics files uploaded in calendar page
   if (GRAV.page.media) {
-    //@todo
-    if (calendarsConfig) {
-      calendarsConfig.calendars.push();
-    }
+    let media = GRAV.page.media;
+    media.forEach((file)=>{
+        calendarsConfig.push({"ics": file.ics , "name": file.name, "active": true});
+    });
   }
 
-  //@todo look for local files (user/data/calendars/
-
-  //demo 
+  //ics demo 
   if (!calendarsConfig) {
-    calendarsConfig = JSON.stringify(demoCalendars);
-  } else {
-    //convert config to object
-    calendarsConfig = JSON.parse(calendarsConfig);
-  }
+    calendarsConfig = demoCalendars;
+  } 
   //@todo ics local file
   console.log(calendarsConfig);
 
-  var showlegend = GRAV.config.plugins.fullcalendar.showlegend;
+  var showlegend = GRAV.config.plugins.fullcalendar.showlegend || false;
 
   // page is now ready, initialize the calendar...
   var calendarEl = document.querySelector(calendarHtmlTarget);
   var calendarEl = document.getElementById('calendar');
-  var calendar = new _fullcalendar_core__WEBPACK_IMPORTED_MODULE_1__["Calendar"](calendarEl, {
-    plugins: [ _fullcalendar_interaction__WEBPACK_IMPORTED_MODULE_2__["default"], _fullcalendar_daygrid__WEBPACK_IMPORTED_MODULE_3__["default"], _fullcalendar_rrule__WEBPACK_IMPORTED_MODULE_4__["default"] ],
+  var calendar = new _fullcalendar_core__WEBPACK_IMPORTED_MODULE_2__["Calendar"](calendarEl, {
+    plugins: [ _fullcalendar_interaction__WEBPACK_IMPORTED_MODULE_3__["default"], _fullcalendar_daygrid__WEBPACK_IMPORTED_MODULE_4__["default"], _fullcalendar_rrule__WEBPACK_IMPORTED_MODULE_5__["default"] ],
     locale: localeCode,
     weekNumbers: weekNums,
     timeZone: GRAV.config.plugins.fullcalendar.timezone,
@@ -57679,7 +57958,17 @@ document.addEventListener('DOMContentLoaded', function() {
      */
       events: function(info, successCallback, failureCallback) {
 
+          let events = store2__WEBPACK_IMPORTED_MODULE_1___default.a.get('events');
+          if (events) {
+            successCallback(events);
+          }
+
+
     calendarsConfig.forEach((calendarConfig, index)=> {
+      if (!calendarConfig.active) {
+        console.log("Calendar " + calendarConfig.name + " is inactive" );
+        return;
+      }
       var calendarUrl = ''+ calendarConfig.ics;
       //allow remote ics files, full URL required
       if (calendarUrl.startsWith("https://") || calendarUrl.startsWith("http://")) {  // calendar URL is remote
@@ -57816,7 +58105,8 @@ document.addEventListener('DOMContentLoaded', function() {
           console.log('events:', events);
         }
         if (do_callback) {
-          successCallback(allevents); // wichtig !!
+          successCallback(allevents);
+          store2__WEBPACK_IMPORTED_MODULE_1___default.a.set('events', allevents);
           if (verbose) {
             console.log('allevents:', allevents);
           }

@@ -4,8 +4,10 @@ require('@fullcalendar/daygrid');
 require('@fullcalendar/interaction');
 require('@fullcalendar/rrule');
 require('moment');
+require('store2');
 
 import moment from 'moment';
+import store from 'store2';
 import { Calendar } from '@fullcalendar/core';
 import interactionPlugin from '@fullcalendar/interaction';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -24,29 +26,25 @@ document.addEventListener('DOMContentLoaded', function() {
 
   //ics from page frontmatter 
   if(GRAV.page.header.calendars) {
-    calendarsConfig = JSON.stringify(GRAV.page.header.calendars);
+    calendarsConfig = GRAV.page.header.calendars;
   }
-
+console.log(calendarsConfig);
+  //ics files uploaded in calendar page
   if (GRAV.page.media) {
-    //@todo
-    if (calendarsConfig) {
-      calendarsConfig.calendars.push();
-    }
+    let media = GRAV.page.media;
+    media.forEach((file)=>{
+        calendarsConfig.push({"ics": file.ics , "name": file.name, "active": true});
+    });
   }
 
-  //@todo look for local files (user/data/calendars/
-
-  //demo 
+  //ics demo 
   if (!calendarsConfig) {
-    calendarsConfig = JSON.stringify(demoCalendars);
-  } else {
-    //convert config to object
-    calendarsConfig = JSON.parse(calendarsConfig);
-  }
+    calendarsConfig = demoCalendars;
+  } 
   //@todo ics local file
   console.log(calendarsConfig);
 
-  var showlegend = GRAV.config.plugins.fullcalendar.showlegend;
+  var showlegend = GRAV.config.plugins.fullcalendar.showlegend || false;
 
   // page is now ready, initialize the calendar...
   var calendarEl = document.querySelector(calendarHtmlTarget);
@@ -85,7 +83,17 @@ document.addEventListener('DOMContentLoaded', function() {
      */
       events: function(info, successCallback, failureCallback) {
 
+          let events = store.get('events');
+          if (events) {
+            successCallback(events);
+          }
+
+
     calendarsConfig.forEach((calendarConfig, index)=> {
+      if (!calendarConfig.active) {
+        console.log("Calendar " + calendarConfig.name + " is inactive" );
+        return;
+      }
       var calendarUrl = ''+ calendarConfig.ics;
       //allow remote ics files, full URL required
       if (calendarUrl.startsWith("https://") || calendarUrl.startsWith("http://")) {  // calendar URL is remote
@@ -222,7 +230,8 @@ document.addEventListener('DOMContentLoaded', function() {
           console.log('events:', events);
         }
         if (do_callback) {
-          successCallback(allevents); // wichtig !!
+          successCallback(allevents);
+          store.set('events', allevents);
           if (verbose) {
             console.log('allevents:', allevents);
           }

@@ -27,6 +27,7 @@
     "ical-expander": "^3.0.0",
     "moment": "^2.27.0",
     "rrule": "^2.6.4",
+    "store2": "^2.11.2",
     "tippy.js": "^6.2.6"
   },
   "version": "1.0.0",
