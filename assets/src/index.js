@@ -13,7 +13,6 @@ import { Calendar } from '@fullcalendar/core';
 import interactionPlugin from '@fullcalendar/interaction';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import rrulePlugin from '@fullcalendar/rrule';
-//import IcalExpander from 'ical-expander';
 
 document.addEventListener('DOMContentLoaded', function() {
   var verbose = GRAV.config.plugins.fullcalendar.verbose || false;
@@ -33,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
   if(GRAV.page.header.calendars) {
     calendarsConfig = GRAV.page.header.calendars;
   }
-  console.log(calendarsConfig);
+
   //ics files uploaded in calendar page
   if (GRAV.page.media) {
     let media = GRAV.page.media;
@@ -46,8 +45,6 @@ document.addEventListener('DOMContentLoaded', function() {
   if (!calendarsConfig) {
     calendarsConfig = demoCalendars;
   } 
-  //@todo ics local file
-  console.log(calendarsConfig);
 
   var showlegend = GRAV.config.plugins.fullcalendar.showlegend || false;
 
@@ -81,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function() {
     events: function(info, successCallback, failureCallback) {
       //load events from cache
       allevents = store.get('events') || [];
-      if (allevents) {
+      if (allevents != null && allevents.length > 0) {
         console.log('[FULLCALENDAR PLUGIN] events loaded from cache');
         successCallback(allevents);
         allevents=[];
@@ -116,15 +113,12 @@ document.addEventListener('DOMContentLoaded', function() {
         if (verbose) {
           console.log('index,do_callback:', index, do_callback);
         }
-        //@todo get rid of jquery
-        var response = '';
 
         superagent.get(calendarUrl).end( (error, result) => {
           console.log('[grav-plugin-fullcalendar] loading ics file :' + calendarUrl);
           let data = new String(result.text);
           const icalExpander = new IcalExpander({ ics:data, maxIterations: 100});
           let events = icalExpander.all();
-          console.log(events.events);
           let  mappedEvents = events.events.map(e => (
             { 
               start: e.startDate.toJSDate(), 
@@ -149,139 +143,15 @@ document.addEventListener('DOMContentLoaded', function() {
           allevents = allevents.concat(events);
 
           if (do_callback) {
-            console.log(allevents);
             successCallback(allevents);
             store.set('events', allevents);
             allevents=[];
           }
 
         });//endof superagent
-
-        /* jQuery.get(calendarUrl, function(data) {
-          var jcalData = ICAL.parse(data);
-          var comp = new ICAL.Component(jcalData);
-          var eventComps = comp.getAllSubcomponents("vevent");
-          //  map them to FullCalendar events Objects
-          events = jQuery.map(eventComps, function(item) {
-            var fcevents = {};
-            var entry = item.getFirstPropertyValue("summary");
-            if (entry !== null) fcevents["title"] = entry;
-            var entry = item.getFirstPropertyValue("location");
-            if (entry !== null) fcevents["location"] = entry;
-            var entry = item.getFirstPropertyValue("url");
-            if (entry !== null) fcevents["url"] = entry;
-            var entry = item.getFirstPropertyValue("dtstart");
-            if (entry !== null) fcevents["start"] = entry.toJSDate();
-            var entry = item.getFirstPropertyValue("dtend");
-            if (entry !== null) fcevents["end"] = entry.toJSDate();
-            var entry = item.getFirstPropertyValue("description");
-            if (entry !== null) fcevents["description"] = entry;
-            var entry = item.getFirstPropertyValue("uid");
-            if (entry !== null) fcevents["uid"] = entry;
-
-            // not used options go here
-
-            var rrules = item.getFirstPropertyValue("rrule");
-            var fcrrules = {};  // extra object for rrules
-            if (rrules !== null)  {
-              if (rrules.freq !== null) { //  freq is required, do not continue if null
-                fcrrules["freq"] = rrules.freq;
-                if (verbose) {
-                  console.log('rrules:', rrules);
-                }
-                var parts = rrules["parts"];
-                if (verbose) {
-                  console.log('parts:', parts);
-                }
-                var byweekday = parts["BYDAY"];
-                var weekdays = [];  // must be empty array, otherwise, push() will not work !
-                var bysetpos = [];
-                if (Array.isArray(byweekday)) {
-                  byweekday = parts["BYDAY"];
-                  for (i = 0; i < byweekday.length; i++) {
-                    //  DONE: implement BYDAY n+ or n-
-                    if (byweekday[i].match(/\d+/g)) { // entry contains digits, save them to setpos, strip from weekdays
-                      var daynum = parseInt(byweekday[i]).toString();
-                      bysetpos.push(daynum);
-                      weekdays.push(byweekday[i].replace(/[0-9,+,-]/g, ''));
-                    } else { weekdays.push(byweekday[i]); } // no digits, just save to weekdays
-                  }
-                  byweekday = weekdays;
-                } else  {
-                  byweekday = null;
-                }
-                if (verbose) {
-                  console.log('byweekday:', byweekday);
-                }
-                var byweekno = parts["BYWEEKNO"];
-                if (Array.isArray(byweekno))  {byweekno = parts["BYWEEKNO"];} else  {byweekno = null;}
-                if (verbose) {
-                  console.log('byweekno:', byweekno);
-                }
-                var bymonth = parts["BYMONTH"];
-                if (Array.isArray(bymonth)) {bymonth = parts["BYMONTH"];} else  {bymonth = null;}
-                if (verbose)  {
-                  console.log('bymonth:', bymonth);
-                }
-                var bymonthday = parts["BYMONTHDAY"];
-                if (Array.isArray(bymonthday))  {bymonthday = parts["BYMONTHDAY"];} else  {bymonthday = null;}
-                if (verbose)  { 
-                  console.log('bymonthday:', bymonthday);
-                }
-                var byyearday = parts["BYYEARDAY"];
-                if (Array.isArray(byyearday)) {byyearday = parts["BYYEARDAY"];} else  {byyearday = null;}
-                if (verbose)  console.log('byyearday:', byyearday);
-                if (rrules.dtstart !== undefined) {
-                  fcrrules["dtstart"] = rrules.dtstart;
-                } else  {
-                  fcrrules["dtstart"] = fcevents["start"];
-                }
-                if (byweekday !== null) { fcrrules["byweekday"] = byweekday;}
-                if (bysetpos !== null) { fcrrules["bysetpos"] = bysetpos;}
-                if (byweekno !== null) { fcrrules["byweekno"] = byweekno;}
-                if (bymonth !== null) { fcrrules["bymonth"] = bymonth;}
-                if (bymonthday !== null) { fcrrules["bymonthday"] = bymonthday;}
-                if (byyearday !== null) { fcrrules["byyearday"] = byyearday;}
-                if (rrules.interval != null) { fcrrules["interval"] = rrules.interval;}
-                if (rrules.count != null) { fcrrules["count"] = rrules.count;}
-                if (rrules.wkst != null) { fcrrules["wkst"] = rrules.wkst;}
-                if (rrules.until != null) { fcrrules["until"] = rrules.until.toJSDate();}
-                fcevents["rrule"] = fcrrules;
-                if (verbose)  {
-                  console.log('fcrrules:', fcrrules);
-                }
-              }
-            }
-            fcevents["backgroundColor"] = calendarConfig.color;
-            if (verbose)  { 
-              console.log('fcevents:', fcevents);
-            }
-            if (item.getFirstPropertyValue("class") === "PRIVATE") {
-              return null;
-            } else {
-              return fcevents;
-            }
-          })
-          jQuery.merge(allevents, events);
-          if (verbose) {
-            console.log('index,do_callback:', index, do_callback);
-            console.log('events:', events);
-          }
-          if (do_callback) {
-            successCallback(allevents);
-            store.set('events', allevents);
-            if (verbose) {
-              console.log('allevents:', allevents);
-            }
-            allevents=[];
-          }
-        },
-          'text');
-          */
       })
     }
   });
-  console.log(calendar);
   calendar.render();
   // show legend, if enabled
   if (showlegend) {
