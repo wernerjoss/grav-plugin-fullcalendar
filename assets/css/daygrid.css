@@ -33,3 +33,10 @@ body {
 .fc-daygrid-dot-event .fc-event-title {
   padding:4px;
 }
+
+.fc-daygrid-day-top {
+  margin-top:4px;
+}
+.fc-col-header-cell-cushion {
+  margin: 4px 0 0 0;
+}
