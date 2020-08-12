@@ -1,5 +1,4 @@
 const path = require('path');
-const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
 
 
 module.exports = {
@@ -10,14 +9,15 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js'
   },
+  target: 'web',
   module: {
     rules: [
       {
         test: /\.css$/i,
         use: ['style-loader', 'css-loader']
       },
-			{
-				test: /\.s[ac]ss$/i,
+      {
+        test: /\.s[ac]ss$/i,
         use: [
           // Creates `style` nodes from JS strings
           'style-loader',
@@ -31,7 +31,11 @@ module.exports = {
   },
   resolve: {
     extensions: ['.js'],
-    modules: ['node_modules']
+    modules: [
+      path.resolve('./node_modules'),
+      path.resolve(__dirname, './node_modules'),
+      'node_modules'
+    ]
   },
   plugins : [],
   devtool: 'sourcemap'

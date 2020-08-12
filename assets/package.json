@@ -25,10 +25,9 @@
     "@fullcalendar/rrule": "^5.2.0",
     "@popperjs/core": "^2.4.4",
     "ical-expander": "^3.0.0",
-    "moment": "^2.27.0",
-    "moment-locales-webpack-plugin": "^1.2.0",
     "rrule": "^2.6.4",
     "store2": "^2.11.2",
+    "superagent": "^6.0.0",
     "tippy.js": "^6.2.6"
   },
   "version": "1.0.0",

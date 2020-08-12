@@ -4,14 +4,16 @@ require('@fullcalendar/daygrid');
 require('@fullcalendar/interaction');
 require('@fullcalendar/rrule');
 require('store2');
-//require('log');
+require('superagent');
+const IcalExpander = require('ical-expander');
 
+import superagent from 'superagent';
 import store from 'store2';
-//import log from 'log'
 import { Calendar } from '@fullcalendar/core';
 import interactionPlugin from '@fullcalendar/interaction';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import rrulePlugin from '@fullcalendar/rrule';
+//import IcalExpander from 'ical-expander';
 
 document.addEventListener('DOMContentLoaded', function() {
   var verbose = GRAV.config.plugins.fullcalendar.verbose || false;
@@ -78,10 +80,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     events: function(info, successCallback, failureCallback) {
       //load events from cache
-      let events = store.get('events');
-      if (events) {
-        console.log('events loaded from cache');
-        successCallback(events);
+      allevents = store.get('events') || [];
+      if (allevents) {
+        console.log('[FULLCALENDAR PLUGIN] events loaded from cache');
+        successCallback(allevents);
+        allevents=[];
       }
 
       calendarsConfig.forEach((calendarConfig, index)=> {
@@ -114,13 +117,52 @@ document.addEventListener('DOMContentLoaded', function() {
           console.log('index,do_callback:', index, do_callback);
         }
         //@todo get rid of jquery
-        jQuery.get(calendarUrl, function(data) {
+        var response = '';
+
+        superagent.get(calendarUrl).end( (error, result) => {
+          console.log('[grav-plugin-fullcalendar] loading ics file :' + calendarUrl);
+          let data = new String(result.text);
+          const icalExpander = new IcalExpander({ ics:data, maxIterations: 100});
+          let events = icalExpander.all();
+          console.log(events.events);
+          let  mappedEvents = events.events.map(e => (
+            { 
+              start: e.startDate.toJSDate(), 
+              end: e.endDate.toJSDate(),
+              location: e.location,
+              title: e.summary,
+              uid: e.uid,
+              description: e.description
+            })
+          );
+          let mappedOccurrences = events.occurrences.map(o => (
+            { 
+              start: o.startDate.toJSDate(),
+              end: o.endDate.toJSDate(),
+              title: o.item.summary, 
+              location: o.location,
+              uid: o.uid,
+              description: o.description
+            })
+          );
+          events = [].concat(mappedEvents, mappedOccurrences);
+          allevents = allevents.concat(events);
+
+          if (do_callback) {
+            console.log(allevents);
+            successCallback(allevents);
+            store.set('events', allevents);
+            allevents=[];
+          }
+
+        });//endof superagent
+
+        /* jQuery.get(calendarUrl, function(data) {
           var jcalData = ICAL.parse(data);
           var comp = new ICAL.Component(jcalData);
           var eventComps = comp.getAllSubcomponents("vevent");
           //  map them to FullCalendar events Objects
           events = jQuery.map(eventComps, function(item) {
-            console.log(item);
             var fcevents = {};
             var entry = item.getFirstPropertyValue("summary");
             if (entry !== null) fcevents["title"] = entry;
@@ -129,7 +171,6 @@ document.addEventListener('DOMContentLoaded', function() {
             var entry = item.getFirstPropertyValue("url");
             if (entry !== null) fcevents["url"] = entry;
             var entry = item.getFirstPropertyValue("dtstart");
-            console.log(entry);
             if (entry !== null) fcevents["start"] = entry.toJSDate();
             var entry = item.getFirstPropertyValue("dtend");
             if (entry !== null) fcevents["end"] = entry.toJSDate();
@@ -236,8 +277,9 @@ document.addEventListener('DOMContentLoaded', function() {
           }
         },
           'text');
+          */
       })
-      }
+    }
   });
   console.log(calendar);
   calendar.render();
