@@ -4,19 +4,9 @@ The **Fullcalendar** Plugin is for [Grav CMS](http://github.com/getgrav/grav). I
 
 ## Installation
 
-Installing the Fullcalendar plugin can be done in one of two ways. The GPM (Grav Package Manager) installation method enables you to quickly and easily install the plugin with a simple terminal command, while the manual method enables you to do so via a zip file.
-
-### GPM Installation (Preferred)
-
-The simplest way to install this plugin is via the [Grav Package Manager (GPM)](http://learn.getgrav.org/advanced/grav-gpm) through your system's terminal (also called the command line).  From the root of your Grav install type:
-
-    bin/gpm install fullcalendar
-
-This will install the Fullcalendar plugin into your `/user/plugins` directory within Grav. Its files can be found under `/your/site/grav/user/plugins/fullcalendar`.
-
 ### Manual Installation
 
-To install this plugin, just download the zip version of this repository and unzip it under `/your/site/grav/user/plugins`. Then, rename the folder to `fullcalendar`. You can find these files on [GitHub](https://github.com/werner-hoernerfranzracing-de/grav-plugin-fullcalendar) or via [GetGrav.org](http://getgrav.org/downloads/plugins#extras).
+To install this plugin, just download the zip version of this repository and unzip it under `/your/site/grav/user/plugins`. Then, rename the folder to `fullcalendar`. You can find these files on [GitHub](https://github.com/sherpadawan/grav-plugin-fullcalendar) or via [GetGrav.org](http://getgrav.org/downloads/plugins#extras).
 
 You should now have all the plugin files under
 
@@ -37,12 +27,13 @@ Here is the default configuration and an explanation of available options:
 ```yaml
 
 enabled: true
-debug: false
 showlegend: false   # set to true to show calendar File Name(s) as Legend below grid
 locale: en  # use your own locale here, e.g. de
-timezone: 'Europe/Paris'
+timezone: 'local' #one can set it to any timezone string
 proxy : 'https://cors-anywhere.herokuapp.com/'
-weekNumbers: false  # set to true to show Week Numbers
+fullcalendar:
+  weekNumbers: false  # set to true to show Week Numbers
+
 calendars:
  - 
   name: 'Personnal'

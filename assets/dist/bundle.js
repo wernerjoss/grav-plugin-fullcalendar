@@ -36652,24 +36652,29 @@ __webpack_require__(/*! @fullcalendar/daygrid */ "./node_modules/@fullcalendar/d
 __webpack_require__(/*! @fullcalendar/interaction */ "./node_modules/@fullcalendar/interaction/main.js");
 __webpack_require__(/*! @fullcalendar/rrule */ "./node_modules/@fullcalendar/rrule/main.js");
 __webpack_require__(/*! store2 */ "./node_modules/store2/dist/store2.js");
+//require('log');
 
 
-
+//import log from 'log'
 
 
 
 
 
 document.addEventListener('DOMContentLoaded', function() {
-  var verbose = GRAV.config.system.debugger.enabled;
-  var localeCode = GRAV.config.plugins.fullcalendar.locale || 'en';
-  var weekNums = GRAV.config.plugins.fullcalendar.weekNumbers;
+  var verbose = GRAV.config.plugins.fullcalendar.verbose || false;
   //demo calendars
   var demoCalendars = GRAV.config.plugins.fullcalendar.calendars;
   var calendarHtmlTarget = GRAV.config.plugins.fullcalendar.fullcalendar.target || '#calendar';
   var calendarsConfig = [];
   var allevents = [];
-  var dateOptions = {locale: localeCode, timeZone: 'local'};
+
+  //var log = log.get('grav-plugin-fullcalendar');
+  //init cache 
+  if (!GRAV.config.system.debugger.enabled) {
+    store2__WEBPACK_IMPORTED_MODULE_0___default.a.page("until", "reload");
+  }
+
   //ics from page frontmatter 
   if(GRAV.page.header.calendars) {
     calendarsConfig = GRAV.page.header.calendars;
@@ -36699,9 +36704,9 @@ document.addEventListener('DOMContentLoaded', function() {
     /* Configuration */
 
     plugins: [ _fullcalendar_interaction__WEBPACK_IMPORTED_MODULE_2__["default"], _fullcalendar_daygrid__WEBPACK_IMPORTED_MODULE_3__["default"], _fullcalendar_rrule__WEBPACK_IMPORTED_MODULE_4__["default"] ],
-    locale: localeCode,
-    weekNumbers: weekNums,
-    timezone: GRAV.config.plugins.fullcalendar.timezone || 'local',
+    locale: GRAV.config.plugins.fullcalendar.locale || 'en',
+    weekNumbers: GRAV.config.plugins.fullcalendar.weekNumbers || false,
+    timeZone: GRAV.config.plugins.fullcalendar.timezone || 'local',
     headerToolbar: {
       right: 'dayGridMonth,dayGridWeek',
       left: 'prevYear,prev,next,nextYear today',
@@ -36723,6 +36728,7 @@ document.addEventListener('DOMContentLoaded', function() {
       //load events from cache
       let events = store2__WEBPACK_IMPORTED_MODULE_0___default.a.get('events');
       if (events) {
+        console.log('events loaded from cache');
         successCallback(events);
       }
 

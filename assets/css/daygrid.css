@@ -8,6 +8,7 @@ body {
 	font-size: large;	/*	14px;	*/
 	margin: 0 auto;
 	line-height: 0.5em;
+  overflow:hidden;
 }
 #calendar .fc-time {
 	display: none;

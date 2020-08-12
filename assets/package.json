@@ -22,7 +22,6 @@
     "@fullcalendar/core": "^5.2.1",
     "@fullcalendar/daygrid": "^5.2.0",
     "@fullcalendar/interaction": "^5.2.0",
-    "@fullcalendar/moment-timezone": "^5.2.0",
     "@fullcalendar/rrule": "^5.2.0",
     "@popperjs/core": "^2.4.4",
     "ical-expander": "^3.0.0",

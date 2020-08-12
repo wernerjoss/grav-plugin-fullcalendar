@@ -1,5 +1,5 @@
 enabled: true
-debug: false 
+verbose: true
 locale: 'en' 
 timezone: 'local'
 #timezone: 'Europe/Paris'
