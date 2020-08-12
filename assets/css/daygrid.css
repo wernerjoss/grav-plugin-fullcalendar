@@ -30,3 +30,6 @@ body {
 #calendar .fc-day-grid-event > .fc-content {
 	white-space: normal;
 }
+.fc-daygrid-dot-event .fc-event-title {
+  padding:4px;
+}

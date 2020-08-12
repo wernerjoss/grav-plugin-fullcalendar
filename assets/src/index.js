@@ -3,32 +3,30 @@ require('@fullcalendar/core');
 require('@fullcalendar/daygrid');
 require('@fullcalendar/interaction');
 require('@fullcalendar/rrule');
-require('moment');
 require('store2');
 
-import moment from 'moment';
 import store from 'store2';
 import { Calendar } from '@fullcalendar/core';
+import { formatDate } from '@fullcalendar/core'
 import interactionPlugin from '@fullcalendar/interaction';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import rrulePlugin from '@fullcalendar/rrule';
 
 document.addEventListener('DOMContentLoaded', function() {
   var verbose = GRAV.config.system.debugger.enabled;
-  var localeCode = GRAV.config.plugins.fullcalendar.locale;
-  moment.locale(localeCode);
+  var localeCode = GRAV.config.plugins.fullcalendar.locale || 'en';
   var weekNums = GRAV.config.plugins.fullcalendar.weekNumbers;
   //demo calendars
   var demoCalendars = GRAV.config.plugins.fullcalendar.calendars;
   var calendarHtmlTarget = GRAV.config.plugins.fullcalendar.fullcalendar.target || '#calendar';
   var calendarsConfig = [];
   var allevents = [];
-
+  var dateOptions = {locale: localeCode, timeZone: 'local'};
   //ics from page frontmatter 
   if(GRAV.page.header.calendars) {
     calendarsConfig = GRAV.page.header.calendars;
   }
-console.log(calendarsConfig);
+  console.log(calendarsConfig);
   //ics files uploaded in calendar page
   if (GRAV.page.media) {
     let media = GRAV.page.media;
@@ -48,12 +46,14 @@ console.log(calendarsConfig);
 
   // page is now ready, initialize the calendar...
   var calendarEl = document.querySelector(calendarHtmlTarget);
-  var calendarEl = document.getElementById('calendar');
   var calendar = new Calendar(calendarEl, {
+
+    /* Configuration */
+
     plugins: [ interactionPlugin, dayGridPlugin, rrulePlugin ],
     locale: localeCode,
     weekNumbers: weekNums,
-    timeZone: GRAV.config.plugins.fullcalendar.timezone,
+    timezone: GRAV.config.plugins.fullcalendar.timezone || 'local',
     headerToolbar: {
       right: 'dayGridMonth,dayGridWeek',
       left: 'prevYear,prev,next,nextYear today',
@@ -65,183 +65,175 @@ console.log(calendarsConfig);
     fixedWeekCount: false,
     contentHeight: 700,
 
-    //click: alert Description, open URL in new Window
-    eventClick: function(info) {
-      info.jsEvent.preventDefault(); // don't let the browser navigate
-      /* omit alert - see Tooltip below
-        if (info.event.extendedProps.description) {
-          alert(info.event.extendedProps.description);
-        }
-        */
-      if (info.event.url) {
-        window.open(info.event.url);  // open url in new Window/Tab
-      }
+    /* methods */
+
+    dateClick: function(info) {
+      console.log('DATE CLICKED='+ info.date.toString());
     },
 
-    /**
-     *
-     */
-      events: function(info, successCallback, failureCallback) {
-
-          let events = store.get('events');
-          if (events) {
-            successCallback(events);
-          }
-
-
-    calendarsConfig.forEach((calendarConfig, index)=> {
-      if (!calendarConfig.active) {
-        console.log("Calendar " + calendarConfig.name + " is inactive" );
-        return;
+    events: function(info, successCallback, failureCallback) {
+      //load events from cache
+      let events = store.get('events');
+      if (events) {
+        successCallback(events);
       }
-      var calendarUrl = ''+ calendarConfig.ics;
-      //allow remote ics files, full URL required
-      if (calendarUrl.startsWith("https://") || calendarUrl.startsWith("http://")) {  // calendar URL is remote
-        //automatically add CORS proxy URL for remote calendars, if not yet done 06.04.20
-        var origin = window.location.protocol + '//' + window.location.host;
-        var cors_api_url = GRAV.config.plugins.fullcalendar.proxy;  // replace this if you prefer another CORS proxy !
-        if (!calendarUrl.startsWith(origin)) {
-          if (verbose) { 
-            console.log('remote is different Origin, use proxy '+ cors_api_url);
-          }
-          calendarUrl = cors_api_url + calendarConfig.ics;
+
+      calendarsConfig.forEach((calendarConfig, index)=> {
+        if (!calendarConfig.active) {
+          console.log("Calendar " + calendarConfig.name + " is inactive" );
+          return;
         }
-      }
-      if (verbose) {
-        console.log( calendarConfig);
-      }
-      var events = [];
-      var do_callback = false;
-      if (index == (calendarsConfig.length - 1)) {
-        do_callback = true;
-      }
-      if (verbose) {
-        console.log('index,do_callback:', index, do_callback);
-      }
-      jQuery.get(calendarUrl, function(data) {
-        var jcalData = ICAL.parse(data);  //  directly parse data, no need to split to lines first ! 14.02.20
-        var comp = new ICAL.Component(jcalData);
-        var eventComps = comp.getAllSubcomponents("vevent");
-        //  map them to FullCalendar events Objects
-        events = jQuery.map(eventComps, function(item) {
-          console.log(item);
-          var fcevents = {};
-          var entry = item.getFirstPropertyValue("summary");
-          if (entry !== null) fcevents["title"] = entry;
-          var entry = item.getFirstPropertyValue("location");
-          if (entry !== null) fcevents["location"] = entry;
-          var entry = item.getFirstPropertyValue("url");
-          if (entry !== null) fcevents["url"] = entry;
-          var entry = item.getFirstPropertyValue("dtstart");
-          if (entry !== null) fcevents["start"] = entry.toJSDate();
-          var entry = item.getFirstPropertyValue("dtend");
-          if (entry !== null) fcevents["end"] = entry.toJSDate();
-          var entry = item.getFirstPropertyValue("description");
-          if (entry !== null) fcevents["description"] = entry;
-          var entry = item.getFirstPropertyValue("uid");
-          if (entry !== null) fcevents["uid"] = entry;
-
-          // not used options go here
-
-          var rrules = item.getFirstPropertyValue("rrule");
-          var fcrrules = {};  // extra object for rrules
-          if (rrules !== null)  {
-            if (rrules.freq !== null) { //  freq is required, do not continue if null
-              fcrrules["freq"] = rrules.freq;
-              if (verbose) {
-                console.log('rrules:', rrules);
-              }
-              var parts = rrules["parts"];
-              if (verbose) {
-                console.log('parts:', parts);
-              }
-              var byweekday = parts["BYDAY"];
-              var weekdays = [];  // must be empty array, otherwise, push() will not work !
-              var bysetpos = [];
-              if (Array.isArray(byweekday)) {
-                byweekday = parts["BYDAY"];
-                for (i = 0; i < byweekday.length; i++) {
-                  //  DONE: implement BYDAY n+ or n-
-                  if (byweekday[i].match(/\d+/g)) { // entry contains digits, save them to setpos, strip from weekdays
-                    var daynum = parseInt(byweekday[i]).toString();
-                    bysetpos.push(daynum);
-                    weekdays.push(byweekday[i].replace(/[0-9,+,-]/g, ''));
-                  } else { weekdays.push(byweekday[i]); } // no digits, just save to weekdays
-                }
-                byweekday = weekdays;
-              } else  {
-                byweekday = null;
-              }
-              if (verbose) {
-                console.log('byweekday:', byweekday);
-              }
-              var byweekno = parts["BYWEEKNO"];
-              if (Array.isArray(byweekno))  {byweekno = parts["BYWEEKNO"];} else  {byweekno = null;}
-              if (verbose) {
-                console.log('byweekno:', byweekno);
-              }
-              var bymonth = parts["BYMONTH"];
-              if (Array.isArray(bymonth)) {bymonth = parts["BYMONTH"];} else  {bymonth = null;}
-              if (verbose)  {
-                console.log('bymonth:', bymonth);
-              }
-              var bymonthday = parts["BYMONTHDAY"];
-              if (Array.isArray(bymonthday))  {bymonthday = parts["BYMONTHDAY"];} else  {bymonthday = null;}
-              if (verbose)  { 
-                console.log('bymonthday:', bymonthday);
-              }
-              var byyearday = parts["BYYEARDAY"];
-              if (Array.isArray(byyearday)) {byyearday = parts["BYYEARDAY"];} else  {byyearday = null;}
-              if (verbose)  console.log('byyearday:', byyearday);
-              if (rrules.dtstart !== undefined) {
-                fcrrules["dtstart"] = rrules.dtstart;
-              } else  {
-                fcrrules["dtstart"] = fcevents["start"];
-              }
-              if (byweekday !== null) { fcrrules["byweekday"] = byweekday;}
-              if (bysetpos !== null) { fcrrules["bysetpos"] = bysetpos;}
-              if (byweekno !== null) { fcrrules["byweekno"] = byweekno;}
-              if (bymonth !== null) { fcrrules["bymonth"] = bymonth;}
-              if (bymonthday !== null) { fcrrules["bymonthday"] = bymonthday;}
-              if (byyearday !== null) { fcrrules["byyearday"] = byyearday;}
-              if (rrules.interval != null) { fcrrules["interval"] = rrules.interval;}
-              if (rrules.count != null) { fcrrules["count"] = rrules.count;}
-              if (rrules.wkst != null) { fcrrules["wkst"] = rrules.wkst;}
-              if (rrules.until != null) { fcrrules["until"] = rrules.until.toJSDate();}
-              fcevents["rrule"] = fcrrules;
-              if (verbose)  {
-                console.log('fcrrules:', fcrrules);
-              }
+        var calendarUrl = ''+ calendarConfig.ics;
+        //allow remote ics files, full URL required
+        if (calendarUrl.startsWith("https://") || calendarUrl.startsWith("http://")) {  // calendar URL is remote
+          //automatically add CORS proxy URL for remote calendars, if not yet done 06.04.20
+          var origin = window.location.protocol + '//' + window.location.host;
+          var cors_api_url = GRAV.config.plugins.fullcalendar.proxy;  // replace this if you prefer another CORS proxy !
+          if (!calendarUrl.startsWith(origin)) {
+            if (verbose) { 
+              console.log('remote is different Origin, use proxy '+ cors_api_url);
             }
+            calendarUrl = cors_api_url + calendarConfig.ics;
           }
-          fcevents["backgroundColor"] = calendarConfig.color;
-          if (verbose)  { 
-            console.log('fcevents:', fcevents);
-          }
-          if (item.getFirstPropertyValue("class") === "PRIVATE") {
-            return null;
-          } else {
-            return fcevents;
-          }
-        })
-        jQuery.merge(allevents, events);
+        }
+        if (verbose) {
+          console.log( calendarConfig);
+        }
+        var events = [];
+        var do_callback = false;
+        if (index == (calendarsConfig.length - 1)) {
+          do_callback = true;
+        }
         if (verbose) {
           console.log('index,do_callback:', index, do_callback);
-          console.log('events:', events);
         }
-        if (do_callback) {
-          successCallback(allevents);
-          store.set('events', allevents);
+        //@todo get rid of jquery
+        jQuery.get(calendarUrl, function(data) {
+          var jcalData = ICAL.parse(data);
+          var comp = new ICAL.Component(jcalData);
+          var eventComps = comp.getAllSubcomponents("vevent");
+          //  map them to FullCalendar events Objects
+          events = jQuery.map(eventComps, function(item) {
+            console.log(item);
+            var fcevents = {};
+            var entry = item.getFirstPropertyValue("summary");
+            if (entry !== null) fcevents["title"] = entry;
+            var entry = item.getFirstPropertyValue("location");
+            if (entry !== null) fcevents["location"] = entry;
+            var entry = item.getFirstPropertyValue("url");
+            if (entry !== null) fcevents["url"] = entry;
+            var entry = item.getFirstPropertyValue("dtstart");
+            console.log(entry);
+            if (entry !== null) fcevents["start"] = entry.toJSDate();
+            var entry = item.getFirstPropertyValue("dtend");
+            if (entry !== null) fcevents["end"] = entry.toJSDate();
+            var entry = item.getFirstPropertyValue("description");
+            if (entry !== null) fcevents["description"] = entry;
+            var entry = item.getFirstPropertyValue("uid");
+            if (entry !== null) fcevents["uid"] = entry;
+
+            // not used options go here
+
+            var rrules = item.getFirstPropertyValue("rrule");
+            var fcrrules = {};  // extra object for rrules
+            if (rrules !== null)  {
+              if (rrules.freq !== null) { //  freq is required, do not continue if null
+                fcrrules["freq"] = rrules.freq;
+                if (verbose) {
+                  console.log('rrules:', rrules);
+                }
+                var parts = rrules["parts"];
+                if (verbose) {
+                  console.log('parts:', parts);
+                }
+                var byweekday = parts["BYDAY"];
+                var weekdays = [];  // must be empty array, otherwise, push() will not work !
+                var bysetpos = [];
+                if (Array.isArray(byweekday)) {
+                  byweekday = parts["BYDAY"];
+                  for (i = 0; i < byweekday.length; i++) {
+                    //  DONE: implement BYDAY n+ or n-
+                    if (byweekday[i].match(/\d+/g)) { // entry contains digits, save them to setpos, strip from weekdays
+                      var daynum = parseInt(byweekday[i]).toString();
+                      bysetpos.push(daynum);
+                      weekdays.push(byweekday[i].replace(/[0-9,+,-]/g, ''));
+                    } else { weekdays.push(byweekday[i]); } // no digits, just save to weekdays
+                  }
+                  byweekday = weekdays;
+                } else  {
+                  byweekday = null;
+                }
+                if (verbose) {
+                  console.log('byweekday:', byweekday);
+                }
+                var byweekno = parts["BYWEEKNO"];
+                if (Array.isArray(byweekno))  {byweekno = parts["BYWEEKNO"];} else  {byweekno = null;}
+                if (verbose) {
+                  console.log('byweekno:', byweekno);
+                }
+                var bymonth = parts["BYMONTH"];
+                if (Array.isArray(bymonth)) {bymonth = parts["BYMONTH"];} else  {bymonth = null;}
+                if (verbose)  {
+                  console.log('bymonth:', bymonth);
+                }
+                var bymonthday = parts["BYMONTHDAY"];
+                if (Array.isArray(bymonthday))  {bymonthday = parts["BYMONTHDAY"];} else  {bymonthday = null;}
+                if (verbose)  { 
+                  console.log('bymonthday:', bymonthday);
+                }
+                var byyearday = parts["BYYEARDAY"];
+                if (Array.isArray(byyearday)) {byyearday = parts["BYYEARDAY"];} else  {byyearday = null;}
+                if (verbose)  console.log('byyearday:', byyearday);
+                if (rrules.dtstart !== undefined) {
+                  fcrrules["dtstart"] = rrules.dtstart;
+                } else  {
+                  fcrrules["dtstart"] = fcevents["start"];
+                }
+                if (byweekday !== null) { fcrrules["byweekday"] = byweekday;}
+                if (bysetpos !== null) { fcrrules["bysetpos"] = bysetpos;}
+                if (byweekno !== null) { fcrrules["byweekno"] = byweekno;}
+                if (bymonth !== null) { fcrrules["bymonth"] = bymonth;}
+                if (bymonthday !== null) { fcrrules["bymonthday"] = bymonthday;}
+                if (byyearday !== null) { fcrrules["byyearday"] = byyearday;}
+                if (rrules.interval != null) { fcrrules["interval"] = rrules.interval;}
+                if (rrules.count != null) { fcrrules["count"] = rrules.count;}
+                if (rrules.wkst != null) { fcrrules["wkst"] = rrules.wkst;}
+                if (rrules.until != null) { fcrrules["until"] = rrules.until.toJSDate();}
+                fcevents["rrule"] = fcrrules;
+                if (verbose)  {
+                  console.log('fcrrules:', fcrrules);
+                }
+              }
+            }
+            fcevents["backgroundColor"] = calendarConfig.color;
+            if (verbose)  { 
+              console.log('fcevents:', fcevents);
+            }
+            if (item.getFirstPropertyValue("class") === "PRIVATE") {
+              return null;
+            } else {
+              return fcevents;
+            }
+          })
+          jQuery.merge(allevents, events);
           if (verbose) {
-            console.log('allevents:', allevents);
+            console.log('index,do_callback:', index, do_callback);
+            console.log('events:', events);
           }
-          allevents=[];
-        }
-      },
-        'text');
-    })
+          if (do_callback) {
+            successCallback(allevents);
+            store.set('events', allevents);
+            if (verbose) {
+              console.log('allevents:', allevents);
+            }
+            allevents=[];
+          }
+        },
+          'text');
+      })
       }
   });
+  console.log(calendar);
   calendar.render();
   // show legend, if enabled
   if (showlegend) {

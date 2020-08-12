@@ -22,10 +22,12 @@
     "@fullcalendar/core": "^5.2.1",
     "@fullcalendar/daygrid": "^5.2.0",
     "@fullcalendar/interaction": "^5.2.0",
+    "@fullcalendar/moment-timezone": "^5.2.0",
     "@fullcalendar/rrule": "^5.2.0",
     "@popperjs/core": "^2.4.4",
     "ical-expander": "^3.0.0",
     "moment": "^2.27.0",
+    "moment-locales-webpack-plugin": "^1.2.0",
     "rrule": "^2.6.4",
     "store2": "^2.11.2",
     "tippy.js": "^6.2.6"

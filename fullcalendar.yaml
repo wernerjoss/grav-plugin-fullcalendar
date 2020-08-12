@@ -1,7 +1,8 @@
 enabled: true
-debug: true
-locale: fr 
-timezone: 'Europe/Paris'
+debug: false 
+locale: 'en' 
+timezone: 'local'
+#timezone: 'Europe/Paris'
 proxy : 'https://cors-anywhere.herokuapp.com/'
 fullcalendar:
   header:
