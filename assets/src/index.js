@@ -6,7 +6,9 @@ require('@fullcalendar/rrule');
 require('store2');
 require('superagent');
 const IcalExpander = require('ical-expander');
+require('@popperjs/core');
 
+import {createPopper} from '@popperjs/core';
 import superagent from 'superagent';
 import store from 'store2';
 import { Calendar } from '@fullcalendar/core';
@@ -14,15 +16,16 @@ import interactionPlugin from '@fullcalendar/interaction';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import rrulePlugin from '@fullcalendar/rrule';
 
+
 document.addEventListener('DOMContentLoaded', function() {
-  var verbose = GRAV.config.plugins.fullcalendar.verbose || false;
+  var GRAV_PLUGIN_CONFIG = GRAV.config.plugins.fullcalendar;
+  var verbose = GRAV_PLUGIN_CONFIG.verbose || false;
   //demo calendars
-  var demoCalendars = GRAV.config.plugins.fullcalendar.calendars;
-  var calendarHtmlTarget = GRAV.config.plugins.fullcalendar.fullcalendar.target || '#calendar';
+  var demoCalendars = GRAV_PLUGIN_CONFIG.calendars;
+  var calendarHtmlTarget = GRAV_PLUGIN_CONFIG.fullcalendar.target || '#calendar';
   var calendarsConfig = [];
   var allevents = [];
 
-  //var log = log.get('grav-plugin-fullcalendar');
   //init cache 
   if (!GRAV.config.system.debugger.enabled) {
     store.page("until", "reload");
@@ -36,8 +39,8 @@ document.addEventListener('DOMContentLoaded', function() {
   //ics files uploaded in calendar page
   if (GRAV.page.media) {
     let media = GRAV.page.media;
-    media.forEach((file)=>{
-        calendarsConfig.push({"ics": file.ics , "name": file.name, "active": true});
+    media.forEach((file, id)=>{
+        calendarsConfig.push({"ics": file.ics , "name": file.name, "active": true, color: GRAV_PLUGIN_CONFIG.colors[id] });
     });
   }
 
@@ -46,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
     calendarsConfig = demoCalendars;
   } 
 
-  var showlegend = GRAV.config.plugins.fullcalendar.showlegend || false;
+  var showlegend = GRAV_PLUGIN_CONFIG.showlegend || false;
 
   // page is now ready, initialize the calendar...
   var calendarEl = document.querySelector(calendarHtmlTarget);
@@ -55,24 +58,36 @@ document.addEventListener('DOMContentLoaded', function() {
     /* Configuration */
 
     plugins: [ interactionPlugin, dayGridPlugin, rrulePlugin ],
-    locale: GRAV.config.plugins.fullcalendar.locale || 'en',
-    weekNumbers: GRAV.config.plugins.fullcalendar.weekNumbers || false,
-    timeZone: GRAV.config.plugins.fullcalendar.timezone || 'local',
+    locale: GRAV_PLUGIN_CONFIG.fullcalendar.locale || 'en',
+    weekNumbers: GRAV_PLUGIN_CONFIG.fullcalendar.weekNumbers || false,
+    timeZone: GRAV_PLUGIN_CONFIG.fullcalendar.timezone || 'local',
     headerToolbar: {
       right: 'dayGridMonth,dayGridWeek',
       left: 'prevYear,prev,next,nextYear today',
       center: 'title',
     },
     firstDay: 1,
-    navLinks: false, // can click day/week names to navigate views
-    editable: true,
-    fixedWeekCount: false,
-    contentHeight: 700,
+    navLinks: GRAV_PLUGIN_CONFIG.fullcalendar.navLinks || false,
+    editable: GRAV_PLUGIN_CONFIG.fullcalendar.editable || false,
+    fixedWeekCount: GRAV_PLUGIN_CONFIG.fullcalendar.fixedWeekCount || false,
+    contentHeight: GRAV_PLUGIN_CONFIG.fullcalendar.contentHeight || 'auto',
 
     /* methods */
 
-    dateClick: function(info) {
-      console.log('DATE CLICKED='+ info.date.toString());
+    eventDidMount: function(info) {
+          let tooltip = document.createElement('div');
+          tooltip.className = 'tooltip';
+          tooltip.setAttribute('role', 'tooltip');
+          tooltip.innerHTML = info.event.title + ' ' + info.event.description;
+          info.el.appendChild(tooltip);
+       },
+
+    eventClick: function(info) {
+      info.jsEvent.preventDefault();
+      //createPopper(info.el, info.el.getElementsByClassName('tooltip')[0], { placement: 'right' });
+      //console.log('Event: ' + info.event.title + 'location:' + info.event.location);
+      let tooltip = info.el.getElementsByClassName('tooltip')[0];
+      createPopper(info.el, tooltip, { placement: 'right' });
     },
 
     events: function(info, successCallback, failureCallback) {
@@ -82,6 +97,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('[FULLCALENDAR PLUGIN] events loaded from cache');
         successCallback(allevents);
         allevents=[];
+        return;
       }
 
       calendarsConfig.forEach((calendarConfig, index)=> {
@@ -94,7 +110,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (calendarUrl.startsWith("https://") || calendarUrl.startsWith("http://")) {  // calendar URL is remote
           //automatically add CORS proxy URL for remote calendars, if not yet done 06.04.20
           var origin = window.location.protocol + '//' + window.location.host;
-          var cors_api_url = GRAV.config.plugins.fullcalendar.proxy;  // replace this if you prefer another CORS proxy !
+          var cors_api_url = GRAV_PLUGIN_CONFIG.proxy;  // replace this if you prefer another CORS proxy !
           if (!calendarUrl.startsWith(origin)) {
             if (verbose) { 
               console.log('remote is different Origin, use proxy '+ cors_api_url);
@@ -126,7 +142,8 @@ document.addEventListener('DOMContentLoaded', function() {
               location: e.location,
               title: e.summary,
               uid: e.uid,
-              description: e.description
+              description: e.description,
+							url: e.url
             })
           );
           let mappedOccurrences = events.occurrences.map(o => (
@@ -136,7 +153,8 @@ document.addEventListener('DOMContentLoaded', function() {
               title: o.item.summary, 
               location: o.location,
               uid: o.uid,
-              description: o.description
+              description: o.description,
+							url: o.url
             })
           );
           events = [].concat(mappedEvents, mappedOccurrences);
@@ -149,16 +167,25 @@ document.addEventListener('DOMContentLoaded', function() {
           }
 
         });//endof superagent
-      })
-    }
-  });
+      })//endof foreach
+    }//endof events
+
+    /* other callbacks */ 
+
+  });//endof new Calendar
+
   calendar.render();
+
   // show legend, if enabled
   if (showlegend) {
     // Add the contents of cfgfiles to #legend:
     document.getElementById('legend').appendChild(makeUL(cfgfiles, colors));
   }
-})
+
+}); //endof eventlistener DOMLoaded
+
+/* utils */
+//@todo refactor
 
 function makeUL(array, colors) {
   // Create the list element:

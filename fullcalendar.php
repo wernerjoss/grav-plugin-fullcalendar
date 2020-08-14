@@ -29,18 +29,26 @@ class FullcalendarPlugin extends Plugin
         //add assets
         $assets = $this->grav['assets'];
         $assets->addJs('plugin://fullcalendar/assets/dist/bundle.js'); 
+        //@todo use webpack loaders and sass
         $assets->addCss('plugin://fullcalendar/assets/css/daygrid.css');  // default CSS for #calendar
+        $assets->addCss('plugin://fullcalendar/assets/css/tooltip.css');  // default CSS for #calendar
 
         //map plugin config
-        $configJSON = json_encode($this->grav['config']);
+        $config = clone $this->grav['config'];
+				//@todo filter config that should not be exposed in frontend
+        $configJSON = json_encode($config);
         $assets->addInlineJs("var GRAV = {};GRAV.config = JSON.parse('" . addslashes($configJSON) . "');", ['loading'=>'inline', 'position'=>'before']); 
     }
 
-
+    /**
+     * Retrieves ics files which were uploaded on current page (or subpage)
+     *
+     */
     public function onTwigPageVariables() 
     {
       $assets = $this->grav['assets'];
       $taxonomy = $this->grav['taxonomy'];
+			//@todo retrieve files on current page not only subpages
       $pages = $this->grav['page']->evaluate(['@taxonomy.category'=>'calendar']);
       foreach($pages as $page) {
         $headers = json_encode($page->header());
@@ -51,6 +59,7 @@ class FullcalendarPlugin extends Plugin
             $fileUrls[] = ['ics'=>$file->url(), 'name'=>$name];
            }
         }
+				//build page headers and media in json  
         $assets->addInlineJs(
           " GRAV.page = {header:'', media:''};" . 
           " GRAV.page.header = JSON.parse('" . addslashes($headers) . "');" .
