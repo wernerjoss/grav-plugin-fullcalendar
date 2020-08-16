@@ -1,18 +1,17 @@
 name: FullCalendar
-version: 0.2.3
+version: 0.3.0alpha
 description: show Calendar Widget from ICS File(s), based on fullcalendar.io
 icon: calendar
 author:
-  name: Werner Joss
-  email: werner@hoernerfranzracing.de
-homepage: https://github.com/wernerjoss/grav-plugin-fullcalendar
+  name: Guillaume Storchi
+  email: guillaume.storchi@lilo.org
+homepage: https://github.com/sherpadawan/grav-plugin-fullcalendar
 keywords: grav, plugin, ICS, Icalendar, fullcalendar.io
-bugs: https://github.com/wernerjoss/grav-plugin-fullcalendar/issues
-docs: https://github.com/wernerjoss/grav-plugin-fullcalendar
+bugs: https://github.com/sherpadawan/grav-plugin-fullcalendar/issues
+docs: https://github.com/sherpadawan/grav-plugin-fullcalendar
 license: MIT
 
 dependencies:
-    - shortcode-core
 
 form:
     fields:
