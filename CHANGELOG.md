@@ -1,3 +1,9 @@
+#v0.3.0alpha
+ * major rewrite, no shortcodes anymore (page media files support instead)
+ * ics files are objects with configuration (in page header)
+ * ics data are cached in local storage
+ * assets are ai webpack project 
+
 # v0.2.3
 ##  06/22/2020
 
