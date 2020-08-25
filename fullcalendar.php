@@ -12,6 +12,7 @@ class FullcalendarPlugin extends Plugin
     {
         return [
             'onPluginsInitialized' => ['onPluginsInitialized', 0],
+            'onGetPageTemplates'   => ['onGetPageTemplates', 0],
             'onTwigPageVariables' => ['onTwigPageVariables', 0]
         ];
     }
@@ -35,7 +36,7 @@ class FullcalendarPlugin extends Plugin
 
         //map plugin config
         $config = clone $this->grav['config'];
-				//@todo filter config that should not be exposed in frontend
+        //@todo filter config that should not be exposed in frontend
         $configJSON = json_encode($config);
         $assets->addInlineJs("var GRAV = {};GRAV.config = JSON.parse('" . addslashes($configJSON) . "');", ['loading'=>'inline', 'position'=>'before']); 
     }
@@ -48,7 +49,7 @@ class FullcalendarPlugin extends Plugin
     {
       $assets = $this->grav['assets'];
       $taxonomy = $this->grav['taxonomy'];
-			//@todo retrieve files on current page not only subpages
+      //@todo retrieve files on current page not only subpages
       $pages = $this->grav['page']->evaluate(['@taxonomy.category'=>'calendar']);
       foreach($pages as $page) {
         $headers = json_encode($page->header());
@@ -59,11 +60,11 @@ class FullcalendarPlugin extends Plugin
             $fileUrls[] = ['ics'=>$file->url(), 'name'=>$name];
            }
         }
-				//build page headers and media in json  
+        //build page headers and media in json  
         $assets->addInlineJs(
           " GRAV.page = {header:'', media:''};" . 
           " GRAV.page.header = JSON.parse('" . addslashes($headers) . "');" .
-          " GRAV.page.media = JSON.parse('" . addslashes(json_encode($fileUrls)). "');",
+          (!empty($fileUrls)?" GRAV.page.media = JSON.parse('" . addslashes(json_encode($fileUrls)). "');":''),
           ['loading'=>'inline', 'position'=>'before']);
       }
     }
@@ -72,4 +73,28 @@ class FullcalendarPlugin extends Plugin
     {
         $this->grav['twig']->twig_paths[] = __DIR__ . '/templates';
     }
+
+    /**
+     * Expose plugin's page templates
+     *
+     * @param  Event $event
+     * @return void
+     */
+    public function onGetPageTemplates(Event $event)
+    {
+      $types = $event->types;
+
+      /* @var Locator $locator */
+      $locator = $this->grav['locator'];
+
+      // Set blueprints & templates.
+      //$types->scanBlueprints($locator->findResource('plugin://fullcalendar/blueprints'));
+      $types->scanTemplates($locator->findResource('plugin://fullcalendar/templates'));
+
+      // reverse the FUBARd order of blueprints
+      $event = array_reverse($types['event']);
+      $types['event'] = $event;
+    }
+
+
 }
