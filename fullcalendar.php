@@ -11,9 +11,7 @@ class FullcalendarPlugin extends Plugin
     public static function getSubscribedEvents()
     {
         return [
-            'onPluginsInitialized' => ['onPluginsInitialized', 0],
-            'onGetPageTemplates'   => ['onGetPageTemplates', 0],
-            'onTwigPageVariables' => ['onTwigPageVariables', 0]
+            'onPluginsInitialized' => ['onPluginsInitialized', 0]
         ];
     }
 
@@ -25,7 +23,9 @@ class FullcalendarPlugin extends Plugin
         }
         // Enable the main events we are interested in
         $this->enable([
-            'onTwigTemplatePaths' => ['onTwigTemplatePaths',0]
+            'onTwigTemplatePaths' => ['onTwigTemplatePaths',0],
+            'onGetPageTemplates'   => ['onGetPageTemplates', 0],
+            'onPagesInitialized' => ['onPagesInitialized', 0]
         ]);
         //add assets
         $assets = $this->grav['assets'];
@@ -45,7 +45,7 @@ class FullcalendarPlugin extends Plugin
      * Retrieves ics files which were uploaded on current page (or subpage)
      *
      */
-    public function onTwigPageVariables() 
+    public function onPagesInitialized() 
     {
       $assets = $this->grav['assets'];
       $taxonomy = $this->grav['taxonomy'];
