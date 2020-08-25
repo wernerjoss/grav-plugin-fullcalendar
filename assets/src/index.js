@@ -19,7 +19,7 @@ import rrulePlugin from '@fullcalendar/rrule';
 
 document.addEventListener('DOMContentLoaded', function() {
   var GRAV_PLUGIN_CONFIG = GRAV.config.plugins.fullcalendar;
-  var verbose = GRAV_PLUGIN_CONFIG.verbose || false;
+  var verbose = GRAV.config.system.debugger.enabled || false;
   //demo calendars
   var demoCalendars = GRAV_PLUGIN_CONFIG.calendars;
   var calendarHtmlTarget = GRAV_PLUGIN_CONFIG.fullcalendar.target || '#calendar';
@@ -27,9 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
   var allevents = [];
 
   //init cache 
-  if (!GRAV.config.system.debugger.enabled) {
-    store.page("until", "reload");
-  }
+  store.remove('events');
 
   //ics from page frontmatter 
   if(GRAV.page.header.calendars) {

@@ -36,9 +36,18 @@ class FullcalendarPlugin extends Plugin
 
         //map plugin config
         $config = clone $this->grav['config'];
-        //@todo filter config that should not be exposed in frontend
-        $configJSON = json_encode($config);
-        $assets->addInlineJs("var GRAV = {};GRAV.config = JSON.parse('" . addslashes($configJSON) . "');", ['loading'=>'inline', 'position'=>'before']); 
+        //we choose settings for security reasons
+        $json = "var GRAV = {
+                              'config': { 
+                                'system': { 
+                                   'debugger': ". json_encode($config['system']['debugger'])."
+                                },
+                                'plugins': {
+                                  'fullcalendar': ".json_encode($config['plugins']['fullcalendar']) ."
+                                }
+                              } 
+                            };";
+        $assets->addInlineJs($json, ['loading'=>'inline', 'position'=>'before']); 
     }
 
     /**
