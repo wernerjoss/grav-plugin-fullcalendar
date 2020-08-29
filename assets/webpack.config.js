@@ -1,5 +1,6 @@
 const path = require('path');
 
+
 module.exports = {
   watch: true,
   mode: 'development',
@@ -10,7 +11,44 @@ module.exports = {
   },
   target: 'web',
   module: {
-    /*sass?*/
+    rules: [
+      {
+        test: /\.css$/i,
+        use: [
+          'style-loader', 
+          {
+            loader: 'css-loader',
+            options: {
+              sourceMap: true,
+            },
+          },
+        ],
+      },
+      {
+        test: /\.s[ac]ss$/i,
+        use: [
+          // Creates `style` nodes from JS strings
+          'style-loader', 
+          // Translates CSS into CommonJS
+          {
+            loader: 'css-loader',
+            options: {
+              sourceMap: true,
+            },
+          },
+          // Compiles Sass to CSS
+          {
+            loader: 'sass-loader',
+            options: {
+              sourceMap: true,
+              sassOptions: {
+                outputStyle: 'compressed',
+              },
+            },
+          },
+        ],
+      },
+    ],
   },
   resolve: {
     extensions: ['.js'],
@@ -23,3 +61,5 @@ module.exports = {
   plugins : [],
   devtool: 'sourcemap'
 };
+
+
