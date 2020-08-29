@@ -1,0 +1,161 @@
+@import 'libs/vars';
+@import 'libs/functions';
+@import 'libs/mixins';
+@import "libs/skel";
+
+/*************/
+/*   Fonts   */
+/*************/
+@font-face {
+  font-family:"Mostra Nuova Alta Bold";
+  src:url("../fonts/Mostra_Nuova_AltA_Bold.otf");
+}
+@font-face {
+  font-family:"Mostra Nuova AltA Heavy";
+  src:url("../fonts/Mostra_Nuova_AltA_Heavy.otf");
+}
+@font-face {
+  font-family:"Mostra Nuova AltA Light";
+  src:url("../fonts/Mostra_Nuova_AltA_Light.otf");
+}
+@font-face {
+  font-family:"Trade Gothic LT Std";
+  src:url("../fonts/TradeGothicLTStd-Cn18.otf");
+}
+@font-face {
+  font-family:"Trade Gothic LT Std Bold";
+  src:url("../fonts/TradeGothicLTStd-BdCn20.otf");
+}
+
+@import url("font-awesome.min.css");
+
+$font-bold: "Mostra Nuova AltA Bold";
+$font-bold-heavy: "Mostra Nuova AltA Heavy";
+$font-light:"Mostra Nuova AltA Light";
+$font-std:"Trade Gothic LT Std";
+$font-std-bold:"Trade Gothic LT Std Bold";
+
+/* font size */
+
+$h1-fontsize: 3em;
+$h2-fontsize: 2em;
+$h3-fontsize: 1.5em;
+$h4-fontsize: 1em;
+$p-fontsize: 1.5em;
+$input-fontsize: 1em;
+
+/* colors */
+$yellow: #FFF200;
+$red: #E41913;
+$orange:#ffae00;
+$black-grey:#323437;
+
+/* overlays */
+$canceled: url('../images/canceled.png');
+$postponed : url('../images/postponed.png');
+
+
+/*********************/
+/*    BREAKPOINTS    */
+/*********************/
+
+	@include skel-breakpoints((
+		wide: '(max-width: 1680px)',
+		normal: '(max-width: 1280px)',
+    middle: '(max-width: 1024px)',
+		narrow: '(max-width: 980px)',
+		narrower: '(max-width: 840px)',
+		mobile: '(max-width: 768px)',
+		small: '(max-width: 600px)',
+    xsmall: '(max-width: 480px)',
+	));
+
+	@include skel-layout((
+		reset: 'full',
+		boxModel: 'border',
+		grid: ( gutters: (50px, 50px) ),
+		conditionals: true,
+		containers: 1400px,
+		breakpoints: (
+			wide: (
+				containers: 1200px,
+				grid: (
+					gutters: (40px, 40px)
+				),
+			),
+			normal: (
+				containers: 100%,
+			),
+      middle: (
+				containers: 100%,
+			),
+			narrow: (
+				containers: 100%,
+				grid: (
+					gutters: (30px, 30px)
+				),
+			),
+			narrower: (
+				containers: (95%, true),
+			),
+			mobile: (
+				containers: (100%, true),
+			),
+			small: (
+				containers: (100%, true),
+			),
+			xsmall: (
+				containers: (100%, true),
+			)
+		)
+	));
+
+/********************/
+/*      MACRO       */
+/********************/
+
+%centered-horizontally {
+  margin-left:auto;
+  margin-right: auto;
+}
+
+%underlined-link {
+  color: $red;
+  text-decoration:underline;
+  &:hover {
+    color:$orange;
+  }
+}
+
+/********************/
+/*      MIXINS      */
+/********************/
+
+  @mixin center($axis: "both") {
+      position:absolute;
+      @if $axis == "y"{
+          top:50%;
+          -webkit-transform: translateY(-50%);
+          -moz-transform: translateY(-50%);
+          -ms-transform: translateY(-50%);
+          -o-transform: translateY(-50%);
+          transform: translateY(-50%);
+      }
+      @if $axis == "x"{
+          left:50%;
+          -webkit-transform: translateX(-50%);
+          -moz-transform: translateX(-50%);
+          -ms-transform: translateX(-50%);
+          -o-transform: translateX(-50%);
+          transform: translateX(-50%);
+      }
+      @if $axis == "both"{
+          top:50%;
+          left:50%;
+          -webkit-transform: translate(-50%, -50%);
+          -moz-transform: translate(-50%, -50%);
+          -ms-transform: translate(-50%, -50%);
+          -o-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+      }
+  }
