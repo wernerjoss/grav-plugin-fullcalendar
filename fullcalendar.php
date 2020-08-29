@@ -31,8 +31,9 @@ class FullcalendarPlugin extends Plugin
         $assets = $this->grav['assets'];
         $assets->addJs('plugin://fullcalendar/assets/dist/bundle.js'); 
         //@todo use webpack loaders and sass
-        $assets->addCss('plugin://fullcalendar/assets/css/daygrid.css');  // default CSS for #calendar
-        $assets->addCss('plugin://fullcalendar/assets/css/tooltip.css');  // default CSS for #calendar
+        #$assets->addCss('plugin://fullcalendar/assets/css/daygrid.css');  // default CSS for #calendar
+        #$assets->addCss('plugin://fullcalendar/assets/css/tooltip.css');  // default CSS for #calendar
+        $assets->addCss('plugin://fullcalendar/assets/css/main.css');  // default CSS for #calendar
 
         //map plugin config
         $config = clone $this->grav['config'];
