@@ -1,3 +1,4 @@
 #!/bin/bash
 
-npx webpack --display-modules
+sass --watch sass/:css/ &
+npx webpack --display-modules &
