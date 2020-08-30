@@ -4,7 +4,7 @@
 
 <script>
 	document.addEventListener('DOMContentLoaded', function() {
-		var verbose = false;
+		var verbose = true;
 		var defaultLocale = 'en';
 		var weekNums = '{{ config.plugins.fullcalendar.weekNumbers }}';
 		weekNums = (weekNums !== null) ? weekNums:false;
@@ -129,6 +129,10 @@
 							if (entry !== null)	fcevents["start"] = entry.toJSDate();
 							var entry = item.getFirstPropertyValue("dtend");
 							if (entry !== null)	fcevents["end"] = entry.toJSDate();
+							duration = fcevents["end"] - fcevents["start"];	// calculate event duration 29.08.20
+							if (verbose)	console.log('Duration:', duration);
+							fcevents["allDay"] = true;	// default value -> span .fc-time in grid is NOT created
+							if (duration < 86400000)	fcevents["allDay"] = false;	// duration less than 1 day: allDay = false
 							var entry = item.getFirstPropertyValue("description");	// add description 22.06.20
 							if (entry !== null)	fcevents["description"] = entry;
 							

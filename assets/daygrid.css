@@ -9,9 +9,11 @@ body {
 	margin: 0 auto;
 	line-height: 0.5em;
 }
+/* this is now deprecated - see fullcalendar.html.twig
 #calendar .fc-time {
 	display: none;
 }
+*/
 #calendar .fc-day-grid-container {
 	height: 100%!important;
 }
