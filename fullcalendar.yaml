@@ -10,6 +10,7 @@ fullcalendar:
   editable: false
   navLinks: false
   fixWeekCount: false
+  initialView: timeGridWeek
 
 calendars: 
   - 

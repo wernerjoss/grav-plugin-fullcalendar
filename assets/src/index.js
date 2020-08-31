@@ -3,11 +3,16 @@ require('@fullcalendar/core');
 require('@fullcalendar/daygrid');
 require('@fullcalendar/interaction');
 require('@fullcalendar/rrule');
+require('@fullcalendar/list');
+require('@fullcalendar/timegrid');
+
 require('store2');
 require('superagent');
 const IcalExpander = require('ical-expander');
 require('@popperjs/core');
+require('ismobilejs');
 
+import isMobile from 'ismobilejs';
 import {createPopper} from '@popperjs/core';
 import superagent from 'superagent';
 import store from 'store2';
@@ -15,6 +20,8 @@ import { Calendar } from '@fullcalendar/core';
 import interactionPlugin from '@fullcalendar/interaction';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import rrulePlugin from '@fullcalendar/rrule';
+import listPlugin from '@fullcalendar/list';
+import timeGridPlugin from '@fullcalendar/timegrid';
 
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -25,6 +32,12 @@ document.addEventListener('DOMContentLoaded', function() {
   var calendarHtmlTarget = GRAV_PLUGIN_CONFIG.fullcalendar.target || '#calendar';
   var calendarsConfig = [];
   var allevents = [];
+
+  //responsive
+  var initialView = GRAV_PLUGIN_CONFIG.fullcalendar.initialView;
+  if (isMobile.any) {
+    initialView = 'listWeek';
+  }
 
   //init cache 
   store.remove('events');
@@ -55,12 +68,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     /* Configuration */
 
-    plugins: [ interactionPlugin, dayGridPlugin, rrulePlugin ],
+    plugins: [ interactionPlugin, listPlugin, dayGridPlugin, rrulePlugin, timeGridPlugin ],
+    initialView: initialView,
     locale: GRAV_PLUGIN_CONFIG.fullcalendar.locale || 'en',
     weekNumbers: GRAV_PLUGIN_CONFIG.fullcalendar.weekNumbers || false,
     timeZone: GRAV_PLUGIN_CONFIG.fullcalendar.timezone || 'local',
     headerToolbar: {
-      right: 'dayGridMonth,dayGridWeek',
+      right: 'dayGridMonth,timeGridWeek,listWeek',
       left: 'prevYear,prev,next,nextYear today',
       center: 'title',
     },
@@ -69,6 +83,7 @@ document.addEventListener('DOMContentLoaded', function() {
     editable: GRAV_PLUGIN_CONFIG.fullcalendar.editable || false,
     fixedWeekCount: GRAV_PLUGIN_CONFIG.fullcalendar.fixedWeekCount || false,
     contentHeight: GRAV_PLUGIN_CONFIG.fullcalendar.contentHeight || 'auto',
+    slotMonTime: '07:00:00',
 
     /* methods */
 

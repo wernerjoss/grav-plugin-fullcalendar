@@ -1,4 +1,4 @@
 #!/bin/bash
 
-sass --watch sass/:css/ &
-npx webpack --display-modules &
+echo "[INFO] Building JS"
+npx webpack --display-modules 
