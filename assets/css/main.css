@@ -1749,7 +1749,17 @@ body {
   border-color: white !important; }
 
 .fc td.fc-today {
-  background: grey; }
+  background-color: inherit !important; }
+
+.fc .fc-list-sticky .fc-list-day > * {
+  background-color: inherit !important; }
+
+.fc-direction-ltr .fc-list-table .fc-list-event-graphic {
+  padding-right: 4px !important;
+  padding-left: 4px; }
+
+.fc-list-day {
+  background-color: inherit; }
 
 .content.events {
   padding: 10px; }

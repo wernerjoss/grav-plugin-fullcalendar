@@ -83,7 +83,8 @@ document.addEventListener('DOMContentLoaded', function() {
     editable: GRAV_PLUGIN_CONFIG.fullcalendar.editable || false,
     fixedWeekCount: GRAV_PLUGIN_CONFIG.fullcalendar.fixedWeekCount || false,
     contentHeight: GRAV_PLUGIN_CONFIG.fullcalendar.contentHeight || 'auto',
-    slotMonTime: '07:00:00',
+    slotMinTime: GRAV_PLUGIN_CONFIG.fullcalendar.slotMinTime || '07:00:00',
+    slotMaxTime: GRAV_PLUGIN_CONFIG.fullcalendar.slotMaxTime || '24:00:00',
 
     /* methods */
 
