@@ -37,12 +37,19 @@ class FullcalendarPlugin extends Plugin
         
         $assets->addCss('plugin://fullcalendar/fc4/packages/core/main.css');
 		$assets->addCss('plugin://fullcalendar/fc4/packages/daygrid/main.css');
-		$assets->addJs('plugin://fullcalendar/fc4/vendor/rrule.js');   // see also reamde.txt file there
-		$assets->addJs('plugin://fullcalendar/fc4/packages/core/main.js');
-		$assets->addJs('plugin://fullcalendar/fc4/packages/interaction/main.js');
+        
+        $assets->addJs('plugin://fullcalendar/fc4/packages/core/main.js');
+        /*
+        $assets->addJs('plugin://fullcalendar/fc4/packages/moment/main.js');
+        $assets->addJs('plugin://fullcalendar/fc4/packages/moment-timezone/main.js');
+        //  $assets->addJs('plugin://fullcalendar/fc4/vendor/luxon.js');    // this is luxon.js from https://moment.github.io/luxon/docs/manual/install.html, does not work
+		$assets->addJs('plugin://fullcalendar/fc4/packages/luxon/main.js');
+        */
+        $assets->addJs('plugin://fullcalendar/fc4/vendor/rrule.js');   // see also reamde.txt file there
+		$assets->addJs('plugin://fullcalendar/fc4/packages/rrule/main.js'); // connector to the vendor/rrule.js Lib
+        $assets->addJs('plugin://fullcalendar/fc4/packages/interaction/main.js');
 		$assets->addJs('plugin://fullcalendar/fc4/packages/daygrid/main.js');
-		$assets->addJs('plugin://fullcalendar/fc4/packages/rrule/main.js');
-		// do not load a predefined language, use system setting instead
+        // do not load a predefined language, use system setting instead
         $language = $this->grav['language']->getLanguage();
         $assets->addJs('plugin://fullcalendar/fc4/packages/core/locales/'.$language.'.js');
         $assets->addJs('plugin://fullcalendar/assets/monthpic.js');

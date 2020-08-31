@@ -4,7 +4,7 @@
 
 <script>
 	document.addEventListener('DOMContentLoaded', function() {
-		var verbose = true;
+		var verbose = false;
 		var defaultLocale = 'en';
 		var weekNums = '{{ config.plugins.fullcalendar.weekNumbers }}';
 		weekNums = (weekNums !== null) ? weekNums:false;
@@ -33,10 +33,14 @@
 		if (verbose) console.log('colors[]:', colors);
 		var showlegend = '{{ config.plugins.fullcalendar.showlegend }}';
 		if (verbose)	console.log('showlegend:', showlegend);
+		var cfg_tz_offset = '{{ config.plugins.fullcalendar.tz_offset }}';
+		var default_tz_offset = 0;	// Default
+		var tz_offset = (cfg_tz_offset !== null) ? cfg_tz_offset : default_tz_offset;
 		// page is now ready, initialize the calendar...
 		var calendarEl = document.getElementById('calendar');
 		var calendar = new FullCalendar.Calendar(calendarEl, {
 			plugins: [ 'interaction', 'dayGrid', 'rrule' ],
+			//	timezone: 'W. Europe Standard Time',
 			locale: LocaleCode,
 			weekNumbers: weekNums,
 			header: {
@@ -126,9 +130,9 @@
 							var entry = item.getFirstPropertyValue("url");
 							if (entry !== null)	fcevents["url"] = entry;
 							var entry = item.getFirstPropertyValue("dtstart");
-							if (entry !== null)	fcevents["start"] = entry.toJSDate();
+							if (entry !== null)	{ fcevents["start"] = entry.toJSDate(); var start = entry;}
 							var entry = item.getFirstPropertyValue("dtend");
-							if (entry !== null)	fcevents["end"] = entry.toJSDate();
+							if (entry !== null)	{ fcevents["end"] = entry.toJSDate(); var end = entry; }
 							duration = fcevents["end"] - fcevents["start"];	// calculate event duration 29.08.20
 							if (verbose)	console.log('Duration:', duration);
 							fcevents["allDay"] = true;	// default value -> span .fc-time in grid is NOT created
@@ -142,8 +146,18 @@
 							var fcrrules = {};	// extra object for rrules
 							if (rrules !== null)	{
 								if (rrules.freq !== null)	{	//	freq is required, do not continue if null
-									fcrrules["freq"] = rrules.freq;
 									if (verbose)	console.log('rrules:', rrules);	
+									fcrrules["freq"] = rrules.freq;
+									// fcrrules["tzid"] = "W. Europe Standard Time";	// test strixos, Fehler: Using TZID without Luxon available is unsupported. Returned times are in UTC, not the requested time zone
+									if (verbose)	console.log('tz_offset:', tz_offset);
+									start["hour"] = start["hour"] + Number(tz_offset);	// add hours from config, type conversion mandatory ! :)
+									if (verbose)	console.log('newstart', start);
+									fcevents["start"] = start.toJSDate();
+									/* not needed
+									end["hour"] = end["hour"] + tz_offset;	// TODO: add configurable Offset, implement housekeeping (24/0h overflow)
+									if (verbose)	console.log('newend', end);
+									fcevents["end"] = end.toJSDate();
+									*/
 									var parts = rrules["parts"];
 									if (verbose)	console.log('parts:', parts);
 									var byweekday = parts["BYDAY"];
@@ -186,6 +200,7 @@
 									if (rrules.count != null) { fcrrules["count"] = rrules.count;}
 									if (rrules.wkst != null) { fcrrules["wkst"] = rrules.wkst;}
 									if (rrules.until != null) { fcrrules["until"] = rrules.until.toJSDate();}
+									
 									fcevents["rrule"] = fcrrules;
 									if (verbose)	console.log('fcrrules:', fcrrules);
 								}
