@@ -28,7 +28,8 @@ Note that if you use the admin plugin, a file with your configuration, and named
 
 ## Usage
 
-fullcalendar plugins, requires you to create a subpage with taxonomy like, this can be achieve in expert or normal mode
+fullcalendar plugins, requires you to create a page with taxonomy like, this can be achieve in expert or normal mode
+if your calendar is a modular subpage you need to add this taxonomy on the parent page and on the modular child page
 
 ```
 taxonomy:
@@ -57,10 +58,13 @@ this plugin is built on
  * [store2](https://www.npmjs.com/package/store2)
  * [superagent](https://www.npmjs.com/package/superagent)
 
+## Issues
+
+See github repo issues
+
 ## To Do
- * SECURITY : filter GRAV syteme configuration !!!! 
- * assets : css should be generated from sass (sass-loader)
- * localstorage expiration time ? (lifetime == page reload)
+
+ * multicalendar ? currently only one calendar per page is supported
  * admin form plugin blueprints.yaml for extended configuration 
  * event popup on click or hover
  * use a unified log library (log does not work with webpack) 
