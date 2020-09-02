@@ -1,6 +1,6 @@
 name: FullCalendar
-version: 0.3.0alpha
-description: show Calendar Widget from ICS File(s), based on fullcalendar.io
+version: 0.3.0
+description: Show Calendar Widget from ICS remote and/or locally uploaded file(s), based on fullcalendar.io
 icon: calendar
 author:
   name: Guillaume Storchi
