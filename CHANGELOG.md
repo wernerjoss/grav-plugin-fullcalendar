@@ -1,8 +1,18 @@
-#v0.3.0alpha
- * major rewrite, no shortcodes anymore (page media files support instead)
- * ics files are objects with configuration (in page header)
- * ics data are cached in local storage
- * assets are ai webpack project 
+# v0.3.0
+## 02/09/2020 
+ 
+ [](#new)
+  * ics can be uploaded as page media files (no shortcodes anymore)
+  * ics url files can be specified in yaml configuration (page header)
+  * assets are a webpack project 
+  * fine fullcalendar configuration mapped in yaml plugin configuration
+  * responsive style (not tested on IE)
+ 
+ [](#improved)
+  * each calendar has its own configuration when specified in yaml
+  * fullcalendar views : month (daygrid), week (timegrid), list (listgrid)
+  * rrule support extended with ical-expander (EXDATE)
+  * events are cached in local storage
 
 # v0.2.3
 ##  06/22/2020
