@@ -41,7 +41,7 @@ class FullcalendarPlugin extends Plugin
       $currentPage = $this->grav['page'];
       //do not process something else than active and calendar page
       $templateName = $currentPage->template();
-      $expectedTemplates = ['fullcalendar', 'modular', 'modular_fullcalendar'];
+      $expectedTemplates = ['fullcalendar', 'modular'];
       if ( !$currentPage->active() || !in_array($templateName, $expectedTemplates)) {
         return;
       }
@@ -50,8 +50,22 @@ class FullcalendarPlugin extends Plugin
       //WARNING : we expect only one modular calendar 
       $page = $currentPage;
       if ($templateName == 'modular') {
-        $children = $currentPage->evaluate(['@page.modular'=> $currentPage->route(),'filter'=>['type'=>'modular_fullcalendar'] ]);
-        $page = $children->current();
+        $children = $currentPage->evaluate(['@page.modular'=>$currentPage->route()]);
+        if ($children->count() == 0 ) {
+          return;
+        }
+        //@todo optimize this with collection method (nothing relevant found yet)
+        foreach($children as $child) { 
+          if ($child->template() == 'modular/modular_fullcalendar') {
+            //page found, end of loop
+            $page = $child;
+            break;
+          }
+        }
+        //no calendar module found 
+        if ($page->template() != 'modular/modular_fullcalendar') {
+          return;
+        }
       }
       //headers and media
       $headers = json_encode($page->header());
