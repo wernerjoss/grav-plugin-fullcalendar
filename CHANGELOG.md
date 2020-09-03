@@ -4,6 +4,7 @@
 
   [](#bugfix)
     * support modular and non modular page #5
+    * js error on modular pages with no calendar submodule #6
 
 # v0.3.0
 ## 02/09/2020 
