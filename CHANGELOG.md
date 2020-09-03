@@ -1,3 +1,10 @@
+# v0.3.1
+  [](#improved)
+    * taxonomy not required anymore, recognition based on template name #4
+
+  [](#bugfix)
+    * support modular and non modular page #5
+
 # v0.3.0
 ## 02/09/2020 
  

@@ -1,5 +1,5 @@
 name: FullCalendar
-version: 0.3.0
+version: 0.3.1
 description: Show Calendar Widget from ICS remote and/or locally uploaded file(s), based on fullcalendar.io
 icon: calendar
 author:

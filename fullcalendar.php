@@ -11,7 +11,8 @@ class FullcalendarPlugin extends Plugin
     public static function getSubscribedEvents()
     {
         return [
-            'onPluginsInitialized' => ['onPluginsInitialized', 0]
+            'onPluginsInitialized' => ['onPluginsInitialized', 0],
+            'onGetPageTemplates'   => ['onGetPageTemplates', 0],
         ];
     }
 
@@ -24,7 +25,6 @@ class FullcalendarPlugin extends Plugin
         // Enable the main events we are interested in
         $this->enable([
             'onTwigTemplatePaths' => ['onTwigTemplatePaths',0],
-            'onGetPageTemplates'   => ['onGetPageTemplates', 0],
             'onPagesInitialized' => ['onPagesInitialized', 0]
         ]);
             }
@@ -36,6 +36,32 @@ class FullcalendarPlugin extends Plugin
     public function onPagesInitialized() 
     {
       $assets = $this->grav['assets'];
+
+      //current page node
+      $currentPage = $this->grav['page'];
+      //do not process something else than active and calendar page
+      $templateName = $currentPage->template();
+      $expectedTemplates = ['fullcalendar', 'modular', 'modular_fullcalendar'];
+      if ( !$currentPage->active() || !in_array($templateName, $expectedTemplates)) {
+        return;
+      }
+
+     
+      //WARNING : we expect only one modular calendar 
+      $page = $currentPage;
+      if ($templateName == 'modular') {
+        $children = $currentPage->evaluate(['@page.modular'=> $currentPage->route(),'filter'=>['type'=>'modular_fullcalendar'] ]);
+        $page = $children->current();
+      }
+      //headers and media
+      $headers = json_encode($page->header());
+      $media = $page->getMedia();
+      $fileUrls = [];
+      foreach($media->files() as $name=>$file) {
+        if (substr(strrchr($name, "."), 1) == 'ics') {
+          $fileUrls[] = ['ics'=>$file->url(), 'name'=>$name];
+        }
+      }
 
       //map plugin config
       $config = $this->grav['config'];
@@ -52,30 +78,6 @@ class FullcalendarPlugin extends Plugin
                           };";
       $assets->addInlineJs($json, ['loading'=>'inline', 'position'=>'before']); 
 
-      //current page node
-      $currentPage = $this->grav['page'];
-      $taxo = $currentPage->taxonomy();
-      //do not process something else than active and calendar page
-      if ( !$currentPage->active() || empty($taxo['category']) || !in_array('calendar', $taxo['category'])) {
-        return;
-      }
-      //we expect only one modular calendar 
-      $children = $currentPage->evaluate(['@page.modular'=> $currentPage->route(),
-                                          '@taxonomy.category' => 'calendar'
-                                        ]);
-      if ($children->count() > 1) {
-        $page = $children->current();
-      } else {
-        $page = $currentPage;
-      }
-      $headers = json_encode($page->header());
-      $media = $page->getMedia();
-      $fileUrls = [];
-      foreach($media->files() as $name=>$file) {
-        if (substr(strrchr($name, "."), 1) == 'ics') {
-          $fileUrls[] = ['ics'=>$file->url(), 'name'=>$name];
-        }
-      }
       //build page headers and media in json  
       $pageJson =
         " GRAV.page = { header:'', media:''};" . 
@@ -104,17 +106,7 @@ class FullcalendarPlugin extends Plugin
     public function onGetPageTemplates(Event $event)
     {
       $types = $event->types;
-
-      /* @var Locator $locator */
-      $locator = $this->grav['locator'];
-
-      // Set blueprints & templates.
-      //$types->scanBlueprints($locator->findResource('plugin://fullcalendar/blueprints'));
-      $types->scanTemplates($locator->findResource('plugin://fullcalendar/templates'));
-
-      // reverse the FUBARd order of blueprints
-      $event = array_reverse($types['event']);
-      $types['event'] = $event;
+      $types->scanTemplates('plugin://fullcalendar/templates/');
     }
 
 

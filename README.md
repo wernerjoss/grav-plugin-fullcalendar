@@ -28,14 +28,7 @@ Note that if you use the admin plugin, a file with your configuration, and named
 
 ## Usage
 
-fullcalendar plugins, requires you to create a page with taxonomy like, this can be achieve in expert or normal mode
-if your calendar is a modular subpage you need to add this taxonomy on the parent page and on the modular child page
-
-```
-taxonomy:
-  category:
-    - calendar
-```
+Nothing special, just use the proper templates Fullcalendar or Modular Fullcalendar
 
 ## Recurrent events
 

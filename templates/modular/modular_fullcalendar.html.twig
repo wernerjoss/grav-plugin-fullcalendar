@@ -1,7 +1,9 @@
-{% extends 'partials/fullcalendar.html.twig' %}
 {% block content %}
-  <div class="content events">
-    <!-- <a class="togglehide" data-target="#calendar" href="#"><h2>Voir le calendrier</h2></a> -->
-{{parent()}}
+<div class="content events">
+  <div class="container">
+    <div id='actMonth'></div>
+    <div id='calendar'></div>
+    <div id='legend'></div>
+  </div>
 </div>
 {% endblock %}
