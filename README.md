@@ -65,4 +65,4 @@ This Plugin is built on [fullcalendar.io](https://fullcalendar.io), [jakubroztoc
 
 ## To Do
 
-* Implement EXDATE/EXRULE rrule exceptions
+* this branch is intended to be merged with [https://github.com/sherpadawan/grav-plugin-fullcalendar](https://github.com/sherpadawan/grav-plugin-fullcalendar) with the goal to create a complete new Release based on fullcalendar.io v5
