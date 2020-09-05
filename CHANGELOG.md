@@ -1,3 +1,11 @@
+# v0.2.5
+##  09/05/2020
+
+1. [](#new)
+    * fix missing event time display when allDay=false 
+    * fix picture artifact in html when no month pics in page folder
+    * add experimental config option tz_offset as a workaround for wrong event times in repeating events (see source code..)
+
 # v0.2.4
 ##  07/21/2020
 
