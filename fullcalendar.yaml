@@ -22,13 +22,16 @@ calendars:
     ics: 'https://cloud.mydomain.com/nextcloud/remote.php/dav/public-calendars/holidays/?export'
     color: blue
     active: true
+    shareLink: ''
   -
     name: Work
     ics: 'https://cloud.mydomain.com/nextcloud/remote.php/dav/public-calendars/work/?export'
     color: red
     active: true
+    shareLink: ''
   -
     name: Personnal
     ics: 'personal-2020-07-15.ics'
     color: green
     active: true
+    shareLink: ''

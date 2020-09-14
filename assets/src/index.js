@@ -197,9 +197,20 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add the contents of cfgfiles to #legend:
     let legend = document.createElement('ul');
     calendarsConfig.forEach((calendarConfig, index)=>{
-      let link = calendarConfig.shareLink;
       let item = document.createElement('li');
-      item.appendChild(document.createTextNode(calendarConfig.name));
+      let name = document.createElement('span');
+      name.innerHTML = calendarConfig.name;
+      item.appendChild(name);
+      if (calendarConfig.shareLink) { 
+        let link = document.createElement('a');
+        link.href = calendarConfig.shareLink;
+        link.innerHTML = '+';
+        item.appendChild(link);
+      }
+      let ics = document.createElement('a');
+      ics.href = calendarConfig.ics;
+      ics.innerHTML = 'ics';
+      item.appendChild(ics);
       item.style.color = calendarConfig.color;
       legend.appendChild(item);
     }); 
