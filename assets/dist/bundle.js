@@ -43741,7 +43741,8 @@ document.addEventListener('DOMContentLoaded', function() {
               title: e.summary,
               uid: e.uid,
               description: e.description,
-							url: e.url
+							url: e.url,
+              color: calendarConfig.color
             })
           );
           let mappedOccurrences = events.occurrences.map(o => (
@@ -43752,7 +43753,8 @@ document.addEventListener('DOMContentLoaded', function() {
               location: o.location,
               uid: o.uid,
               description: o.description,
-							url: o.url
+							url: o.url,
+              color: calendarConfig.color
             })
           );
           events = [].concat(mappedEvents, mappedOccurrences);
@@ -43777,33 +43779,18 @@ document.addEventListener('DOMContentLoaded', function() {
   // show legend, if enabled
   if (showlegend) {
     // Add the contents of cfgfiles to #legend:
-    document.getElementById('legend').appendChild(makeUL(cfgfiles, colors));
+    let legend = document.createElement('ul');
+    calendarConfig.forEach((calendarConfig, index)=>{
+      let link = calendarConfig.shareLink;
+      let item = document.createElement('li');
+      item.appendChild(document.createTextNode(calendarConfig.name));
+      item.style.color = calendarConfig.color;
+      legend.appendChild(item);
+    }); 
+    document.getElementById('legend').appendChild(legend);
   }
 
 }); //endof eventlistener DOMLoaded
-
-/* utils */
-//@todo refactor
-
-function makeUL(array, colors) {
-  // Create the list element:
-  var list = document.createElement('ul');
-  // assign css class
-  list.classList.add('cal_legend');
-  for (var i = 0; i < array.length; i++) {
-    // Create the list item:
-    var item = document.createElement('li');
-
-    // Set its contents:
-    item.appendChild(document.createTextNode(array[i]));
-    item.style.color = colors[i];
-
-    // Add it to the list:
-    list.appendChild(item);
-  }
-  // Finally, return the constructed list:
-  return list;
-}
 
 //@todo return prefix configured in grav cms
 function getAbsolutePath() { // see https://www.sitepoint.com/jquery-current-page-url/

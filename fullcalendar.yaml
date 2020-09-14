@@ -1,6 +1,8 @@
 enabled: true
 proxy : 'https://cors-anywhere.herokuapp.com/'
 colors: ["blue", "green", "yellow", "red", "orange", "purple"]
+showlegend: true
+
 #fullcalendar library configuration
 fullcalendar:
   locale: 'en' 
