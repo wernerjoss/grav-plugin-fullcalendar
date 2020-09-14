@@ -196,7 +196,7 @@ document.addEventListener('DOMContentLoaded', function() {
   if (showlegend) {
     // Add the contents of cfgfiles to #legend:
     let legend = document.createElement('ul');
-    calendarConfig.forEach((calendarConfig, index)=>{
+    calendarsConfig.forEach((calendarConfig, index)=>{
       let link = calendarConfig.shareLink;
       let item = document.createElement('li');
       item.appendChild(document.createTextNode(calendarConfig.name));
