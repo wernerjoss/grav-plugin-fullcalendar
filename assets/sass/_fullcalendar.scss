@@ -1,0 +1,114 @@
+.fc-unthemed th, .fc-unthemed td, .fc-unthemed thead, .fc-unthemed tbody,
+.fc-unthemed .fc-divider, .fc-unthemed .fc-row, .fc-unthemed .fc-content,
+.fc-unthemed .fc-popover, .fc-unthemed .fc-list-view, .fc-unthemed .fc-list-heading td {
+  border-color:white !important;
+}
+.fc td.fc-today {
+  background-color: inherit !important;
+}
+.fc .fc-list-sticky .fc-list-day > * {
+  background-color: inherit !important;
+}
+.fc-direction-ltr .fc-list-table .fc-list-event-graphic {
+  padding-right: 4px !important;
+  padding-left: 4px;
+}
+.fc-list-day {
+  background-color:inherit;
+}
+.content.events {
+
+   padding:10px;
+
+   h2 {
+     text-align:left;
+     @include breakpoint(narrow)  {
+       text-align:center;
+     }
+   }
+
+  #legend {
+    ul {
+      li {
+       span {
+         margin: 0 10px 0 10px;
+       }
+       a {
+         margin: 0 10px 0 10px;
+       }
+      }
+    }
+  }
+
+  #calendar {
+    overflow: hidden;
+    display: block;
+    margin: 10px;
+
+
+    .fc-dayGrid-view .fc-week-number, .fc-dayGrid-view .fc-day-number {
+      padding:10px;
+    }
+
+    .fc-unthemed td.fc-today {
+      background:grey;
+    }
+
+    th.fc-day-header {
+      height: 20px;
+      padding-top: 8px;
+      @include breakpoint(narrow) {
+        line-height:1em;
+      }
+    }
+
+    .fc-button-primary {
+      background-color: grey;
+      color:white;
+
+         @include breakpoint(narrow) {
+           margin-top:1em;
+           margin-bottom:1em;
+           margin-left: auto;
+           margin-right: auto;
+         }
+
+    }
+
+     .fc-toolbar.fc-header-toolbar {
+       display: flex;
+       flex-wrap:wrap;
+       justify-content: center;
+       @include breakpoint(narrow) {
+         text-align: center;
+       }
+       .fc-left {
+          @include breakpoint(narrow) {
+            width:90%;
+            margin-left: auto;
+            margin-right: auto;
+          }
+
+       }
+       .fc-right {
+          @include breakpoint(narrow) {
+            width:90%;
+            margin-left: auto;
+            margin-right: auto;
+          }
+
+       }
+       .fc-center {
+         @include breakpoint(narrow) {
+           width:100%;
+
+         }
+       }
+     }
+  }
+
+}
+/*
+ * #calendar .fc-time {
+  display:inline-block;
+}*/

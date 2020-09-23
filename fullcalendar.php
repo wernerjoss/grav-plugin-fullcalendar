@@ -4,58 +4,106 @@ namespace Grav\Plugin;
 use Grav\Common\Plugin;
 use Grav\Common\Language;
 use RocketTheme\Toolbox\Event\Event;
+use Grav\Common\Taxonomy;
 
 class FullcalendarPlugin extends Plugin
 {
     public static function getSubscribedEvents()
     {
         return [
-            'onPluginsInitialized' => ['onPluginsInitialized', 0]
+            'onPluginsInitialized' => ['onPluginsInitialized', 0],
+            'onGetPageTemplates'   => ['onGetPageTemplates', 0],
         ];
     }
 
     public function onPluginsInitialized()
-    {
-        // Don't proceed if we are in the admin plugin
-        if ($this->isAdmin()) {
-            return;
-        }
-        // Enable the main events we are interested in
-        $this->enable([
-            'onShortcodeHandlers' => ['onShortcodeHandlers', 0],
-            'onTwigTemplatePaths' => ['onTwigTemplatePaths',0]
-        ]);
-        //add assets
-        $assets = $this->grav['assets'];
-        // $assets->addJs('plugin://fullcalendar/assets/lib/jquery.min.js');	// jquery should already be in system/assets
-        
-        $assets->addJs('plugin://fullcalendar/assets/ical.js/build/ical.min.js');   // see also reamde.txt file there
+	{
+		// Don't proceed if we are in the admin plugin
+		if ($this->isAdmin()) {
+			return;
+		}
+		// Enable the main events we are interested in
+		$this->enable([
+			'onTwigTemplatePaths' => ['onTwigTemplatePaths',0],
+			'onPagesInitialized' => ['onPagesInitialized', 0]
+		]);
+	}
 
-        // for Tooltip: (use unpkg cdn for now...)
-        $assets->addJs('https://unpkg.com/@popperjs/core@2');
-        $assets->addJs('https://unpkg.com/tippy.js@6');
-        
-        $assets->addCss('plugin://fullcalendar/fc4/packages/core/main.css');
-		$assets->addCss('plugin://fullcalendar/fc4/packages/daygrid/main.css');
-        
-        $assets->addJs('plugin://fullcalendar/fc4/packages/core/main.js');
-        /*
-        $assets->addJs('plugin://fullcalendar/fc4/packages/moment/main.js');
-        $assets->addJs('plugin://fullcalendar/fc4/packages/moment-timezone/main.js');
-        //  $assets->addJs('plugin://fullcalendar/fc4/vendor/luxon.js');    // this is luxon.js from https://moment.github.io/luxon/docs/manual/install.html, does not work
-		$assets->addJs('plugin://fullcalendar/fc4/packages/luxon/main.js');
-        */
-        $assets->addJs('plugin://fullcalendar/fc4/vendor/rrule.js');   // see also reamde.txt file there
-		$assets->addJs('plugin://fullcalendar/fc4/packages/rrule/main.js'); // connector to the vendor/rrule.js Lib
-        $assets->addJs('plugin://fullcalendar/fc4/packages/interaction/main.js');
-		$assets->addJs('plugin://fullcalendar/fc4/packages/daygrid/main.js');
-        // do not load a predefined language, use system setting instead
-        $language = $this->grav['language']->getLanguage();
-        $assets->addJs('plugin://fullcalendar/fc4/packages/core/locales/'.$language.'.js');
-        $assets->addJs('plugin://fullcalendar/assets/monthpic.js');
-        $assets->addCss('plugin://fullcalendar/assets/daygrid.css');	// default CSS for #calendar
-        //	$assets->addCss('plugin://fullcalendar/assets/custom.css');	// don't use custom CSS in Plugin folder, better from Theme !
-        
+    /**
+     * Retrieves ics files which were uploaded on current page (or subpage)
+     *
+     */
+    public function onPagesInitialized() 
+    {
+      $assets = $this->grav['assets'];
+
+      //current page node
+      $currentPage = $this->grav['page'];
+      //do not process something else than active and calendar page
+      $templateName = $currentPage->template();
+      $expectedTemplates = ['fullcalendar', 'modular'];
+      if ( !$currentPage->active() || !in_array($templateName, $expectedTemplates)) {
+        return;
+      }
+
+     
+      //WARNING : we expect only one modular calendar 
+      $page = $currentPage;
+      if ($templateName == 'modular') {
+        $children = $currentPage->evaluate(['@page.modular'=>$currentPage->route()]);
+        if ($children->count() == 0 ) {
+          return;
+        }
+        //@todo optimize this with collection method (nothing relevant found yet)
+        foreach($children as $child) { 
+          if ($child->template() == 'modular/modular_fullcalendar') {
+            //page found, end of loop
+            $page = $child;
+            break;
+          }
+        }
+        //no calendar module found 
+        if ($page->template() != 'modular/modular_fullcalendar') {
+          return;
+        }
+      }
+      //headers and media
+      $headers = json_encode($page->header());
+      $media = $page->getMedia();
+      $fileUrls = [];
+      foreach($media->files() as $name=>$file) {
+        if (substr(strrchr($name, "."), 1) == 'ics') {
+          $fileUrls[] = ['ics'=>$file->url(), 'name'=>$name];
+        }
+      }
+
+      //map plugin config
+      $config = $this->grav['config'];
+      //we choose settings for security reasons
+      $json = "var GRAV = {
+                            'config': { 
+                              'system': { 
+                                 'debugger': ". json_encode($config['system']['debugger'])."
+                              },
+                              'plugins': {
+                                'fullcalendar': ".json_encode($config['plugins']['fullcalendar']) ."
+                              }
+                            } 
+                          };";
+      $assets->addInlineJs($json, ['loading'=>'inline', 'position'=>'before']); 
+
+      //build page headers and media in json  
+      $pageJson =
+        " GRAV.page = { header:'', media:''};" . 
+        " GRAV.page.header = JSON.parse('" . addslashes($headers) . "');" .
+        (!empty($fileUrls)?" GRAV.page.media = JSON.parse('" . addslashes(json_encode($fileUrls)). "');":'');
+
+      $assets->addInlineJs($pageJson, ['loading'=>'inline', 'position'=>'before']);
+      //main fullcalendar assets
+      $assets->addJs('plugin://fullcalendar/assets/dist/bundle.js'); 
+      //@todo use webpack loaders and sass
+      $assets->addCss('plugin://fullcalendar/assets/css/main.css');  // default CSS for #calendar
+
     }
 
     public function onTwigTemplatePaths()
@@ -63,8 +111,15 @@ class FullcalendarPlugin extends Plugin
         $this->grav['twig']->twig_paths[] = __DIR__ . '/templates';
     }
 
-    public function onShortcodeHandlers(Event $e)
+    /**
+     * Expose plugin's page templates
+     *
+     * @param  Event $event
+     * @return void
+     */
+    public function onGetPageTemplates(Event $event)
     {
-        $this->grav['shortcode']->registerAllShortcodes(__DIR__.'/shortcodes');
+      $types = $event->types;
+      $types->scanTemplates('plugin://fullcalendar/templates/');
     }
 }
