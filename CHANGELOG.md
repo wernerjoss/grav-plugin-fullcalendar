@@ -1,3 +1,27 @@
+# v0.3.1
+  [](#improved)
+    * taxonomy not required anymore, recognition based on template name #4
+
+  [](#bugfix)
+    * support modular and non modular page #5
+    * js error on modular pages with no calendar submodule #6
+
+# v0.3.0
+## 02/09/2020 
+ 
+ [](#new)
+  * ics can be uploaded as page media files (no shortcodes anymore)
+  * ics url files can be specified in yaml configuration (page header)
+  * assets are a webpack project 
+  * fine fullcalendar configuration mapped in yaml plugin configuration
+  * responsive style (not tested on IE)
+ 
+ [](#improved)
+  * each calendar has its own configuration when specified in yaml
+  * fullcalendar views : month (daygrid), week (timegrid), list (listgrid)
+  * rrule support extended with ical-expander (EXDATE)
+  * events are cached in local storage
+
 # v0.2.4
 ##  07/21/2020
 

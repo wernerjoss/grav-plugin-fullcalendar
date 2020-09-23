@@ -1,1 +1,37 @@
 enabled: true
+proxy : 'https://cors-anywhere.herokuapp.com/'
+colors: ["blue", "green", "yellow", "red", "orange", "purple"]
+showlegend: true
+
+#fullcalendar library configuration
+fullcalendar:
+  locale: 'en' 
+  timezone: 'local'
+  weekNumbers: false
+  contentHeight: 700
+  editable: false
+  navLinks: false
+  fixWeekCount: false
+  initialView: timeGridWeek
+  slotMinTime: '07:00:00'
+  slotMaxTime: '24:00:00'
+
+calendars: 
+  - 
+    name: Holidays
+    ics: 'https://cloud.mydomain.com/nextcloud/remote.php/dav/public-calendars/holidays/?export'
+    color: blue
+    active: true
+    shareLink: ''
+  -
+    name: Work
+    ics: 'https://cloud.mydomain.com/nextcloud/remote.php/dav/public-calendars/work/?export'
+    color: red
+    active: true
+    shareLink: ''
+  -
+    name: Personnal
+    ics: 'personal-2020-07-15.ics'
+    color: green
+    active: true
+    shareLink: ''

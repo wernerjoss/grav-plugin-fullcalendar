@@ -1,0 +1,108 @@
+@import 'libs/functions';
+@import 'libs/mixins';
+@import "libs/skel";
+
+/*********************/
+/*    BREAKPOINTS    */
+/*********************/
+
+  @include skel-breakpoints((
+    wide: '(max-width: 1680px)',
+    normal: '(max-width: 1280px)',
+    middle: '(max-width: 1024px)',
+    narrow: '(max-width: 980px)',
+    narrower: '(max-width: 840px)',
+    mobile: '(max-width: 768px)',
+    small: '(max-width: 600px)',
+    xsmall: '(max-width: 480px)',
+  ));
+
+  @include skel-layout((
+    reset: 'full',
+    boxModel: 'border',
+    grid: ( gutters: (50px, 50px) ),
+    conditionals: true,
+    containers: 1400px,
+    breakpoints: (
+      wide: (
+        containers: 1200px,
+        grid: (
+          gutters: (40px, 40px)
+        ),
+      ),
+      normal: (
+        containers: 100%,
+      ),
+      middle: (
+        containers: 100%,
+      ),
+      narrow: (
+        containers: 100%,
+        grid: (
+          gutters: (30px, 30px)
+        ),
+      ),
+      narrower: (
+        containers: (95%, true),
+      ),
+      mobile: (
+        containers: (100%, true),
+      ),
+      small: (
+        containers: (100%, true),
+      ),
+      xsmall: (
+        containers: (100%, true),
+      )
+    )
+  ));
+
+/********************/
+/*      MACRO       */
+/********************/
+
+%centered-horizontally {
+  margin-left:auto;
+  margin-right: auto;
+}
+
+%underlined-link {
+  color: white;
+  text-decoration:underline;
+  &:hover {
+    color:grey;
+  }
+}
+
+/********************/
+/*      MIXINS      */
+/********************/
+
+  @mixin center($axis: "both") {
+      position:absolute;
+      @if $axis == "y"{
+          top:50%;
+          -webkit-transform: translateY(-50%);
+          -moz-transform: translateY(-50%);
+          -ms-transform: translateY(-50%);
+          -o-transform: translateY(-50%);
+          transform: translateY(-50%);
+      }
+      @if $axis == "x"{
+          left:50%;
+          -webkit-transform: translateX(-50%);
+          -moz-transform: translateX(-50%);
+          -ms-transform: translateX(-50%);
+          -o-transform: translateX(-50%);
+          transform: translateX(-50%);
+      }
+      @if $axis == "both"{
+          top:50%;
+          left:50%;
+          -webkit-transform: translate(-50%, -50%);
+          -moz-transform: translate(-50%, -50%);
+          -ms-transform: translate(-50%, -50%);
+          -o-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+      }
+  }

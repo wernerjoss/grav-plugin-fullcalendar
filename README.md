@@ -4,16 +4,6 @@ The **Fullcalendar** Plugin is for [Grav CMS](http://github.com/getgrav/grav). I
 
 ## Installation
 
-Installing the Fullcalendar plugin can be done in one of two ways. The GPM (Grav Package Manager) installation method enables you to quickly and easily install the plugin with a simple terminal command, while the manual method enables you to do so via a zip file.
-
-### GPM Installation (Preferred)
-
-The simplest way to install this plugin is via the [Grav Package Manager (GPM)](http://learn.getgrav.org/advanced/grav-gpm) through your system's terminal (also called the command line).  From the root of your Grav install type:
-
-    bin/gpm install fullcalendar
-
-This will install the Fullcalendar plugin into your `/user/plugins` directory within Grav. Its files can be found under `/your/site/grav/user/plugins/fullcalendar`.
-
 ### Manual Installation
 
 To install this plugin, just download the zip version of this repository and unzip it under `/your/site/grav/user/plugins`. Then, rename the folder to `fullcalendar`. You can find these files on [GitHub](https://github.com/wernerjoss/grav-plugin-fullcalendar) or via [GetGrav.org](https://getgrav.org/downloads/plugins).
@@ -46,6 +36,8 @@ weekNumbers: false  # set to true to show Week Numbers
 cors_api_url: https://cors-anywhere.herokuapp.com/  # this is the default value, change if you like to use another
 
 ```
+=======
+See fullcalendar.yaml file in this repo as example.
 
 ## Usage
 
@@ -58,11 +50,39 @@ You can also provide absolute URL's to ICS Files, in which case a CORS proxy wil
 As an addition, you can show a Picture for the current month above the calendar widget.  
 Just put 12 Image Files named 'January.jpg', 'February.jpg', ... , 'December.jpg' in the Folder for your Page where the Calendar will be placed.
 (Note that Image File names must match Month names according to your locale setting, so, for locale: de, use 'Januar.jpg' ...)
+Nothing special, just use the proper templates Fullcalendar or Modular Fullcalendar
+
+## Recurrent events
+
+ical-expander is now used to support rrules in events. [ical-expander](https://github.com/mifi/ical-expander)
+some tunning performance and further testing are required.
+
+## Developement
+
+assets dir is a webpack built project, so use npm and webpack commands.
+one can do :
+```
+cd assets
+bash build.sh
+```
 
 ## Credits
 
-This Plugin is built on [fullcalendar.io](https://fullcalendar.io), [jakubroztocil/rrule](https://github.com/jakubroztocil/rrule) and [jsical](http://mozilla-comm.github.io/ical.js) - Javascript parser for rfc5545
+this plugin is built on 
+ * [ical-expander](https://github.com/mifi/ical-expander)
+ * [store2](https://www.npmjs.com/package/store2)
+ * [superagent](https://www.npmjs.com/package/superagent)
+
+## Issues
+
+See github repo issues
 
 ## To Do
 
 * this branch is intended to be merged with [https://github.com/sherpadawan/grav-plugin-fullcalendar](https://github.com/sherpadawan/grav-plugin-fullcalendar) with the goal to create a complete new Release based on fullcalendar.io v5
+=======
+ * multicalendar ? currently only one calendar per page is supported
+ * admin form plugin blueprints.yaml for extended configuration 
+ * event popup on click or hover
+ * use a unified log library (log does not work with webpack) 
+ * fix missing/removed functionality from fc4 branch: multiple calendars, monthpic, legend, summary on hover, event URL ...
