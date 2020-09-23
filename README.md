@@ -36,7 +36,6 @@ weekNumbers: false  # set to true to show Week Numbers
 cors_api_url: https://cors-anywhere.herokuapp.com/  # this is the default value, change if you like to use another
 
 ```
-=======
 See fullcalendar.yaml file in this repo as example.
 
 ## Usage
@@ -46,6 +45,9 @@ Once installed and enabled, you can use this Plugin to parse ICS Calendar File(s
     [fullcalendar icsfile='example0.ics,example1.ics,...'][/fullcalendar]
     
 in the appropriate page.  
+## Note:
+the shortcode feature is subject to be changed, it will evtl. be removed completely, however, a transition path will be provided in this cae !  
+
 You can also provide absolute URL's to ICS Files, in which case a CORS proxy will be used to access them.  
 As an addition, you can show a Picture for the current month above the calendar widget.  
 Just put 12 Image Files named 'January.jpg', 'February.jpg', ... , 'December.jpg' in the Folder for your Page where the Calendar will be placed.
@@ -79,10 +81,9 @@ See github repo issues
 
 ## To Do
 
-* this branch is intended to be merged with [https://github.com/sherpadawan/grav-plugin-fullcalendar](https://github.com/sherpadawan/grav-plugin-fullcalendar) with the goal to create a complete new Release based on fullcalendar.io v5
-=======
- * multicalendar ? currently only one calendar per page is supported
+* this branch is intended to be merged with [https://github.com/wernerjoss/grav-plugin-fullcalendar](https://github.com/wernerjoss/grav-plugin-fullcalendar) with the goal to create a complete new Release based on fullcalendar.io v5
+ * multicalendar - this is mandatory: currently only one calendar per page is supported
  * admin form plugin blueprints.yaml for extended configuration 
  * event popup on click or hover
  * use a unified log library (log does not work with webpack) 
- * fix missing/removed functionality from fc4 branch: multiple calendars, monthpic, legend, summary on hover, event URL ...
+ * fix missing/removed functionality from fc4 branch: monthpic, legend, summary on hover, event URL ...
