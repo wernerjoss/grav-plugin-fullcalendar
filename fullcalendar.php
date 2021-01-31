@@ -27,35 +27,25 @@ class FullcalendarPlugin extends Plugin
         ]);
         //add assets
         $assets = $this->grav['assets'];
-        // $assets->addJs('plugin://fullcalendar/assets/lib/jquery.min.js');	// jquery should already be in system/assets
         
-        $assets->addJs('plugin://fullcalendar/assets/ical.js/build/ical.min.js');   // see also reamde.txt file there
-
-        // for Tooltip: (use unpkg cdn for now...)
-        $assets->addJs('https://unpkg.com/@popperjs/core@2');
-        $assets->addJs('https://unpkg.com/tippy.js@6');
-        
-        $assets->addCss('plugin://fullcalendar/fc4/packages/core/main.css');
-		$assets->addCss('plugin://fullcalendar/fc4/packages/daygrid/main.css');
-        
-        $assets->addJs('plugin://fullcalendar/fc4/packages/core/main.js');
+        //  31.01.21: most assets loading has been moved to fullcalendar.html.twig, which is only loaded in corresponding page, NOT directly upon Plugin Initialize !
         /*
-        $assets->addJs('plugin://fullcalendar/fc4/packages/moment/main.js');
-        $assets->addJs('plugin://fullcalendar/fc4/packages/moment-timezone/main.js');
-        //  $assets->addJs('plugin://fullcalendar/fc4/vendor/luxon.js');    // this is luxon.js from https://moment.github.io/luxon/docs/manual/install.html, does not work
-		$assets->addJs('plugin://fullcalendar/fc4/packages/luxon/main.js');
+        $assets->addJs('plugin://fullcalendar/assets/ical.js/build/ical.min.js','defer');
+        $assets->addJs('plugin://fullcalendar/assets/popper.min.js','defer');   // local popper
+		$assets->addJs('plugin://fullcalendar/assets/tippy-bundle.umd.min.js','defer');   // local tippy
+		$assets->addCss('plugin://fullcalendar/fc4/packages/core/main.css');
+		$assets->addCss('plugin://fullcalendar/fc4/packages/daygrid/main.css');
+        $assets->addJs('plugin://fullcalendar/fc4/packages/core/main.js','defer');
+        $assets->addJs('plugin://fullcalendar/fc4/vendor/rrule.js','defer');   // see also reamde.txt file there
+		$assets->addJs('plugin://fullcalendar/fc4/packages/rrule/main.js','defer'); // connector to the vendor/rrule.js Lib
+        $assets->addJs('plugin://fullcalendar/fc4/packages/interaction/main.js','defer');
+		$assets->addJs('plugin://fullcalendar/fc4/packages/daygrid/main.js','defer');
+        $assets->addJs('plugin://fullcalendar/assets/monthpic.js','defer');
+        $assets->addCss('plugin://fullcalendar/assets/daygrid.css');	// default CSS for #calendar
         */
-        $assets->addJs('plugin://fullcalendar/fc4/vendor/rrule.js');   // see also reamde.txt file there
-		$assets->addJs('plugin://fullcalendar/fc4/packages/rrule/main.js'); // connector to the vendor/rrule.js Lib
-        $assets->addJs('plugin://fullcalendar/fc4/packages/interaction/main.js');
-		$assets->addJs('plugin://fullcalendar/fc4/packages/daygrid/main.js');
         // do not load a predefined language, use system setting instead
         $language = $this->grav['language']->getLanguage();
         $assets->addJs('plugin://fullcalendar/fc4/packages/core/locales/'.$language.'.js');
-        $assets->addJs('plugin://fullcalendar/assets/monthpic.js');
-        $assets->addCss('plugin://fullcalendar/assets/daygrid.css');	// default CSS for #calendar
-        //	$assets->addCss('plugin://fullcalendar/assets/custom.css');	// don't use custom CSS in Plugin folder, better from Theme !
-        
     }
 
     public function onTwigTemplatePaths()

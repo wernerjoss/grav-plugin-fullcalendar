@@ -1,3 +1,10 @@
+# v0.2.6
+##  01/31/2021
+
+1. [](#new)
+    * load assets only on calendar Page, not upon Plugin Initialisation
+    * move javascript out of twig template into separate js File for easier Maintenance
+
 # v0.2.5
 ##  09/05/2020
 
