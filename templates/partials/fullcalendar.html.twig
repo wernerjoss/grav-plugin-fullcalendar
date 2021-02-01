@@ -1,19 +1,9 @@
-{# move assets loading here, so they are only loaded on calendar page, NOT already with plugin registration ! #}
-{% do assets.addJs('plugin://fullcalendar/assets/ical.js/build/ical.min.js') %}
-{% do assets.addJs('plugin://fullcalendar/assets/popper.min.js') %}
-{% do assets.addJs('plugin://fullcalendar/assets/tippy-bundle.umd.min.js') %}
-{% do assets.addCss('plugin://fullcalendar/fc4/packages/core/main.css') %}
-{% do assets.addCss('plugin://fullcalendar/fc4/packages/daygrid/main.css') %}
-{% do assets.addJs('plugin://fullcalendar/fc4/packages/rrule/main.js') %} {# moved before core 31.01.21 #}
-{% do assets.addJs('plugin://fullcalendar/fc4/packages/interaction/main.js') %} {# moved before core 31.01.21 #}
-{% do assets.addJs('plugin://fullcalendar/fc4/packages/daygrid/main.js') %} {# moved before core 31.01.21 #}
-{% do assets.addJs('plugin://fullcalendar/fc4/packages/core/main.js') %}
-{% do assets.addJs('plugin://fullcalendar/fc4/vendor/rrule.js') %}
-{% do assets.addJs('plugin://fullcalendar/assets/monthpic.js') %}
-{% do assets.addCss('plugin://fullcalendar/assets/daygrid.css') %}
-{% do assets.addJs('plugin://fullcalendar/assets/calendar.js') %}	{# this is the former script included in twig here	#}
+{# moved assets loading here, so they are only loaded on calendar page, NOT already with plugin registration ! #}
+{# but this does NOT work - only 1st Page load, then assets loading failure #}
 
-<div id='actMonth'></div>
+{% if '{{page.media.images}}' %} {# simple check: only create this div if images in folder #}
+    <div id='actMonth'></div>
+{% endif %}
 <div id='calendar'></div>
 <div id='legend'></div>
 
@@ -24,5 +14,3 @@
 <div id='CorsUrl' style='display:none;'>{{ config.plugins.fullcalendar.cors_api_url }}</div>
 <div id='showlegend' style='display:none;'>{{ config.plugins.fullcalendar.showlegend }}</div>
 <div id='tzoffset' style='display:none;'>{{ config.plugins.fullcalendar.tz_offset }}</div>
-
-{{ assets.js()|raw }}

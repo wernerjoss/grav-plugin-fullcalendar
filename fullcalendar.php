@@ -27,25 +27,30 @@ class FullcalendarPlugin extends Plugin
         ]);
         //add assets
         $assets = $this->grav['assets'];
+        // $assets->addJs('plugin://fullcalendar/assets/lib/jquery.min.js', 'defer');	// jquery should already be in system/assets
         
-        //  31.01.21: most assets loading has been moved to fullcalendar.html.twig, which is only loaded in corresponding page, NOT directly upon Plugin Initialize !
-        /*
-        $assets->addJs('plugin://fullcalendar/assets/ical.js/build/ical.min.js','defer');
-        $assets->addJs('plugin://fullcalendar/assets/popper.min.js','defer');   // local popper
-		$assets->addJs('plugin://fullcalendar/assets/tippy-bundle.umd.min.js','defer');   // local tippy
-		$assets->addCss('plugin://fullcalendar/fc4/packages/core/main.css');
+        $assets->addJs('plugin://fullcalendar/assets/ical.js/build/ical.min.js', 'defer');   // see also reamde.txt file there
+
+        // for Tooltip: 
+        $assets->addJs('plugin://fullcalendar/assets/popper.min.js', 'defer');
+        $assets->addJs('plugin://fullcalendar/assets/tippy-bundle.umd.min.js', 'defer');
+        
+        $assets->addCss('plugin://fullcalendar/fc4/packages/core/main.css');
 		$assets->addCss('plugin://fullcalendar/fc4/packages/daygrid/main.css');
-        $assets->addJs('plugin://fullcalendar/fc4/packages/core/main.js','defer');
-        $assets->addJs('plugin://fullcalendar/fc4/vendor/rrule.js','defer');   // see also reamde.txt file there
-		$assets->addJs('plugin://fullcalendar/fc4/packages/rrule/main.js','defer'); // connector to the vendor/rrule.js Lib
-        $assets->addJs('plugin://fullcalendar/fc4/packages/interaction/main.js','defer');
-		$assets->addJs('plugin://fullcalendar/fc4/packages/daygrid/main.js','defer');
-        $assets->addJs('plugin://fullcalendar/assets/monthpic.js','defer');
-        $assets->addCss('plugin://fullcalendar/assets/daygrid.css');	// default CSS for #calendar
-        */
+        
+        $assets->addJs('plugin://fullcalendar/fc4/packages/core/main.js', 'defer');
+        $assets->addJs('plugin://fullcalendar/fc4/vendor/rrule.js', 'defer');   // see also reamde.txt file there
+		$assets->addJs('plugin://fullcalendar/fc4/packages/rrule/main.js', 'defer'); // connector to the vendor/rrule.js Lib
+        $assets->addJs('plugin://fullcalendar/fc4/packages/interaction/main.js', 'defer');
+		$assets->addJs('plugin://fullcalendar/fc4/packages/daygrid/main.js', 'defer');
         // do not load a predefined language, use system setting instead
         $language = $this->grav['language']->getLanguage();
-        $assets->addJs('plugin://fullcalendar/fc4/packages/core/locales/'.$language.'.js');
+        $assets->addJs('plugin://fullcalendar/fc4/packages/core/locales/'.$language.'.js', 'defer');
+        $assets->addJs('plugin://fullcalendar/assets/monthpic.js', 'defer');
+        $assets->addJs('plugin://fullcalendar/assets/calendar.js', 'defer');
+        $assets->addCss('plugin://fullcalendar/assets/daygrid.css');	// default CSS for #calendar
+        //	$assets->addCss('plugin://fullcalendar/assets/custom.css');	// don't use custom CSS in Plugin folder, better from Theme !
+        
     }
 
     public function onTwigTemplatePaths()
