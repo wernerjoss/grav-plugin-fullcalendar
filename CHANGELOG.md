@@ -2,7 +2,7 @@
 ##  02/19/2021
 
 1. [](#new)
-    * make Monthpics search/display configurable
+    * improve Monthpics search/display (disable javascript month change event watching when no month pics available)
     * introduce page Template in Plugin, make this selectable in Admin Backend without copy to Theme Templates Folder
     * move javascript out of twig template into separate js File for easier Maintenance
 
