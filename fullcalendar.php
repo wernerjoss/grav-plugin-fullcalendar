@@ -10,7 +10,8 @@ class FullcalendarPlugin extends Plugin
     public static function getSubscribedEvents()
     {
         return [
-            'onPluginsInitialized' => ['onPluginsInitialized', 0]
+            'onPluginsInitialized' => ['onPluginsInitialized', 0],
+            'onGetPageTemplates' => ['onGetPageTemplates',0]
         ];
     }
 
@@ -23,7 +24,7 @@ class FullcalendarPlugin extends Plugin
         // Enable the main events we are interested in
         $this->enable([
             'onShortcodeHandlers' => ['onShortcodeHandlers', 0],
-            'onTwigTemplatePaths' => ['onTwigTemplatePaths',0]
+            'onTwigTemplatePaths' => ['onTwigTemplatePaths',0],
         ]);
         //add assets
         $assets = $this->grav['assets'];
@@ -61,5 +62,15 @@ class FullcalendarPlugin extends Plugin
     public function onShortcodeHandlers(Event $e)
     {
         $this->grav['shortcode']->registerAllShortcodes(__DIR__.'/shortcodes');
+    }
+    
+    // register Template 'calendar' so it can be used in the admin backend without having to be copied to the theme's template folder
+    // see https://github.com/getgrav/grav-learn/pull/907
+    public function onGetPageTemplates(Event $event)
+    {
+        /** @var Types $types */
+        $types = $event->types;
+        $types->register('calendar');
+        $types->scanTemplates(__DIR__.'/templates');
     }
 }

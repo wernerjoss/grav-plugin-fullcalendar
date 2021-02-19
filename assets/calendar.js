@@ -9,10 +9,64 @@ document.addEventListener('DOMContentLoaded', function() {
     var cfgLocale = jQuery('#cfgLocale').text();	//	get Paramter from DOM
     var LocaleCode = (cfgLocale !== null) ? cfgLocale : defaultLocale;
     if (verbose)	console.log('LocaleCode:', LocaleCode);
+    
+    var pageFilestring = jQuery('#pagecalendars').text();	//	get Paramter from DOM
+    if (verbose) console.log('pagecalendars:', pageFilestring);
+    var pagecalendars = [];
+    if (pageFilestring) {
+        pagecalendars = JSON.parse(pageFilestring);
+    }
+    var calUrls = [];
+    var calNames = [];
+    var loc = window.location;  // the current page
+    pagecalendars.forEach(function(value, index) {
+        if (value) {
+        url = loc + '/' + value;
+        calUrls.push(url);
+        calNames.push(value);
+        }
+    })
+
+    if (verbose)    console.log('pagecalendars:', pagecalendars);
+
     var cfgFilestring = jQuery('#cfgFilestring').text();	//	get Paramter from DOM
     if (verbose) console.log('cfgfilestring:', cfgFilestring);
     var cfgfiles = cfgFilestring.split(','); // split string into multiple ics files, if appropriate, see note above
-    var len = cfgfiles.length;
+    
+    var cfgUrls = [];
+    cfgfiles.forEach(function(value, index) {
+        cfgFile = value;
+        if (value){
+        calNames.push(value);
+        if (verbose) console.log('yaml CFG File:' + cfgFile);
+        // allow remote ics files, full URL required
+        if (cfgFile.startsWith("https://") || cfgFile.startsWith("http://")) {	// calendar URL is remote
+            // automatically add CORS proxy URL for remote calendars, if not yet done 06.04.20
+            var origin = window.location.protocol + '//' + window.location.host;
+            if (verbose) console.log('Origin:' + origin);
+            if (cfgFile.startsWith(origin)) {
+                if (verbose) console.log('remote is same Origin, do not use proxy');
+                calendarUrl = cfgFile;
+            }	else	{
+                if (cfgFile.startsWith(cors_api_url)) {
+                    if (verbose) console.log('remote is different Origin, but cors URL already added, do not add in addition');
+                    calendarUrl = cfgFile;
+                }	else	{
+                    if (verbose) console.log('remote is different Origin, use proxy');
+                    calendarUrl = cors_api_url + cfgFile;
+                }
+            }
+        }   else    {
+            calendarUrl = getAbsolutePath() + 'user/data/calendars/' + cfgFile;
+        }
+        if (verbose) console.log('Calendar URL:' + calendarUrl);
+        cfgUrls.push(calendarUrl);
+        }
+    })
+
+    jQuery.merge(calUrls, cfgUrls);
+
+    var len = calUrls.length;
     if (verbose) console.log('cfgfiles[]:', cfgfiles);
     var BgColstring = jQuery('#BgColstring').text();	//	get Paramter from DOM'
     if (verbose) console.log('BgColstring:', BgColstring);
@@ -67,29 +121,8 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         events: function(info, successCallback, failureCallback) {
             var allevents = [];
-            cfgfiles.forEach(function(value, index) {
-                cfgFile = value;
-                if (verbose) console.log('yaml CFG File:' + cfgFile);
-                // allow remote ics files, full URL required
-                if (cfgFile.startsWith("https://") || cfgFile.startsWith("http://")) {	// calendar URL is remote
-                    // automatically add CORS proxy URL for remote calendars, if not yet done 06.04.20
-                    var origin = window.location.protocol + '//' + window.location.host;
-                    if (verbose) console.log('Origin:' + origin);
-                    if (cfgFile.startsWith(origin)) {
-                        if (verbose) console.log('remote is same Origin, do not use proxy');
-                        calendarUrl = cfgFile;
-                    }	else	{
-                        if (cfgFile.startsWith(cors_api_url)) {
-                            if (verbose) console.log('remote is different Origin, but cors URL already added, do not add in addition');
-                            calendarUrl = cfgFile;
-                        }	else	{
-                            if (verbose) console.log('remote is different Origin, use proxy');
-                            calendarUrl = cors_api_url + cfgFile;
-                        }
-                    }
-                }   else    {
-                    calendarUrl = getAbsolutePath() + 'user/data/calendars/' + cfgFile;
-                }
+            calUrls.forEach(function(value, index) {
+                calendarUrl = value;
                 if (verbose) console.log('Calendar URL:' + calendarUrl);
                 var events = [];
                 var do_callback = false; // muss zwingend hier hin, nicht ausserhalb der forEach schleife !!
@@ -210,7 +243,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // show legend, if enabled
     if (showlegend) {
         // Add the contents of cfgfiles to #legend:
-        document.getElementById('legend').appendChild(makeUL(cfgfiles, colors));
+        document.getElementById('legend').appendChild(makeUL(calNames, colors));
     }
 })
 
@@ -236,6 +269,7 @@ function makeUL(array, colors) {
 
 function getAbsolutePath() { // see https://www.sitepoint.com/jquery-current-page-url/
     var loc = window.location;
+    //  console.log('window.location:', loc);
     var pathName = loc.pathname.substring(0, loc.pathname.lastIndexOf('/') + 1);
     return loc.href.substring(0, loc.href.length - ((loc.pathname + loc.search + loc.hash).length - pathName.length));
 }

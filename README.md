@@ -57,7 +57,11 @@ in the appropriate page (note the double quotes " surrounding the file name - si
 You can also provide absolute URL's to ICS Files, in which case a CORS proxy will be used to access them.  
 As an addition, you can show a Picture for the current month above the calendar widget.  
 Just put 12 Image Files named 'January.jpg', 'February.jpg', ... , 'December.jpg' in the Folder for your Page where the Calendar will be placed.
-(Note that Image File names must match Month names according to your locale setting, so, for locale: de, use 'Januar.jpg' ...)
+(Note that Image File names must match Month names according to your locale setting, so, for locale: de, use 'Januar.jpg' ...).  
+From Version 0.2.6, it is also possible to just drop .ics Calendar Files into your page folder, they will be picked up and used like those in /user/data/calendars.  
+In case you only use calendar files in the page folder, be sure to include an empty shortcut: ` [fullcalendar][/fullcalendar]`  in your page content, otherwise it will not work !  
+However, this will only work if you use the calendar.html.twig template from the plugin for the calendar page (this can be done manually or in the admin backend by choosing 'Calendar' in the dropdown for the page template).  
+The use of the calendar.html.twig template is also mandatory if you want to use the month picture feature of the plugin, otherwise you can also use other templates.  
 
 ## Credits
 

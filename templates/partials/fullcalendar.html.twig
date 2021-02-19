@@ -1,15 +1,11 @@
-{# moved assets loading here, so they are only loaded on calendar page, NOT already with plugin registration ! #}
-{# but this does NOT work - only 1st Page load, then assets loading failure #}
+{# pass plugin paramters via DOM to calendar.js #}
 
-{% if '{{page.media.images}}' %} {# simple check: only create this div if images in folder #}
-    <div id='actMonth'></div>
-{% endif %}
 <div id='calendar'></div>
 <div id='legend'></div>
-
-<div id='weeknums' style='display:none;'>{{ config.plugins.fullcalendar.weekNumbers }}'</div>
+            
+<div id='weeknums' style='display:none;'>{{ config.plugins.fullcalendar.weekNumbers }}</div>
 <div id='cfgLocale' style='display:none;'>{{ config.plugins.fullcalendar.locale }}</div>
-<div id='cfgFilestring' style='display:none;'>{{ icsfile }}</div>	{#	from FullCalendarShortCode.php, can now (from v 0.1.2) hold multiple ics Files, comma separated #}
+<div id='cfgFilestring' style='display:none;'>{{ icsfile }}</div>
 <div id='BgColstring' style='display:none;'>{{ config.plugins.fullcalendar.colors }}</div>
 <div id='CorsUrl' style='display:none;'>{{ config.plugins.fullcalendar.cors_api_url }}</div>
 <div id='showlegend' style='display:none;'>{{ config.plugins.fullcalendar.showlegend }}</div>

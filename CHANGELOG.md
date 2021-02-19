@@ -1,8 +1,9 @@
 # v0.2.6
-##  01/31/2021
+##  02/19/2021
 
 1. [](#new)
-    * load assets only on calendar Page, not upon Plugin Initialisation
+    * make Monthpics search/display configurable
+    * introduce page Template in Plugin, make this selectable in Admin Backend without copy to Theme Templates Folder
     * move javascript out of twig template into separate js File for easier Maintenance
 
 # v0.2.5
