@@ -1,10 +1,11 @@
 # v0.2.6
-##  02/19/2021
+##  02/20/2021
 
 1. [](#new)
     * improve Monthpics search/display (disable javascript month change event watching when no month pics available)
     * introduce page Template in Plugin, make this selectable in Admin Backend without copy to Theme Templates Folder
     * move javascript out of twig template into separate js File for easier Maintenance
+    * enhance blueprints.yaml for easier configuration in admin backend
 
 # v0.2.5
 ##  09/05/2020

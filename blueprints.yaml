@@ -20,8 +20,42 @@ form:
             type: toggle
             label: Plugin status
             highlight: 1
+            default: 1
+            options:
+                1: Enabled
+                0: Disabled
+        showlegend:
+            type: toggle
+            label: Show Legend(s)
+            help: Show Calendar Name(s) as list below Grid
+            highlight: 1
             default: 0
             options:
                 1: Enabled
                 0: Disabled
- 
+        weekNumbers:
+            type: toggle
+            label: Show Week Numbers
+            help: Show Week Numbers in 1st Grid Column
+            highlight: 1
+            default: 0
+            options:
+                1: Enabled
+                0: Disabled
+        locale:
+            type: text
+            size: x-small
+            label: Locale (Language)
+            help: valid locale Code, e.g. en, de, fr, pl
+        colors:
+            type: text
+            size: large
+            label: Calendar(s) Colors 
+            help: Comma separated List of valid html Colors, e.g. Red,LightBlue or '#DEFFAB,#GADEEF
+        cors_api_url:
+            type: text
+            size: large
+            label: Cors API URL
+            default: https://cors-anywhere.herokuapp.com/
+            help: only change this if you are really sure you need it, in most cases, default is ok
+                
