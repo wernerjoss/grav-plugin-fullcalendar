@@ -1,6 +1,7 @@
 # Fullcalendar Plugin
 
-The **Fullcalendar** Plugin is for [Grav CMS](http://github.com/getgrav/grav). It reads an ICS Calendar File and shows Events in a monthly Calendar Widget on your Page(s)
+The **Fullcalendar** Plugin is for [Grav CMS](http://github.com/getgrav/grav). It reads an ICS Calendar File and shows Events in a monthly Calendar Widget on your Page(s) - including Month Specific Image (it available):
+![](monthpic.png)
 
 ## Installation
 
