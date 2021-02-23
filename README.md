@@ -34,7 +34,7 @@ If you use the admin plugin, you can install directly through the admin plugin b
 
 Before configuring this plugin, you should copy the `user/plugins/fullcalendar/fullcalendar.yaml` to `user/config/plugins/fullcalendar.yaml` and only edit that copy.  
 Note that if you use the admin plugin, the file with your configuration, named fullcalendar.yaml will be saved in the `user/config/plugins/` folder once the configuration is saved in the admin.  
-There is, however, no UI in the admin Backend that provides any customizations other than enable/disable - you will have to edit the config file to do that.
+There is also a simple UI in the admin Backend that provides basic customizations.
 
 Here is the default configuration and an explanation of available options:
 
