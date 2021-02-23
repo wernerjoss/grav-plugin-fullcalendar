@@ -66,9 +66,9 @@ in your page content, otherwise it will not work !
 However, this will only work if you use the calendar.html.twig template from the plugin for the calendar page (this can be done manually or in the admin backend by choosing 'Calendar' in the dropdown for the page template).  
 The use of the calendar.html.twig template is also mandatory if you want to use the month picture feature of the plugin, otherwise you can also use other templates. 
 
-## Advanced Usage:
-As an addition to the standard use case, there is an elegant way to automate display of remote Calandars in case those are hosted on a CalDav Server (e.g. Owncloud, Nextcloud...):  
-In this case, you can just use [caldav2ics](https://github.com/wernerjoss/wp-caldav2ics) via cron job to automatically update your ics Files shown by the Fullcalendar Plugin, so that remote Calendars, usually maintained in separate Calendar Apps (such as Google Calendar or Lightning) are automatically propagated to your Website.
+## Advanced Usage
+As an addition to the standard use case, there is an elegant way to automate display of remote Calendars in case those are hosted on a CalDav Server (e.g. Owncloud, Nextcloud...):  
+In this case, you can just use [caldav2ics](https://github.com/wernerjoss/wp-caldav2ics) via cron job or the [Grav Scheduler](https://learn.getgrav.org/17/advanced/scheduler) to automatically update your ics Files shown by the Fullcalendar Plugin, so that remote Calendar content, usually maintained in separate Calendar Apps (such as Google Calendar or Lightning) is automatically propagated to your Website.
 
 ## Credits
 
