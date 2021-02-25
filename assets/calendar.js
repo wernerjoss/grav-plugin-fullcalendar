@@ -4,9 +4,10 @@
 document.addEventListener('DOMContentLoaded', function() {
     var verbose = false;
     var defaultLocale = 'en';
-    var weekNums = jQuery('#weeknums').text();	//	get Paramter from DOM
-    weekNums = (weekNums !== null) ? weekNums:false;
-    var cfgLocale = jQuery('#cfgLocale').text();	//	get Paramter from DOM
+    var cfgWeekNums = jQuery('#weeknums').text();	//	get Paramter from DOM
+	weekNums = false;
+	if (cfgWeekNums > 0)	weekNums = true;
+	var cfgLocale = jQuery('#cfgLocale').text();	//	get Paramter from DOM
     var LocaleCode = (cfgLocale !== null) ? cfgLocale : defaultLocale;
     if (verbose)	console.log('LocaleCode:', LocaleCode);
     
