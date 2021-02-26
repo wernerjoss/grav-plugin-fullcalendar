@@ -1,3 +1,9 @@
+# v0.2.7
+##  02/26/2021
+
+1. [](#bugfix)
+    * fix weekNumbers setting not recognized, code formatting
+
 # v0.2.6
 ##  02/20/2021
 

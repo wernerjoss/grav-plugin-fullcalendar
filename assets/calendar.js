@@ -1,251 +1,252 @@
 // this is now a standalone javascript file, formerly embedded in fullcalendar.html.twig (ugly)
 // gets Parameters via DOM, see below
 
-document.addEventListener('DOMContentLoaded', function() {
-    var verbose = false;
-    var defaultLocale = 'en';
-    var cfgWeekNums = jQuery('#weeknums').text();	//	get Paramter from DOM
+jQuery(document).ready(function () {
+	var verbose = false;
+	var defaultLocale = 'en';
+	var cfgWeekNums = jQuery('#weeknums').text();	//	get Paramter from DOM
 	weekNums = false;
 	if (cfgWeekNums > 0)	weekNums = true;
+	if (verbose)	console.log('Weeknums:', weekNums);
 	var cfgLocale = jQuery('#cfgLocale').text();	//	get Paramter from DOM
-    var LocaleCode = (cfgLocale !== null) ? cfgLocale : defaultLocale;
-    if (verbose)	console.log('LocaleCode:', LocaleCode);
-    
-    var pageFilestring = jQuery('#pagecalendars').text();	//	get Paramter from DOM
-    if (verbose) console.log('pagecalendars:', pageFilestring);
-    var pagecalendars = [];
-    if (pageFilestring) {
-        pagecalendars = JSON.parse(pageFilestring);
-    }
-    var calUrls = [];
-    var calNames = [];
-    var loc = window.location;  // the current page
-    pagecalendars.forEach(function(value, index) {
-        if (value) {
-        url = loc + '/' + value;
-        calUrls.push(url);
-        calNames.push(value);
-        }
-    })
+	var LocaleCode = (cfgLocale !== null) ? cfgLocale : defaultLocale;
+	if (verbose)	console.log('LocaleCode:', LocaleCode);
 
-    if (verbose)    console.log('pagecalendars:', pagecalendars);
+	var pageFilestring = jQuery('#pagecalendars').text();	//	get Paramter from DOM
+	if (verbose) console.log('pagecalendars:', pageFilestring);
+	var pagecalendars = [];
+	if (pageFilestring) {
+		pagecalendars = JSON.parse(pageFilestring);
+	}
+	var calUrls = [];
+	var calNames = [];
+	var loc = window.location;  // the current page
+	pagecalendars.forEach(function(value, index) {
+		if (value) {
+		url = loc + '/' + value;
+		calUrls.push(url);
+		calNames.push(value);
+		}
+	})
 
-    var cfgFilestring = jQuery('#cfgFilestring').text();	//	get Paramter from DOM
-    if (verbose) console.log('cfgfilestring:', cfgFilestring);
-    var cfgfiles = cfgFilestring.split(','); // split string into multiple ics files, if appropriate, see note above
-    
-    var cfgUrls = [];
-    cfgfiles.forEach(function(value, index) {
-        cfgFile = value;
-        if (value){
-        calNames.push(value);
-        if (verbose) console.log('yaml CFG File:' + cfgFile);
-        // allow remote ics files, full URL required
-        if (cfgFile.startsWith("https://") || cfgFile.startsWith("http://")) {	// calendar URL is remote
-            // automatically add CORS proxy URL for remote calendars, if not yet done 06.04.20
-            var origin = window.location.protocol + '//' + window.location.host;
-            if (verbose) console.log('Origin:' + origin);
-            if (cfgFile.startsWith(origin)) {
-                if (verbose) console.log('remote is same Origin, do not use proxy');
-                calendarUrl = cfgFile;
-            }	else	{
-                if (cfgFile.startsWith(cors_api_url)) {
-                    if (verbose) console.log('remote is different Origin, but cors URL already added, do not add in addition');
-                    calendarUrl = cfgFile;
-                }	else	{
-                    if (verbose) console.log('remote is different Origin, use proxy');
-                    calendarUrl = cors_api_url + cfgFile;
-                }
-            }
-        }   else    {
-            calendarUrl = getAbsolutePath() + 'user/data/calendars/' + cfgFile;
-        }
-        if (verbose) console.log('Calendar URL:' + calendarUrl);
-        cfgUrls.push(calendarUrl);
-        }
-    })
+	if (verbose)    console.log('pagecalendars:', pagecalendars);
 
-    jQuery.merge(calUrls, cfgUrls);
+	var cfgFilestring = jQuery('#cfgFilestring').text();	//	get Paramter from DOM
+	if (verbose) console.log('cfgfilestring:', cfgFilestring);
+	var cfgfiles = cfgFilestring.split(','); // split string into multiple ics files, if appropriate, see note above
 
-    var len = calUrls.length;
-    if (verbose) console.log('cfgfiles[]:', cfgfiles);
-    var BgColstring = jQuery('#BgColstring').text();	//	get Paramter from DOM'
-    if (verbose) console.log('BgColstring:', BgColstring);
-    var default_cors_api_url = 'https://cors-anywhere.herokuapp.com/';	// set cors_api_url in config if you prefer another CORS proxy !
-    if (verbose) console.log('default CORS Url:', default_cors_api_url);
-    var cfg_cors_api_url = jQuery('#CorsUrl').text();	//	get Paramter from DOM'
-    if (!cfg_cors_api_url.endsWith('/')) cfg_cors_api_url = cfg_cors_api_url + '/'; // add trailing slash if not present
-    var cors_api_url = (cfg_cors_api_url !== '/') ? cfg_cors_api_url : default_cors_api_url;
-    if (verbose) console.log('CORS Url:', cors_api_url);
-    var colors = BgColstring.split(',');
-    var ncolors = colors.length;
-    if (ncolors < len)	{	// populate colors with default color from fullcalendar.css
-        colors = ['#3a87ad'];
-        for (i=0; i<(len);i++)
-            colors.push('#3a87ad');
-    }
-    if (verbose) console.log('colors[]:', colors);
-    var showlegend = jQuery('#showlegend').text();	//	get Paramter from DOM'
-    showlegend = (showlegend !== null) ? showlegend : false;
-    if (verbose)	console.log('showlegend:', showlegend);
-    var cfg_tz_offset = jQuery('#tzoffset').text();	//	get Paramter from DOM'
-    var default_tz_offset = 0;	// Default
-    var tz_offset = (cfg_tz_offset !== null) ? cfg_tz_offset : default_tz_offset;
-    // page is now ready, initialize the calendar...
-    var calendarEl = document.getElementById('calendar');
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-        plugins: [ 'interaction', 'dayGrid', 'rrule' ],
-        //	timezone: 'W. Europe Standard Time',
-        locale: LocaleCode,
-        weekNumbers: weekNums,
-        header: {
-            left: 'prevYear,nextYear',
-            center: 'title',
-        },
-        navLinks: false, // can click day/week names to navigate views
-        editable: true,
-        eventLimit: false, // allow "more" link when too many events
-        fixedWeekCount: false,
-        eventClick: function(info) {
-            info.jsEvent.preventDefault(); // don't let the browser navigate
-            if (info.event.url) {
-                window.open(info.event.url);	// open url in new Window/Tab
-            }
-        },
-        //	Description as Tooltip (tippy.js) :
-        eventRender: function(info) {
-            if (info.event.extendedProps.description) {
-                tippy (info.el, {
-                    content: info.event.extendedProps.description,
-                });
-            }
-        },
-        events: function(info, successCallback, failureCallback) {
-            var allevents = [];
-            calUrls.forEach(function(value, index) {
-                calendarUrl = value;
-                if (verbose) console.log('Calendar URL:' + calendarUrl);
-                var events = [];
-                var do_callback = false; // muss zwingend hier hin, nicht ausserhalb der forEach schleife !!
-                if (index == (len - 1)) {
-                    do_callback = true;
-                }
-                if (verbose) console.log('index,do_callback:', index, do_callback);
-                jQuery.get(calendarUrl, function(data) {
-                    var jcalData = ICAL.parse(data);	//	directly parse data, no need to split to lines first ! 14.02.20
-                    var comp = new ICAL.Component(jcalData);
-                    var eventComps = comp.getAllSubcomponents("vevent");
-                    //	map them to FullCalendar events Objects
-                    events = jQuery.map(eventComps, function(item) {
-                        var fcevents = {};
-                        var entry = item.getFirstPropertyValue("summary");
-                        if (entry !== null)	fcevents["title"] = entry;
-                        var entry = item.getFirstPropertyValue("location");
-                        if (entry !== null)	fcevents["location"] = entry;
-                        var entry = item.getFirstPropertyValue("url");
-                        if (entry !== null)	fcevents["url"] = entry;
-                        var entry = item.getFirstPropertyValue("dtstart");
-                        if (entry !== null)	{ fcevents["start"] = entry.toJSDate(); var start = entry;}
-                        var entry = item.getFirstPropertyValue("dtend");
-                        if (entry !== null)	{ fcevents["end"] = entry.toJSDate(); var end = entry; }
-                        duration = fcevents["end"] - fcevents["start"];	// calculate event duration 29.08.20
-                        if (verbose)	console.log('Duration:', duration);
-                        fcevents["allDay"] = true;	// default value -> span .fc-time in grid is NOT created
-                        if (duration < 86400000)	fcevents["allDay"] = false;	// duration less than 1 day: allDay = false
-                        var entry = item.getFirstPropertyValue("description");	// add description 22.06.20
-                        if (entry !== null)	fcevents["description"] = entry;
-                        
-                        // not used options go here
-                        
-                        var rrules = item.getFirstPropertyValue("rrule");
-                        var fcrrules = {};	// extra object for rrules
-                        if (rrules !== null)	{
-                            if (rrules.freq !== null)	{	//	freq is required, do not continue if null
-                                if (verbose)	console.log('rrules:', rrules);	
-                                fcrrules["freq"] = rrules.freq;
-                                // fcrrules["tzid"] = "W. Europe Standard Time";	// test strixos, Fehler: Using TZID without Luxon available is unsupported. Returned times are in UTC, not the requested time zone
-                                if (verbose)	console.log('tz_offset:', tz_offset);
-                                start["hour"] = start["hour"] + Number(tz_offset);	// add hours from config, type conversion mandatory ! :)
-                                if (verbose)	console.log('newstart', start);
-                                fcevents["start"] = start.toJSDate();
-                                /* not needed
-                                end["hour"] = end["hour"] + tz_offset;	// TODO: add configurable Offset, implement housekeeping (24/0h overflow)
-                                if (verbose)	console.log('newend', end);
-                                fcevents["end"] = end.toJSDate();
-                                */
-                                var parts = rrules["parts"];
-                                if (verbose)	console.log('parts:', parts);
-                                var byweekday = parts["BYDAY"];
-                                var weekdays = [];	// must be empty array, otherwise, push() will not work !
-                                var bysetpos = [];
-                                if (Array.isArray(byweekday))	{
-                                    byweekday = parts["BYDAY"];
-                                    for (i = 0; i < byweekday.length; i++) { 
-                                        //	DONE: implement BYDAY n+ or n- 
-                                        if (byweekday[i].match(/\d+/g))	{	// entry contains digits, save them to setpos, strip from weekdays
-                                            var daynum = parseInt(byweekday[i]).toString();
-                                            //	console.log('daynum: ' + daynum) ;
-                                            bysetpos.push(daynum);
-                                            weekdays.push(byweekday[i].replace(/[0-9,+,-]/g, ''));
-                                        } else { weekdays.push(byweekday[i]); }	// no digits, just save to weekdays
-                                    }
-                                    byweekday = weekdays;
-                                }	else	{byweekday = null;}
-                                if (verbose)	console.log('byweekday:', byweekday);
-                                var byweekno = parts["BYWEEKNO"];
-                                if (Array.isArray(byweekno))	{byweekno = parts["BYWEEKNO"];}	else	{byweekno = null;}
-                                if (verbose)	console.log('byweekno:', byweekno);
-                                var bymonth = parts["BYMONTH"];
-                                if (Array.isArray(bymonth))	{bymonth = parts["BYMONTH"];}	else	{bymonth = null;}
-                                if (verbose)	console.log('bymonth:', bymonth);
-                                var bymonthday = parts["BYMONTHDAY"];
-                                if (Array.isArray(bymonthday))	{bymonthday = parts["BYMONTHDAY"];}	else	{bymonthday = null;}
-                                if (verbose)	console.log('bymonthday:', bymonthday);
-                                var byyearday = parts["BYYEARDAY"];
-                                if (Array.isArray(byyearday))	{byyearday = parts["BYYEARDAY"];}	else	{byyearday = null;}
-                                if (verbose)	console.log('byyearday:', byyearday);
-                                if (rrules.dtstart !== undefined)	{fcrrules["dtstart"] = rrules.dtstart;}	else	{fcrrules["dtstart"] = fcevents["start"];}
-                                if (byweekday !== null) { fcrrules["byweekday"] = byweekday;}
-                                if (bysetpos !== null) { fcrrules["bysetpos"] = bysetpos;}
-                                if (byweekno !== null) { fcrrules["byweekno"] = byweekno;}
-                                if (bymonth !== null) { fcrrules["bymonth"] = bymonth;}
-                                if (bymonthday !== null) { fcrrules["bymonthday"] = bymonthday;}
-                                if (byyearday !== null) { fcrrules["byyearday"] = byyearday;}
-                                if (rrules.interval != null) { fcrrules["interval"] = rrules.interval;}
-                                if (rrules.count != null) { fcrrules["count"] = rrules.count;}
-                                if (rrules.wkst != null) { fcrrules["wkst"] = rrules.wkst;}
-                                if (rrules.until != null) { fcrrules["until"] = rrules.until.toJSDate();}
-                                
-                                fcevents["rrule"] = fcrrules;
-                                if (verbose)	console.log('fcrrules:', fcrrules);
-                            }
-                        }
-                        fcevents["backgroundColor"] = colors[index];
-                        if (verbose)	console.log('fcevents:', fcevents);
-                        if (item.getFirstPropertyValue("class") === "PRIVATE") {
-                            return null;
-                        } else {
-                            return fcevents;
-                        } 
-                    })
-                    jQuery.merge(allevents, events);
-                    if (verbose) console.log('index,do_callback:', index, do_callback);
-                    if (verbose) console.log('events:', events);
-                    if (do_callback) {
-                        successCallback(allevents);	// wichtig !!
-                        if (verbose) console.log('allevents:', allevents);
-                    }
-                }, 
-                'text');
-            })
-        }
-    });
-    calendar.render();
-    // show legend, if enabled
-    if (showlegend) {
-        // Add the contents of cfgfiles to #legend:
-        document.getElementById('legend').appendChild(makeUL(calNames, colors));
-    }
+	var cfgUrls = [];
+	cfgfiles.forEach(function(value, index) {
+		cfgFile = value;
+		if (value){
+		calNames.push(value);
+		if (verbose) console.log('yaml CFG File:' + cfgFile);
+		// allow remote ics files, full URL required
+		if (cfgFile.startsWith("https://") || cfgFile.startsWith("http://")) {	// calendar URL is remote
+			// automatically add CORS proxy URL for remote calendars, if not yet done 06.04.20
+			var origin = window.location.protocol + '//' + window.location.host;
+			if (verbose) console.log('Origin:' + origin);
+			if (cfgFile.startsWith(origin)) {
+				if (verbose) console.log('remote is same Origin, do not use proxy');
+				calendarUrl = cfgFile;
+			}	else	{
+				if (cfgFile.startsWith(cors_api_url)) {
+					if (verbose) console.log('remote is different Origin, but cors URL already added, do not add in addition');
+					calendarUrl = cfgFile;
+				}	else	{
+					if (verbose) console.log('remote is different Origin, use proxy');
+					calendarUrl = cors_api_url + cfgFile;
+				}
+			}
+		}   else    {
+			calendarUrl = getAbsolutePath() + 'user/data/calendars/' + cfgFile;
+		}
+		if (verbose) console.log('Calendar URL:' + calendarUrl);
+		cfgUrls.push(calendarUrl);
+		}
+	})
+
+	jQuery.merge(calUrls, cfgUrls);
+
+	var len = calUrls.length;
+	if (verbose) console.log('cfgfiles[]:', cfgfiles);
+	var BgColstring = jQuery('#BgColstring').text();	//	get Paramter from DOM'
+	if (verbose) console.log('BgColstring:', BgColstring);
+	var default_cors_api_url = 'https://cors-anywhere.herokuapp.com/';	// set cors_api_url in config if you prefer another CORS proxy !
+	if (verbose) console.log('default CORS Url:', default_cors_api_url);
+	var cfg_cors_api_url = jQuery('#CorsUrl').text();	//	get Paramter from DOM'
+	if (!cfg_cors_api_url.endsWith('/')) cfg_cors_api_url = cfg_cors_api_url + '/'; // add trailing slash if not present
+	var cors_api_url = (cfg_cors_api_url !== '/') ? cfg_cors_api_url : default_cors_api_url;
+	if (verbose) console.log('CORS Url:', cors_api_url);
+	var colors = BgColstring.split(',');
+	var ncolors = colors.length;
+	if (ncolors < len)	{	// populate colors with default color from fullcalendar.css
+		colors = ['#3a87ad'];
+		for (i=0; i<(len);i++)
+			colors.push('#3a87ad');
+	}
+	if (verbose) console.log('colors[]:', colors);
+	var showlegend = jQuery('#showlegend').text();	//	get Paramter from DOM'
+	showlegend = (showlegend !== null) ? showlegend : false;
+	if (verbose)	console.log('showlegend:', showlegend);
+	var cfg_tz_offset = jQuery('#tzoffset').text();	//	get Paramter from DOM'
+	var default_tz_offset = 0;	// Default
+	var tz_offset = (cfg_tz_offset !== null) ? cfg_tz_offset : default_tz_offset;
+	// page is now ready, initialize the calendar...
+	var calendarEl = document.getElementById('calendar');
+	var calendar = new FullCalendar.Calendar(calendarEl, {
+		plugins: [ 'interaction', 'dayGrid', 'rrule' ],
+		//	timezone: 'W. Europe Standard Time',
+		locale: LocaleCode,
+		weekNumbers: weekNums,
+		header: {
+			left: 'prevYear,nextYear',
+			center: 'title',
+		},
+		navLinks: false, // can click day/week names to navigate views
+		editable: true,
+		eventLimit: false, // allow "more" link when too many events
+		fixedWeekCount: false,
+		eventClick: function(info) {
+			info.jsEvent.preventDefault(); // don't let the browser navigate
+			if (info.event.url) {
+				window.open(info.event.url);	// open url in new Window/Tab
+			}
+		},
+		//	Description as Tooltip (tippy.js) :
+		eventRender: function(info) {
+			if (info.event.extendedProps.description) {
+				tippy (info.el, {
+					content: info.event.extendedProps.description,
+				});
+			}
+		},
+		events: function(info, successCallback, failureCallback) {
+			var allevents = [];
+			calUrls.forEach(function(value, index) {
+				calendarUrl = value;
+				if (verbose) console.log('Calendar URL:' + calendarUrl);
+				var events = [];
+				var do_callback = false; // muss zwingend hier hin, nicht ausserhalb der forEach schleife !!
+				if (index == (len - 1)) {
+					do_callback = true;
+				}
+				if (verbose) console.log('index,do_callback:', index, do_callback);
+				jQuery.get(calendarUrl, function(data) {
+					var jcalData = ICAL.parse(data);	//	directly parse data, no need to split to lines first ! 14.02.20
+					var comp = new ICAL.Component(jcalData);
+					var eventComps = comp.getAllSubcomponents("vevent");
+					//	map them to FullCalendar events Objects
+					events = jQuery.map(eventComps, function(item) {
+						var fcevents = {};
+						var entry = item.getFirstPropertyValue("summary");
+						if (entry !== null)	fcevents["title"] = entry;
+						var entry = item.getFirstPropertyValue("location");
+						if (entry !== null)	fcevents["location"] = entry;
+						var entry = item.getFirstPropertyValue("url");
+						if (entry !== null)	fcevents["url"] = entry;
+						var entry = item.getFirstPropertyValue("dtstart");
+						if (entry !== null)	{ fcevents["start"] = entry.toJSDate(); var start = entry;}
+						var entry = item.getFirstPropertyValue("dtend");
+						if (entry !== null)	{ fcevents["end"] = entry.toJSDate(); var end = entry; }
+						duration = fcevents["end"] - fcevents["start"];	// calculate event duration 29.08.20
+						if (verbose)	console.log('Duration:', duration);
+						fcevents["allDay"] = true;	// default value -> span .fc-time in grid is NOT created
+						if (duration < 86400000)	fcevents["allDay"] = false;	// duration less than 1 day: allDay = false
+						var entry = item.getFirstPropertyValue("description");	// add description 22.06.20
+						if (entry !== null)	fcevents["description"] = entry;
+						
+						// not used options go here
+						
+						var rrules = item.getFirstPropertyValue("rrule");
+						var fcrrules = {};	// extra object for rrules
+						if (rrules !== null)	{
+							if (rrules.freq !== null)	{	//	freq is required, do not continue if null
+								if (verbose)	console.log('rrules:', rrules);	
+								fcrrules["freq"] = rrules.freq;
+								// fcrrules["tzid"] = "W. Europe Standard Time";	// test strixos, Fehler: Using TZID without Luxon available is unsupported. Returned times are in UTC, not the requested time zone
+								if (verbose)	console.log('tz_offset:', tz_offset);
+								start["hour"] = start["hour"] + Number(tz_offset);	// add hours from config, type conversion mandatory ! :)
+								if (verbose)	console.log('newstart', start);
+								fcevents["start"] = start.toJSDate();
+								/* not needed
+								end["hour"] = end["hour"] + tz_offset;	// TODO: add configurable Offset, implement housekeeping (24/0h overflow)
+								if (verbose)	console.log('newend', end);
+								fcevents["end"] = end.toJSDate();
+								*/
+								var parts = rrules["parts"];
+								if (verbose)	console.log('parts:', parts);
+								var byweekday = parts["BYDAY"];
+								var weekdays = [];	// must be empty array, otherwise, push() will not work !
+								var bysetpos = [];
+								if (Array.isArray(byweekday))	{
+									byweekday = parts["BYDAY"];
+									for (i = 0; i < byweekday.length; i++) { 
+										//	DONE: implement BYDAY n+ or n- 
+										if (byweekday[i].match(/\d+/g))	{	// entry contains digits, save them to setpos, strip from weekdays
+											var daynum = parseInt(byweekday[i]).toString();
+											//	console.log('daynum: ' + daynum) ;
+											bysetpos.push(daynum);
+											weekdays.push(byweekday[i].replace(/[0-9,+,-]/g, ''));
+										} else { weekdays.push(byweekday[i]); }	// no digits, just save to weekdays
+									}
+									byweekday = weekdays;
+								}	else	{byweekday = null;}
+								if (verbose)	console.log('byweekday:', byweekday);
+								var byweekno = parts["BYWEEKNO"];
+								if (Array.isArray(byweekno))	{byweekno = parts["BYWEEKNO"];}	else	{byweekno = null;}
+								if (verbose)	console.log('byweekno:', byweekno);
+								var bymonth = parts["BYMONTH"];
+								if (Array.isArray(bymonth))	{bymonth = parts["BYMONTH"];}	else	{bymonth = null;}
+								if (verbose)	console.log('bymonth:', bymonth);
+								var bymonthday = parts["BYMONTHDAY"];
+								if (Array.isArray(bymonthday))	{bymonthday = parts["BYMONTHDAY"];}	else	{bymonthday = null;}
+								if (verbose)	console.log('bymonthday:', bymonthday);
+								var byyearday = parts["BYYEARDAY"];
+								if (Array.isArray(byyearday))	{byyearday = parts["BYYEARDAY"];}	else	{byyearday = null;}
+								if (verbose)	console.log('byyearday:', byyearday);
+								if (rrules.dtstart !== undefined)	{fcrrules["dtstart"] = rrules.dtstart;}	else	{fcrrules["dtstart"] = fcevents["start"];}
+								if (byweekday !== null) { fcrrules["byweekday"] = byweekday;}
+								if (bysetpos !== null) { fcrrules["bysetpos"] = bysetpos;}
+								if (byweekno !== null) { fcrrules["byweekno"] = byweekno;}
+								if (bymonth !== null) { fcrrules["bymonth"] = bymonth;}
+								if (bymonthday !== null) { fcrrules["bymonthday"] = bymonthday;}
+								if (byyearday !== null) { fcrrules["byyearday"] = byyearday;}
+								if (rrules.interval != null) { fcrrules["interval"] = rrules.interval;}
+								if (rrules.count != null) { fcrrules["count"] = rrules.count;}
+								if (rrules.wkst != null) { fcrrules["wkst"] = rrules.wkst;}
+								if (rrules.until != null) { fcrrules["until"] = rrules.until.toJSDate();}
+								
+								fcevents["rrule"] = fcrrules;
+								if (verbose)	console.log('fcrrules:', fcrrules);
+							}
+						}
+						fcevents["backgroundColor"] = colors[index];
+						if (verbose)	console.log('fcevents:', fcevents);
+						if (item.getFirstPropertyValue("class") === "PRIVATE") {
+							return null;
+						} else {
+							return fcevents;
+						} 
+					})
+					jQuery.merge(allevents, events);
+					if (verbose) console.log('index,do_callback:', index, do_callback);
+					if (verbose) console.log('events:', events);
+					if (do_callback) {
+						successCallback(allevents);	// wichtig !!
+						if (verbose) console.log('allevents:', allevents);
+					}
+				}, 
+				'text');
+			})
+		}
+	});
+	calendar.render();
+	// show legend, if enabled
+	if (showlegend) {
+		// Add the contents of cfgfiles to #legend:
+		document.getElementById('legend').appendChild(makeUL(calNames, colors));
+	}
 })
 
 function makeUL(array, colors) {
