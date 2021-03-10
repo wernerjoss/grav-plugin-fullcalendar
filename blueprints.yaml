@@ -4,7 +4,7 @@ description: show Calendar Widget from ICS File(s), based on fullcalendar.io
 icon: calendar
 author:
   name: Werner Joss
-  email: werner@hoernerfranzracing.de
+  email: wernerjoss@users.noreply.github.com
 homepage: https://github.com/wernerjoss/grav-plugin-fullcalendar
 keywords: grav, plugin, ICS, Icalendar, fullcalendar.io
 bugs: https://github.com/wernerjoss/grav-plugin-fullcalendar/issues
