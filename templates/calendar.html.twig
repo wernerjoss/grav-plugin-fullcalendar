@@ -1,38 +1,56 @@
 {% extends 'partials/base.html.twig' %}
+{% set debug = false  %}
 {% block content %}
-    <article class="post-2 page type-page status-publish hentry">
-        <header class="entry-header">
-        </header>
-        <div class="entry-content">
-            <h2>{{ page.header.title }}</h2>
-            {% set debug = false  %}
-            {% set numcalendars = 0  %} {# DONE: find number of ics files, put them in invisible div for automatic processing by calendar.js #}
-            {% set num_mpics = 0  %}
-            {% set calendars = []   %}  {# empty array  #}
-            {% for file in page.media %}
-                {% if debug %}  {{ dump(file|print_r) }}  {% endif %}
-                {% if (file.filename|ends_with('.ics')) %}
-                    {% if (debug) %}    {{ dump(file.filename|string) }}    {% endif %}
-                    {% set calendars = calendars|merge([file.filename|string])  %}
-                    {% set numcalendars = numcalendars + 1 %}
-                {% endif %}
-                {% if (file.filename|ends_with('.jpg')) %}
-                    {% if (debug) %}    {{ dump(file.filename|string) }}    {% endif %}
-                    {% set num_mpics = num_mpics + 1 %}
-                {% endif %}
-            {% endfor %}
-            {% if (debug) %}    
-                {{ dump(numcalendars) }}
-                {{ dump(num_mpics) }}
-                {{ dump(calendars|print_r) }}
-            {% endif %}
-            {% if (num_mpics|int) >= 12 %} {# 12 pics sollten für 1 Jahr reichen :-) #}
-                <div id='actMonth'></div>
-            {% endif %}
-            {% if (numcalendars|int) > 0 %} {# write local page calendars to DOM, json encoded #}
-                <div id='pagecalendars' style='display:none;'>{{ calendars|json_encode() }}</div>
-            {% endif %}
-            {{ page.content|raw }}
-        </div>
-    </article>
+	<article class="post-2 page type-page status-publish hentry">
+		<header class="entry-header">
+		{% set use_plugin_template = false %}
+		{% if (config.plugins.fullcalendar.use_plugin_template) %} {% set use_plugin_template = true %} {% endif %}
+		{% if (debug) %}    {{ dump(use_plugin_template) }}    {% endif %}
+		{% if (use_plugin_template) %}
+			{% do assets.addJs('plugins://fullcalendar/assets/ical.js/build/ical.min.js') %}
+			{% do assets.addJs('plugins://fullcalendar/assets/popper.min.js') %}
+			{% do assets.addJs('plugins://fullcalendar/assets/tippy-bundle.umd.min.js') %}
+			{% do assets.addCss('plugins://fullcalendar/fc4/packages/core/main.css') %}
+			{% do assets.addCss('plugins://fullcalendar/fc4/packages/daygrid/main.css') %}
+			{% do assets.addJs('plugins://fullcalendar/fc4/packages/core/main.js') %}
+			{% do assets.addJs('plugins://fullcalendar/fc4/vendor/rrule.js') %}
+			{% do assets.addJs('plugins://fullcalendar/fc4/packages/rrule/main.js') %}
+			{% do assets.addJs('plugins://fullcalendar/fc4/packages/interaction/main.js') %}
+			{% do assets.addJs('plugins://fullcalendar/fc4/packages/daygrid/main.js') %}
+			{% do assets.addJs('plugins://fullcalendar/assets/monthpic.js') %}
+			{% do assets.addJs('plugins://fullcalendar/assets/calendar.js') %}
+			{% do assets.addCss('plugins://fullcalendar/assets/daygrid.css') %}
+		{% endif %}
+		</header>
+		<div class="entry-content">
+			<h2>{{ page.header.title }}</h2>
+			{% set numcalendars = 0  %} {# DONE: find number of ics files, put them in invisible div for automatic processing by calendar.js #}
+			{% set num_mpics = 0  %}
+			{% set calendars = []   %}  {# empty array  #}
+			{% for file in page.media %}
+				{% if debug %}  {{ dump(file|print_r) }}  {% endif %}
+				{% if (file.filename|ends_with('.ics')) %}
+					{% if (debug) %}    {{ dump(file.filename|string) }}    {% endif %}
+					{% set calendars = calendars|merge([file.filename|string])  %}
+					{% set numcalendars = numcalendars + 1 %}
+				{% endif %}
+				{% if (file.filename|ends_with('.jpg')) %}
+					{% if (debug) %}    {{ dump(file.filename|string) }}    {% endif %}
+					{% set num_mpics = num_mpics + 1 %}
+				{% endif %}
+			{% endfor %}
+			{% if (debug) %}    
+				{{ dump(numcalendars) }}
+				{{ dump(num_mpics) }}
+				{{ dump(calendars|print_r) }}
+			{% endif %}
+			{% if (num_mpics|int) >= 12 %} {# 12 pics sollten für 1 Jahr reichen :-) #}
+				<div id='actMonth'></div>
+			{% endif %}
+			{% if (numcalendars|int) > 0 %} {# write local page calendars to DOM, json encoded #}
+				<div id='pagecalendars' style='display:none;'>{{ calendars|json_encode() }}</div>
+			{% endif %}
+			{{ page.content|raw }}
+		</div>
+	</article>
 {% endblock %}

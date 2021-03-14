@@ -1,3 +1,9 @@
+# v0.2.8
+##  03/08/2021
+
+1. [](#new)
+    * add config option use_plugin_template (improve site page speed ranking)
+
 # v0.2.7
 ##  02/26/2021
 

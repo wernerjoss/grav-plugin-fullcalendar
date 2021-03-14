@@ -65,7 +65,8 @@ In case you only use calendar files in the page folder, be sure to include an em
 ` [fullcalendar][/fullcalendar]`   
 in your page content, otherwise it will not work !  
 However, this will only work if you use the calendar.html.twig template from the plugin for the calendar page (this can be done manually or in the admin backend by choosing 'Calendar' in the dropdown for the page template).  
-The use of the calendar.html.twig template is also mandatory if you want to use the month picture feature of the plugin, otherwise you can also use other templates. 
+The use of the calendar.html.twig template is also mandatory if you want to use the month picture feature of the plugin, otherwise you can also use other templates.  
+Another improvement can be used with the plugin template is the config option use_plugin_template (default: false) : if set to true, fc4 assets will only be loaded on calendar page(s), NOT upon plugin initialization, thus page speed of your site can be improved significantly !
 
 ## Advanced Usage
 As an addition to the standard use case, there is an elegant way to automate display of remote Calendars in case those are hosted on a CalDav Server (e.g. Owncloud, Nextcloud...):  
