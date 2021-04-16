@@ -118,6 +118,7 @@ jQuery(document).ready(function () {
 			if (info.event.extendedProps.description) {
 				tippy (info.el, {
 					content: info.event.extendedProps.description,
+					allowHTML: true,	// see https://github.com/wernerjoss/grav-plugin-fullcalendar/issues/29
 				});
 			}
 		},
