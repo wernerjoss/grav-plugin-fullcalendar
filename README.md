@@ -43,9 +43,10 @@ Here is the default configuration and an explanation of available options:
 enabled: true
 colors: #3a87ad # see additional Note on custom colors in the Changelog
 showlegend: false   # set to true to show calendar File Name(s) as Legend below grid
-locale: en  # use your own locale here, e.g. de
+locale: en  # use your own locale here, e.g. de, fr ...
 weekNumbers: false  # set to true to show Week Numbers
 cors_api_url: https://cors-anywhere.herokuapp.com/  # this is the default value, change if you like to use another
+use_plugin_template: false
 
 ```
 
@@ -70,7 +71,8 @@ Another improvement can be used with the plugin template is the config option us
 
 ## Advanced Usage
 As an addition to the standard use case, there is an elegant way to automate display of remote Calendars in case those are hosted on a CalDav Server (e.g. Owncloud, Nextcloud...):  
-In this case, you can just use [caldav2ics](https://github.com/wernerjoss/wp-caldav2ics) via cron job or the [Grav Scheduler](https://learn.getgrav.org/17/advanced/scheduler) to automatically update your ics Files shown by the Fullcalendar Plugin, so that remote Calendar content, usually maintained in separate Calendar Apps (such as Google Calendar or Lightning) is automatically propagated to your Website.
+In this case, you can just use [caldav2ics](https://github.com/wernerjoss/caldav2ics) via cron job or the [Grav Scheduler](https://learn.getgrav.org/17/advanced/scheduler) to automatically update your ics Files shown by the Fullcalendar Plugin, so that remote Calendar content, usually maintained in separate Calendar Apps (such as Google Calendar or Lightning) is automatically propagated to your Website.  
+Also note that recently there is a new [Grav Plugin](https://github.com/wernerjoss/grav-plugin-caldav2ics) which does the same, but is fully integrated with the Grav Admin Backend and has a nice UI for easy cron job configuration.
 
 ## Credits
 
