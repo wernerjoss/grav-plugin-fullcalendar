@@ -2,7 +2,7 @@
 // gets Parameters via DOM, see below
 
 jQuery(document).ready(function () {
-	var verbose = false;
+	var verbose = true;
 	var defaultLocale = 'en';
 	var cfgWeekNums = jQuery('#weeknums').text();	//	get Paramter from DOM
 	weekNums = false;
@@ -34,6 +34,17 @@ jQuery(document).ready(function () {
 	var cfgFilestring = jQuery('#cfgFilestring').text();	//	get Paramter from DOM
 	if (verbose) console.log('cfgfilestring:', cfgFilestring);
 	var cfgfiles = cfgFilestring.split(','); // split string into multiple ics files, if appropriate, see note above
+	
+	var len = calUrls.length;
+	if (verbose) console.log('cfgfiles[]:', cfgfiles);
+	var BgColstring = jQuery('#BgColstring').text();	//	get Paramter from DOM'
+	if (verbose) console.log('BgColstring:', BgColstring);
+	var default_cors_api_url = 'https://cors-anywhere.herokuapp.com/';	// set cors_api_url in config if you prefer another CORS proxy !
+	if (verbose) console.log('default CORS Url:', default_cors_api_url);
+	var cfg_cors_api_url = jQuery('#CorsUrl').text();	//	get Paramter from DOM'
+	if (!cfg_cors_api_url.endsWith('/')) cfg_cors_api_url = cfg_cors_api_url + '/'; // add trailing slash if not present
+	var cors_api_url = (cfg_cors_api_url !== '/') ? cfg_cors_api_url : default_cors_api_url;
+	if (verbose) console.log('CORS Url:', cors_api_url);
 
 	if (verbose) console.log('cfgfiles[]:', cfgfiles);
 	var BgColstring = jQuery('#BgColstring').text();	//	get Paramter from DOM'
@@ -119,7 +130,6 @@ jQuery(document).ready(function () {
 			if (info.event.extendedProps.description) {
 				tippy (info.el, {
 					content: info.event.extendedProps.description,
-					allowHTML: true,	// see https://github.com/wernerjoss/grav-plugin-fullcalendar/issues/29
 				});
 			}
 		},
