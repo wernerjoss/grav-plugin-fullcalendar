@@ -34,6 +34,7 @@ class FullcalendarPlugin extends Plugin
 		//  dump($use_plugin_template);
 		if (! $use_plugin_template) {   // load Js/Css here if plugin template is not used (default behaviour)
 			//	$assets->addJs('plugin://fullcalendar/assets/lib/jquery.min.js', 'defer');	// jquery should already be in system/assets
+			$assets->addJs('plugin://fullcalendar/assets/jquery.ajax-cross-origin.min.js', 'defer');   // 12.05.21  -   so gehts !!!
 			$assets->addJs('plugin://fullcalendar/assets/ical.js/build/ical.min.js', 'defer');   // see also reamde.txt file there
 			// for Tooltip: 
 			$assets->addJs('plugin://fullcalendar/assets/popper.min.js', 'defer');

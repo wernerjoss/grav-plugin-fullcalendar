@@ -7,6 +7,7 @@
 		{% if (config.plugins.fullcalendar.use_plugin_template) %} {% set use_plugin_template = true %} {% endif %}
 		{% if (debug) %}    {{ dump(use_plugin_template) }}    {% endif %}
 		{% if (use_plugin_template) %}
+			{% do assets.addJs('plugins://fullcalendar/assets/jquery.ajax-cross-origin.min.js') %}
 			{% do assets.addJs('plugins://fullcalendar/assets/ical.js/build/ical.min.js') %}
 			{% do assets.addJs('plugins://fullcalendar/assets/popper.min.js') %}
 			{% do assets.addJs('plugins://fullcalendar/assets/tippy-bundle.umd.min.js') %}

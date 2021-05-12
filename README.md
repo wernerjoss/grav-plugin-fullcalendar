@@ -74,6 +74,11 @@ As an addition to the standard use case, there is an elegant way to automate dis
 In this case, you can just use [caldav2ics](https://github.com/wernerjoss/caldav2ics) via cron job or the [Grav Scheduler](https://learn.getgrav.org/17/advanced/scheduler) to automatically update your ics Files shown by the Fullcalendar Plugin, so that remote Calendar content, usually maintained in separate Calendar Apps (such as Google Calendar or Lightning) is automatically propagated to your Website.  
 Also note that recently there is a new [Grav Plugin](https://github.com/wernerjoss/grav-plugin-caldav2ics) which does the same, but is fully integrated with the Grav Admin Backend and has a nice UI for easy cron job configuration.
 
+## CORS Issues:
+As of Begin 2021, I realized, that the recommended external CORS Proxy (herokuapp, see above) will no longer work for public use, see [this support Thread](https://github.com/Rob--W/cors-anywhere/issues/301).
+So I decided to implement a local CORS Proxy, which is available from v 0.2.8.
+For most use cases, the default URL: http://localhost/user/plugins/fullcalendar/proxy.php/ should be ok, only in case your Grav Installation is not in the web root, you will need to adapt this.
+
 ## Credits
 
 This Plugin is built on [fullcalendar.io](https://fullcalendar.io), [jakubroztocil/rrule](https://github.com/jakubroztocil/rrule) and [jsical](http://mozilla-comm.github.io/ical.js) - Javascript parser for rfc5545

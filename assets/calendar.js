@@ -35,6 +35,15 @@ jQuery(document).ready(function () {
 	if (verbose) console.log('cfgfilestring:', cfgFilestring);
 	var cfgfiles = cfgFilestring.split(','); // split string into multiple ics files, if appropriate, see note above
 
+	if (verbose) console.log('cfgfiles[]:', cfgfiles);
+	var BgColstring = jQuery('#BgColstring').text();	//	get Paramter from DOM'
+	if (verbose) console.log('BgColstring:', BgColstring);
+	var default_cors_api_url = 'https://cors-anywhere.herokuapp.com/';	// set cors_api_url in config if you prefer another CORS proxy !
+	if (verbose) console.log('default CORS Url:', default_cors_api_url);
+	var cfg_cors_api_url = jQuery('#CorsUrl').text();	//	get Paramter from DOM'
+	if (!cfg_cors_api_url.endsWith('/')) cfg_cors_api_url = cfg_cors_api_url + '/'; // add trailing slash if not present
+	var cors_api_url = (cfg_cors_api_url !== '/') ? cfg_cors_api_url : default_cors_api_url;
+	if (verbose) console.log('CORS Url:', cors_api_url);
 	var cfgUrls = [];
 	cfgfiles.forEach(function(value, index) {
 		cfgFile = value;
@@ -44,6 +53,7 @@ jQuery(document).ready(function () {
 		// allow remote ics files, full URL required
 		if (cfgFile.startsWith("https://") || cfgFile.startsWith("http://")) {	// calendar URL is remote
 			// automatically add CORS proxy URL for remote calendars, if not yet done 06.04.20
+			/*
 			var origin = window.location.protocol + '//' + window.location.host;
 			if (verbose) console.log('Origin:' + origin);
 			if (cfgFile.startsWith(origin)) {
@@ -58,6 +68,8 @@ jQuery(document).ready(function () {
 					calendarUrl = cors_api_url + cfgFile;
 				}
 			}
+			*/
+			calendarUrl = cfgFile;	// always :-)	-	see axjax proxy below 12.05.21
 		}   else    {
 			calendarUrl = getAbsolutePath() + 'user/data/calendars/' + cfgFile;
 		}
@@ -65,19 +77,8 @@ jQuery(document).ready(function () {
 		cfgUrls.push(calendarUrl);
 		}
 	})
-
 	jQuery.merge(calUrls, cfgUrls);
-
 	var len = calUrls.length;
-	if (verbose) console.log('cfgfiles[]:', cfgfiles);
-	var BgColstring = jQuery('#BgColstring').text();	//	get Paramter from DOM'
-	if (verbose) console.log('BgColstring:', BgColstring);
-	var default_cors_api_url = 'https://cors-anywhere.herokuapp.com/';	// set cors_api_url in config if you prefer another CORS proxy !
-	if (verbose) console.log('default CORS Url:', default_cors_api_url);
-	var cfg_cors_api_url = jQuery('#CorsUrl').text();	//	get Paramter from DOM'
-	if (!cfg_cors_api_url.endsWith('/')) cfg_cors_api_url = cfg_cors_api_url + '/'; // add trailing slash if not present
-	var cors_api_url = (cfg_cors_api_url !== '/') ? cfg_cors_api_url : default_cors_api_url;
-	if (verbose) console.log('CORS Url:', cors_api_url);
 	var colors = BgColstring.split(',');
 	var ncolors = colors.length;
 	if (ncolors < len)	{	// populate colors with default color from fullcalendar.css
@@ -133,7 +134,20 @@ jQuery(document).ready(function () {
 					do_callback = true;
 				}
 				if (verbose) console.log('index,do_callback:', index, do_callback);
-				jQuery.get(calendarUrl, function(data) {
+				jQuery.ajax({
+					crossOrigin: true,
+					proxy: cors_api_url,	//	"http://localhost:8080/proxy.php", //to overide default proxy
+					url: calendarUrl,
+					//dataType: "json", //no need. if you use crossOrigin, the dataType will be override with "json"
+					//charset: 'ISO-8859-1', //use it to define the charset of the target url
+					context: {},
+					success: function(data) {
+						//	alert(data);
+						//	$( '#test' ).html(data);
+					}
+				})
+				.done(function( data, textStatus, jqXHR ) {	//	jQuery.get(calendarUrl, function(data) {
+					if (verbose)	console.log(data);
 					var jcalData = ICAL.parse(data);	//	directly parse data, no need to split to lines first ! 14.02.20
 					var comp = new ICAL.Component(jcalData);
 					var eventComps = comp.getAllSubcomponents("vevent");

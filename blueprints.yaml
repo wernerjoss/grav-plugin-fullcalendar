@@ -1,5 +1,5 @@
 name: FullCalendar
-version: 0.2.7
+version: 0.2.8
 description: show Calendar Widget from ICS File(s), based on fullcalendar.io
 icon: calendar
 author:
@@ -42,11 +42,6 @@ form:
             options:
                 1: Enabled
                 0: Disabled
-        locale:
-            type: text
-            size: x-small
-            label: Locale (Language)
-            help: valid locale Code, e.g. en, de, fr, pl
         colors:
             type: text
             size: large
@@ -56,6 +51,15 @@ form:
             type: text
             size: large
             label: Cors API URL
-            default: https://cors-anywhere.herokuapp.com/
-            help: only change this if you are really sure you need it, in most cases, default is ok
+            default: http://localhost/user/plugins/fullcalendar/proxy.php/
+            help: only change this if you are sure the default is not ok ! - see README
+        use_plugin_template:
+            type: toggle
+            label: use Plugin Page Template
+            highlight: 1
+            default: 0
+            options:
+                1: Enabled
+                0: Disabled
+        
                 
