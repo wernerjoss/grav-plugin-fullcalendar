@@ -1,8 +1,9 @@
 # v0.2.8
-##  03/08/2021
+##  05/12/2021
 
 1. [](#new)
     * add config option use_plugin_template (improve site page speed ranking)
+    * add local CORS Proxy (as default external proxy herokuapp stopped working)
 
 # v0.2.7
 ##  02/26/2021
