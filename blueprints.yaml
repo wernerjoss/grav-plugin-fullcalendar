@@ -57,5 +57,5 @@ form:
             size: large
             label: Cors API URL
             default: https://cors-anywhere.herokuapp.com/
-            help: only change this if you are really sure you need it, in most cases, default is ok
+            help: from 01/2021, this does not really work anymore, see README - CORS Issues !
                 
