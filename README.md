@@ -63,13 +63,12 @@ From Version 0.2.6, it is also possible to just drop .ics Calendar Files into yo
 In case you only use calendar files in the page folder, be sure to include an empty shortcut:   
 ` [fullcalendar][/fullcalendar]`   
 in your page content, otherwise it will not work !  
-However, this will only work if you use the calendar.html.twig template from the plugin for the calendar page (this can be done manually or in the admin backend by choosing 'Calendar' in the dropdown for the page template).  
-Another improvement can be used with the plugin template is the config option use_plugin_template (default: false) : if set to true, fc4 assets will only be loaded on calendar page(s), NOT upon plugin initialization, thus page speed of your site can be improved significantly !  
-The use of the calendar.html.twig template is also mandatory if you want to use the month picture feature of the plugin, otherwise you can also use other templates. 
+Also note, that from v 0.2.8, the Plugin will only work if you use the calendar.html.twig template from the plugin (or a modified copy in your Theme Folder) for the calendar page - this can be done manually or in the admin backend by choosing 'Calendar' in the dropdown for the page template.  
 
 ## Advanced Usage
-As an addition to the standard use case, there is an elegant way to automate display of remote Calendars in case those are hosted on a CalDav Server (e.g. Owncloud, Nextcloud...):  
-In this case, you can just use [caldav2ics](https://github.com/wernerjoss/caldav2ics) via cron job or the [Grav Scheduler](https://learn.getgrav.org/17/advanced/scheduler) to automatically update your ics Files shown by the Fullcalendar Plugin, so that remote Calendar content, usually maintained in separate Calendar Apps (such as Google Calendar or Lightning) is automatically propagated to your Website.
+As an addition to the standard use case, there is an elegant way to automatically update your .ics Files from remote Calendars in case those are hosted on a CalDav Server (e.g. Owncloud, Nextcloud...):  
+In this case, you can just use [caldav2ics](https://github.com/wernerjoss/caldav2ics) via cron job or the [Grav Scheduler](https://learn.getgrav.org/17/advanced/scheduler) to automatically update your ics Files shown by the Fullcalendar Plugin, so that remote Calendar content, usually maintained in separate Calendar Apps (such as Google Calendar or Lightning) is automatically propagated to your Website.  
+The same is true if you install [grav-plugin-caldav2ics](https://github.com/wernerjoss/grav-plugin-caldav2ics) which is fully integrated in Grav and has a nice Admin Backend for easy configuration.
 
 ## CORS Issues:
 As of Begin 2021, I realized, that the recommended external CORS Proxy (herokuapp, see above) will no longer work for public use, see [this support Thread](https://github.com/Rob--W/cors-anywhere/issues/301).
