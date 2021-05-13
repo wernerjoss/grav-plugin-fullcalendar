@@ -2,7 +2,8 @@
 // gets Parameters via DOM, see below
 
 jQuery(document).ready(function () {
-	var verbose = true;
+	var verbose = false;
+	var debug = false;
 	var defaultLocale = 'en';
 	var cfgWeekNums = jQuery('#weeknums').text();	//	get Paramter from DOM
 	weekNums = false;
@@ -35,56 +36,53 @@ jQuery(document).ready(function () {
 	if (verbose) console.log('cfgfilestring:', cfgFilestring);
 	var cfgfiles = cfgFilestring.split(','); // split string into multiple ics files, if appropriate, see note above
 	
-	var len = calUrls.length;
 	if (verbose) console.log('cfgfiles[]:', cfgfiles);
 	var BgColstring = jQuery('#BgColstring').text();	//	get Paramter from DOM'
 	if (verbose) console.log('BgColstring:', BgColstring);
 	var default_cors_api_url = 'http://localhost/user/plugins/fullcalendar/proxy.php/';	// set cors_api_url in config if you prefer another CORS proxy !
 	if (verbose) console.log('default CORS Url:', default_cors_api_url);
 	var cfg_cors_api_url = jQuery('#CorsUrl').text();	//	get Paramter from DOM'
-	if (!cfg_cors_api_url.endsWith('/')) cfg_cors_api_url = cfg_cors_api_url + '/'; // add trailing slash if not present
-	var cors_api_url = (cfg_cors_api_url !== '/') ? cfg_cors_api_url : default_cors_api_url;
-	if (verbose) console.log('CORS Url:', cors_api_url);
+	if (debug)	console.log(cfg_cors_api_url.length);
+	var origin = window.location.protocol + '//' + window.location.host;
+	if (debug) console.log('Origin:' + origin);
+	var auto_cors_api_url = origin + '/user/plugins/fullcalendar/proxy.php/';	// derive CORS URL from Site URL, no more config needed ! 13.05.21		
+
+	var cors_api_url = (auto_cors_api_url !== '/') ? auto_cors_api_url : default_cors_api_url;
+	if (cfg_cors_api_url.length > 8)	{	// use this if it has a reasonable lenth
+		if (!cfg_cors_api_url.endsWith('/')) cfg_cors_api_url = cfg_cors_api_url + '/'; // add trailing slash if not present
+		cors_api_url = cfg_cors_api_url;
+	}
+	
+	if (debug) console.log('CORS Url:', cors_api_url);
 	var cfgUrls = [];
 	cfgfiles.forEach(function(value, index) {
 		cfgFile = value;
 		if (value){
-		calNames.push(value);
-		if (verbose) console.log('yaml CFG File:' + cfgFile);
-		// allow remote ics files, full URL required
-		if (cfgFile.startsWith("https://") || cfgFile.startsWith("http://")) {	// calendar URL is remote
-			// automatically add CORS proxy URL for remote calendars, if not yet done 06.04.20
-			/*
-			var origin = window.location.protocol + '//' + window.location.host;
-			if (verbose) console.log('Origin:' + origin);
-			if (cfgFile.startsWith(origin)) {
-				if (verbose) console.log('remote is same Origin, do not use proxy');
-				calendarUrl = cfgFile;
-			}	else	{
-				if (cfgFile.startsWith(cors_api_url)) {
-					if (verbose) console.log('remote is different Origin, but cors URL already added, do not add in addition');
-					calendarUrl = cfgFile;
-				}	else	{
-					if (verbose) console.log('remote is different Origin, use proxy');
-					calendarUrl = cors_api_url + cfgFile;
-				}
+			var calName = value;
+			if (verbose) console.log('yaml CFG File:' + cfgFile);
+			// allow remote ics files, these are handeled by local CORS proxy now
+			if (cfgFile.startsWith("https://") || cfgFile.startsWith("http://")) {	// calendar URL is remote
+				// automatically add CORS proxy URL for remote calendars, if not yet done 06.04.20 - this is obsolete from v 0.2.8 - local proxy
+				
+				calendarUrl = cfgFile;	// always :-)	-	see axjax proxy below 12.05.21
+				var index = cfgFile.lastIndexOf("/") + 1;
+				calName = cfgFile.substr(index);	// calName is used for Legend, should be only Name, NOT full Url !
+			}   else    {
+				calendarUrl = getAbsolutePath() + 'user/data/calendars/' + cfgFile;
 			}
-			*/
-			calendarUrl = cfgFile;	// always :-)	-	see axjax proxy below 12.05.21
-		}   else    {
-			calendarUrl = getAbsolutePath() + 'user/data/calendars/' + cfgFile;
-		}
-		if (verbose) console.log('Calendar URL:' + calendarUrl);
-		cfgUrls.push(calendarUrl);
+			if (verbose) console.log('Calendar URL:' + calendarUrl);
+			cfgUrls.push(calendarUrl);
+			calNames.push(calName);
 		}
 	})
 	jQuery.merge(calUrls, cfgUrls);
 	var len = calUrls.length;
+	if (debug)	console.log('len:', len);
 	var colors = BgColstring.split(',');
 	var ncolors = colors.length;
-	if (ncolors < len)	{	// populate colors with default color from fullcalendar.css
-		colors = ['#3a87ad'];
-		for (i=0; i<(len);i++)
+	if (ncolors < len)	{	// populate colors with default color
+		//	colors = ['#3a87ad'];
+		for (i=ncolors; i<(len);i++)
 			colors.push('#3a87ad');
 	}
 	if (verbose) console.log('colors[]:', colors);
@@ -128,7 +126,7 @@ jQuery(document).ready(function () {
 			var allevents = [];
 			calUrls.forEach(function(value, index) {
 				calendarUrl = value;
-				if (verbose) console.log('Calendar URL:' + calendarUrl);
+				if (debug) console.log('Calendar URL:' + calendarUrl);
 				var events = [];
 				var do_callback = false; // muss zwingend hier hin, nicht ausserhalb der forEach schleife !!
 				if (index == (len - 1)) {

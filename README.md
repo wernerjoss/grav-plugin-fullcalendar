@@ -43,9 +43,8 @@ Here is the default configuration and an explanation of available options:
 enabled: true
 colors: #3a87ad # see additional Note on custom colors in the Changelog
 showlegend: false   # set to true to show calendar File Name(s) as Legend below grid
-locale: en  # use your own locale here, e.g. de
 weekNumbers: false  # set to true to show Week Numbers
-cors_api_url: https://cors-anywhere.herokuapp.com/  # this is the default value, change if you like to use another
+cors_api_url: # the default value is now empty as the formerly used external proxy, https://cors-anywhere.herokuapp.com/ , will no longer work
 
 ```
 
@@ -75,7 +74,8 @@ In this case, you can just use [caldav2ics](https://github.com/wernerjoss/caldav
 ## CORS Issues:
 As of Begin 2021, I realized, that the recommended external CORS Proxy (herokuapp, see above) will no longer work for public use, see [this support Thread](https://github.com/Rob--W/cors-anywhere/issues/301).
 So I decided to implement a local CORS Proxy, which is available from v 0.2.8.
-For most use cases, the default URL: http://localhost/user/plugins/fullcalendar/proxy.php/ should be ok, only in case your Grav Installation is not in the web root, you will need to adapt this.
+For most use cases, the empty Cors API URL in the settings should be ok, only in case your Grav Installation is not in the web root, you will need to adapt this.  
+Hint: the automatically evaluated URL is normally http://yourdomain/user/plugins/fullcalendar/proxy.php/ which will work if the Grav Installation is at the webroot, if that is not the case, e.g. Grav installed in Subdirectory grav, you will need http://yourdomain/grav/user/plugins/fullcalendar/proxy.php/ .
 
 ## Credits
 

@@ -3,25 +3,6 @@
 {% block content %}
 	<article class="post-2 page type-page status-publish hentry">
 		<header class="entry-header">
-		{% set use_plugin_template = false %}
-		{% if (config.plugins.fullcalendar.use_plugin_template) %} {% set use_plugin_template = true %} {% endif %}
-		{% if (debug) %}    {{ dump(use_plugin_template) }}    {% endif %}
-		{% if (use_plugin_template) %}
-			{% do assets.addJs('plugins://fullcalendar/assets/jquery.ajax-cross-origin.min.js') %}
-			{% do assets.addJs('plugins://fullcalendar/assets/ical.js/build/ical.min.js') %}
-			{% do assets.addJs('plugins://fullcalendar/assets/popper.min.js') %}
-			{% do assets.addJs('plugins://fullcalendar/assets/tippy-bundle.umd.min.js') %}
-			{% do assets.addCss('plugins://fullcalendar/fc4/packages/core/main.css') %}
-			{% do assets.addCss('plugins://fullcalendar/fc4/packages/daygrid/main.css') %}
-			{% do assets.addJs('plugins://fullcalendar/fc4/packages/core/main.js') %}
-			{% do assets.addJs('plugins://fullcalendar/fc4/vendor/rrule.js') %}
-			{% do assets.addJs('plugins://fullcalendar/fc4/packages/rrule/main.js') %}
-			{% do assets.addJs('plugins://fullcalendar/fc4/packages/interaction/main.js') %}
-			{% do assets.addJs('plugins://fullcalendar/fc4/packages/daygrid/main.js') %}
-			{% do assets.addJs('plugins://fullcalendar/assets/monthpic.js') %}
-			{% do assets.addJs('plugins://fullcalendar/assets/calendar.js') %}
-			{% do assets.addCss('plugins://fullcalendar/assets/daygrid.css') %}
-		{% endif %}
 		</header>
 		<div class="entry-content">
 			<h2>{{ page.header.title }}</h2>
