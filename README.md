@@ -74,7 +74,7 @@ The same is true if you install [grav-plugin-caldav2ics](https://github.com/wern
 As of Begin 2021, I realized, that the recommended external CORS Proxy (herokuapp, see above) will no longer work for public use, see [this support Thread](https://github.com/Rob--W/cors-anywhere/issues/301).
 So I decided to implement a local CORS Proxy, which is available from v 0.2.8.
 For most use cases, the empty Cors API URL in the settings should be ok, only in case your Grav Installation is not in the web root, you will need to adapt this.  
-Hint: the automatically evaluated URL is normally http://yourdomain/user/plugins/fullcalendar/proxy.php/ which will work if the Grav Installation is at the webroot, if that is not the case, e.g. Grav installed in Subdirectory grav, you will need http://yourdomain/grav/user/plugins/fullcalendar/proxy.php/ .
+Hint: the automatically evaluated URL (created when Cors API URL is empty - so, when updating, be sure to delete the old herokuapp URL if present) is normally http://yourdomain/user/plugins/fullcalendar/proxy.php/ which will work if the Grav Installation is at the webroot, if that is not the case, e.g. Grav installed in Subdirectory grav, you will need http://yourdomain/grav/user/plugins/fullcalendar/proxy.php/ .
 
 ## Credits
 
