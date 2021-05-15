@@ -3,7 +3,6 @@
 
 jQuery(document).ready(function () {
 	var verbose = false;
-	var debug = false;
 	var defaultLocale = 'en';
 	var cfgWeekNums = jQuery('#weeknums').text();	//	get Paramter from DOM
 	weekNums = false;
@@ -42,9 +41,9 @@ jQuery(document).ready(function () {
 	var default_cors_api_url = 'http://localhost/user/plugins/fullcalendar/proxy.php/';	// set cors_api_url in config if you prefer another CORS proxy !
 	if (verbose) console.log('default CORS Url:', default_cors_api_url);
 	var cfg_cors_api_url = jQuery('#CorsUrl').text();	//	get Paramter from DOM'
-	if (debug)	console.log(cfg_cors_api_url.length);
+	if (verbose)	console.log(cfg_cors_api_url.length);
 	var origin = window.location.protocol + '//' + window.location.host;
-	if (debug) console.log('Origin:' + origin);
+	if (verbose) console.log('Origin:' + origin);
 	var auto_cors_api_url = origin + '/user/plugins/fullcalendar/proxy.php/';	// derive CORS URL from Site URL, no more config needed ! 13.05.21		
 
 	var cors_api_url = (auto_cors_api_url !== '/') ? auto_cors_api_url : default_cors_api_url;
@@ -53,7 +52,7 @@ jQuery(document).ready(function () {
 		cors_api_url = cfg_cors_api_url;
 	}
 	
-	if (debug) console.log('CORS Url:', cors_api_url);
+	if (verbose) console.log('CORS Url:', cors_api_url);
 	var cfgUrls = [];
 	cfgfiles.forEach(function(value, index) {
 		cfgFile = value;
@@ -77,7 +76,7 @@ jQuery(document).ready(function () {
 	})
 	jQuery.merge(calUrls, cfgUrls);
 	var len = calUrls.length;
-	if (debug)	console.log('len:', len);
+	if (verbose)	console.log('len:', len);
 	var colors = BgColstring.split(',');
 	var ncolors = colors.length;
 	if (ncolors < len)	{	// populate colors with default color
@@ -126,7 +125,7 @@ jQuery(document).ready(function () {
 			var allevents = [];
 			calUrls.forEach(function(value, index) {
 				calendarUrl = value;
-				if (debug) console.log('Calendar URL:' + calendarUrl);
+				if (verbose) console.log('Calendar URL:' + calendarUrl);
 				var events = [];
 				var do_callback = false; // muss zwingend hier hin, nicht ausserhalb der forEach schleife !!
 				if (index == (len - 1)) {
