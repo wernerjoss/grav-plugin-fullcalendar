@@ -7,8 +7,8 @@
 <div id='cfgFilestring' style='display:none;'>{{ icsfile }}</div>
 <div id='BgColstring' style='display:none;'>{{ config.plugins.fullcalendar.colors }}</div>
 <div id='CorsUrl' style='display:none;'>{{ config.plugins.fullcalendar.cors_api_url }}</div>
-{% if config.system.languages.default_lang %}   {#  use override default lang, if set, else 1st supported lang from system config #}
-    <div id='cfgLocale' style='display:none;'>{{ config.system.languages.default_lang }}</div>
+{% if config.site.default_lang %}   {#  use site default lang, if set, else 1st supported lang from system config #}
+    <div id='cfgLocale' style='display:none;'>{{ config.site.default_lang }}</div>
 {% else %}
     <div id='cfgLocale' style='display:none;'>{{ config.system.languages.supported[0] }}</div>
 {% endif %}
