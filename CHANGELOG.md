@@ -1,3 +1,9 @@
+# v0.2.9
+##  05/20/2021
+
+1. [](#new)
+    * use grav.language.getLanguage instead of config Options - Hint from Ulrich Wolf, thanks :-)
+
 # v0.2.8
 ##  05/12/2021
 
