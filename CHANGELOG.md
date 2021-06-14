@@ -1,3 +1,10 @@
+# v0.2.10
+##  06/14/2021
+
+1. [](#new)
+    * add config Option to add jquery asset in case the used Theme does not.
+    * add Frontmatter Variable lang to allow override of language for page
+
 # v0.2.9
 ##  05/20/2021
 

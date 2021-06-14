@@ -2,7 +2,7 @@
 // gets Parameters via DOM, see below
 
 jQuery(document).ready(function () {
-	var verbose = false;
+	var verbose = true;
 	var defaultLocale = 'en';
 	var cfgWeekNums = jQuery('#weeknums').text();	//	get Paramter from DOM
 	weekNums = false;

@@ -29,6 +29,17 @@
 			{% if (num_mpics|int) >= 12 %} {# 12 pics sollten für 1 Jahr reichen :-) #}
 				<div id='actMonth'></div>
 			{% endif %}
+
+			{% set lang = grav.language.getLanguage   %}
+			{#
+			<span>{{ lang }}</span>
+			<span>{{ page.header.lang }}</span>
+			#}
+			{% if page.header.lang|length > 0   %}
+				{% set lang = page.header.lang    %}
+			{% endif %}
+			<div id='cfgLocale' style='display:none;'>{{ lang }}</div>
+
 			{% if (numcalendars|int) > 0 %} {# write local page calendars to DOM, json encoded #}
 				<div id='pagecalendars' style='display:none;'>{{ calendars|json_encode() }}</div>
 			{% endif %}

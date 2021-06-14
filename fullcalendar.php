@@ -43,6 +43,9 @@ class FullcalendarPlugin extends Plugin
 	{
 		/** @var Assets */
 		$assets = $this->grav['assets'];
+		$config = $this->config->get('plugins.fullcalendar');
+		if ($config['addJquery'])
+			$assets->add('jquery', 100);	// add jquery on demand (in case Theme does not do this)
 		$assets->addJs('plugins://' . $this->name . '/assets/jquery.ajax-cross-origin.min.js', ['group' => 'bottom']);   // 12.05.21  -   so gehts !!!
 		$assets->addJs('plugins://' . $this->name . '/assets/ical.js/build/ical.min.js', ['group' => 'bottom']);   // see also reamde.txt file there
 		// for Tooltip: 
@@ -60,7 +63,21 @@ class FullcalendarPlugin extends Plugin
 		$assets->addJs('plugins://' . $this->name . '/assets/calendar.js', ['group' => 'bottom']);
 		$assets->addCss('plugins://' . $this->name . '/assets/daygrid.css');	// default CSS for #calendar
 		$language = $this->grav['language']->getLanguage();
+		//	dump($language);
 		$assets->addJs('plugins://' . $this->name . '/fc4/packages/core/locales/'.$language.'.js', ['group' => 'bottom']);
+		$languages = $this->config->get('system.languages.supported');
+		//	$languages = ['en','it'];
+		//	dump($languages);
+		foreach ($languages as $lang)	{
+			//	dump($lang);
+			if ($lang != $language)	{
+				$asset = 'plugins://' . $this->name . '/fc4/packages/core/locales/'.$lang.'.js';
+				//	dump($asset);
+				$assets->addJs('plugins://' . $this->name . '/fc4/packages/core/locales/'.$lang.'.js', ['group' => 'bottom']);
+			}
+		}
+		/*
+		*/
 	}
 	
 	public function onTwigTemplatePaths()
