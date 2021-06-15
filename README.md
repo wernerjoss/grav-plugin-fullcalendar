@@ -65,6 +65,7 @@ In case you only use calendar files in the page folder, be sure to include an em
 ` [fullcalendar][/fullcalendar]`   
 in your page content, otherwise it will not work !  
 Also note, that from v 0.2.8, the Plugin will only work if you use the calendar.html.twig template from the plugin (or a modified copy in your Theme Folder) for the calendar page - this can be done manually or in the admin backend by choosing 'Calendar' in the dropdown for the page template.  
+Additionally, it should be noted that this Plugin relies on jquery beeing loaded by the Theme (most Themes do this) - in case you are using a Theme that does not do this, there is now (from v 0.2.10) a configuration Option to resolve this Problem: just set addJquery to true.
 
 ## Advanced Usage
 As an addition to the standard use case, there is an elegant way to automatically update your .ics Files from remote Calendars in case those are hosted on a CalDav Server (e.g. Owncloud, Nextcloud...):  
