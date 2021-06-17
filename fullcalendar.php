@@ -67,12 +67,10 @@ class FullcalendarPlugin extends Plugin
 		$languages = $this->config->get('system.languages.supported');
 		foreach ($languages as $lang)	{
 			if ($lang != $language)	{
-				$asset = 'plugins://' . $this->name . '/fc4/packages/core/locales/'.$lang.'.js';
+				//	$asset = 'plugins://' . $this->name . '/fc4/packages/core/locales/'.$lang.'.js';
 				$assets->addJs('plugins://' . $this->name . '/fc4/packages/core/locales/'.$lang.'.js', ['group' => 'bottom']);
 			}
 		}
-		/*
-		*/
 	}
 	
 	public function onTwigTemplatePaths()
