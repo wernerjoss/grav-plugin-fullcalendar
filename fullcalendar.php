@@ -63,16 +63,11 @@ class FullcalendarPlugin extends Plugin
 		$assets->addJs('plugins://' . $this->name . '/assets/calendar.js', ['group' => 'bottom']);
 		$assets->addCss('plugins://' . $this->name . '/assets/daygrid.css');	// default CSS for #calendar
 		$language = $this->grav['language']->getLanguage();
-		//	dump($language);
 		$assets->addJs('plugins://' . $this->name . '/fc4/packages/core/locales/'.$language.'.js', ['group' => 'bottom']);
 		$languages = $this->config->get('system.languages.supported');
-		//	$languages = ['en','it'];
-		//	dump($languages);
 		foreach ($languages as $lang)	{
-			//	dump($lang);
 			if ($lang != $language)	{
 				$asset = 'plugins://' . $this->name . '/fc4/packages/core/locales/'.$lang.'.js';
-				//	dump($asset);
 				$assets->addJs('plugins://' . $this->name . '/fc4/packages/core/locales/'.$lang.'.js', ['group' => 'bottom']);
 			}
 		}
