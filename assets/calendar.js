@@ -168,6 +168,8 @@ jQuery(document).ready(function () {
 						if (duration < 86400000)	fcevents["allDay"] = false;	// duration less than 1 day: allDay = false
 						var entry = item.getFirstPropertyValue("description");	// add description 22.06.20
 						if (entry !== null)	fcevents["description"] = entry;
+						var entry = item.getFirstPropertyValue("color");	// add color from ics
+						if (entry !== null)	fcevents["color"] = entry;
 						
 						// not used options go here
 						
@@ -234,7 +236,7 @@ jQuery(document).ready(function () {
 								if (verbose)	console.log('fcrrules:', fcrrules);
 							}
 						}
-						fcevents["backgroundColor"] = colors[index];
+						if(fcevents["color"] == null) { fcevents["backgroundColor"] = colors[index];}
 						if (verbose)	console.log('fcevents:', fcevents);
 						if (item.getFirstPropertyValue("class") === "PRIVATE") {
 							return null;
