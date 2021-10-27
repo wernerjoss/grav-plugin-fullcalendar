@@ -45,8 +45,10 @@ function whenJqReady() {
 
 	var cfgFilestring = jQuery('#cfgFilestring').text();	//	get Paramter from DOM
 	if (verbose) console.log('cfgfilestring:', cfgFilestring);
-	var cfgfiles = cfgFilestring.split(','); // split string into multiple ics files, if appropriate, see note above
-
+    // split string into multiple ics files, if appropriate, see note above
+    var cfgfiles = cfgFilestring.split(",").map(function(item) {
+      return item.trim();
+    });
 	if (verbose) console.log('cfgfiles[]:', cfgfiles);
 	var BgColstring = jQuery('#BgColstring').text();	//	get Paramter from DOM'
 	if (verbose) console.log('BgColstring:', BgColstring);
