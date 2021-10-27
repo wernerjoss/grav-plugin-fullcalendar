@@ -2,7 +2,7 @@
 // gets Parameters via DOM, see below
 
 // Load jQuery when it is not loaded already by the theme
-if(typeof jQuery=='undefined') {
+if (typeof jQuery=='undefined') {
     var headTag = document.getElementsByTagName("head")[0];
     var jqTag = document.createElement('script');
     jqTag.type = 'text/javascript';
@@ -58,7 +58,7 @@ function whenJqReady() {
     var linktags = document.head.getElementsByTagName("link");
     var linktagurl = [...linktags].find(tag => tag.href.includes("fullcalendar"));
     var cors_api_url = linktagurl.href.split("fullcalendar", 1)[0] + "fullcalendar/proxy.php/";
-    if (verbose) console.log('default CORS Url:', default_cors_api_url);
+    if (verbose) console.log('CORS API URL:', cors_api_url);
 
 	var cfg_cors_api_url = jQuery('#CorsUrl').text();	//	get Paramter from DOM'
 	if (verbose)	console.log(cfg_cors_api_url.length);
