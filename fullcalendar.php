@@ -44,11 +44,9 @@ class FullcalendarPlugin extends Plugin
 		/** @var Assets */
 		$assets = $this->grav['assets'];
 		$config = $this->config->get('plugins.fullcalendar');
-		if ($config['addJquery'])
-			$assets->add('jquery', 100);	// add jquery on demand (in case Theme does not do this)
 		$assets->addJs('plugins://' . $this->name . '/assets/jquery.ajax-cross-origin.min.js', ['group' => 'bottom']);   // 12.05.21  -   so gehts !!!
 		$assets->addJs('plugins://' . $this->name . '/assets/ical.js/build/ical.min.js', ['group' => 'bottom']);   // see also reamde.txt file there
-		// for Tooltip: 
+		// for Tooltip:
 		$assets->addJs('plugins://' . $this->name . '/assets/popper.min.js', ['group' => 'bottom']);
 		$assets->addJs('plugins://' . $this->name . '/assets/tippy-bundle.umd.min.js', ['group' => 'bottom']);
 		$assets->addCss('plugins://' . $this->name . '/fc4/packages/core/main.css');
@@ -72,7 +70,7 @@ class FullcalendarPlugin extends Plugin
 			}
 		}
 	}
-	
+
 	public function onTwigTemplatePaths()
 	{
 		$this->grav['twig']->twig_paths[] = __DIR__ . '/templates';
@@ -82,7 +80,7 @@ class FullcalendarPlugin extends Plugin
 	{
 		$this->grav['shortcode']->registerAllShortcodes(__DIR__.'/shortcodes');
 	}
-    
+
 	// register Template 'calendar' so it can be used in the admin backend without having to be copied to the theme's template folder
 	// see https://github.com/getgrav/grav-learn/pull/907
 	public function onGetPageTemplates(Event $event)

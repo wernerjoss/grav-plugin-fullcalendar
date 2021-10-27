@@ -23,7 +23,7 @@ To install this plugin, just download the zip version of this repository and unz
 You should now have all the plugin files under
 
     /your/site/grav/user/plugins/fullcalendar
-    
+
 > NOTE: This plugin is a modular component for Grav which requires [Grav](http://github.com/getgrav/grav) and the [Error](https://github.com/getgrav/grav-plugin-error) and [Problems](https://github.com/getgrav/grav-plugin-problems) Plugins to operate.
 
 ### Admin Plugin
@@ -45,8 +45,6 @@ colors: "#3a87ad" # see additional Note on custom colors in the Changelog, be su
 showlegend: false   # set to true to show calendar File Name(s) as Legend below grid
 weekNumbers: false  # set to true to show Week Numbers
 cors_api_url: # the default value is now empty as the formerly used external proxy, https://cors-anywhere.herokuapp.com/ , will no longer work
-addJquery: false # Add Jquery asset in case your Theme does not do this
-
 ```
 
 ## Usage
@@ -54,7 +52,7 @@ addJquery: false # Add Jquery asset in case your Theme does not do this
 Once installed and enabled, you can use this Plugin to parse ICS Calendar File(s) (these must be found in user/data/calendars and set as parameter in Plugin shortcode, without Path !) and display Events from that Calendar(s) anywhere on your Site using this shortcode:
 
     [fullcalendar icsfile="example0.ics,example1.ics,..."][/fullcalendar]
-    
+
 in the appropriate page (note the double quotes " surrounding the file name - single quotes ' will not work !)    
 You can also provide absolute URL's to ICS Files, in which case a CORS proxy will be used to access them.  
 As an addition, you can show a Picture for the current month above the calendar widget.  
