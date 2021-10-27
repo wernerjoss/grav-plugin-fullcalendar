@@ -12,7 +12,7 @@ class FullCalendarShortcode extends Shortcode {
             // icsfile is Parameter from shortcode:
             if (isset($params['icsfile'])) {
                 $icsfile = $this->grav['twig']->processString($params['icsfile']);
-            } else $icsfile = '';	
+            } else $icsfile = '';
             $output = $twig->processTemplate('partials/fullcalendar.html.twig',
                 [
                     'icsfile' => $icsfile

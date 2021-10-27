@@ -52,15 +52,16 @@ function whenJqReady() {
 	if (verbose) console.log('cfgfiles[]:', cfgfiles);
 	var BgColstring = jQuery('#BgColstring').text();	//	get Paramter from DOM'
 	if (verbose) console.log('BgColstring:', BgColstring);
-	var default_cors_api_url = 'http://localhost/user/plugins/fullcalendar/proxy.php/';	// set cors_api_url in config if you prefer another CORS proxy !
-	if (verbose) console.log('default CORS Url:', default_cors_api_url);
+
+    // get CORS api url from default Paramter from DOM'
+    // set cors_api_url in config if you prefer another CORS proxy !
+    var linktags = document.head.getElementsByTagName("link");
+    var linktagurl = [...linktags].find(tag => tag.href.includes("fullcalendar"));
+    var cors_api_url = linktagurl.href.split("fullcalendar", 1)[0] + "fullcalendar/proxy.php/";
+    if (verbose) console.log('default CORS Url:', default_cors_api_url);
+
 	var cfg_cors_api_url = jQuery('#CorsUrl').text();	//	get Paramter from DOM'
 	if (verbose)	console.log(cfg_cors_api_url.length);
-	var origin = window.location.protocol + '//' + window.location.host;
-	if (verbose) console.log('Origin:' + origin);
-	var auto_cors_api_url = origin + '/user/plugins/fullcalendar/proxy.php/';	// derive CORS URL from Site URL, no more config needed ! 13.05.21
-
-	var cors_api_url = (auto_cors_api_url !== '/') ? auto_cors_api_url : default_cors_api_url;
 	if (cfg_cors_api_url.length > 8)	{	// use this if it has a reasonable lenth
 		if (!cfg_cors_api_url.endsWith('/')) cfg_cors_api_url = cfg_cors_api_url + '/'; // add trailing slash if not present
 		cors_api_url = cfg_cors_api_url;
