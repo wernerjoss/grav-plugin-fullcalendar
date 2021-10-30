@@ -34,7 +34,8 @@ class FullcalendarPlugin extends Plugin
 		/** @var Page */
 		$page = $event['page'];
 
-		if ($page->template() === 'calendar') {
+		$config = $this->config->get('plugins.fullcalendar');
+		if (($page->template() === 'calendar') || ($config['useCustomPageTemplate'])) {
 			$this->addAssets();
 		}
 	}
