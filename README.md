@@ -44,7 +44,6 @@ enabled: true
 colors: "#3a87ad" # see additional Note on custom colors in the Changelog, be sure to use single or double quotes around list !
 showlegend: false   # set to true to show calendar File Name(s) as Legend below grid
 weekNumbers: false  # set to true to show Week Numbers
-cors_api_url: # the default value is now empty as the formerly used external proxy, https://cors-anywhere.herokuapp.com/ , will no longer work
 ```
 
 ## Usage
