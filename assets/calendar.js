@@ -101,7 +101,7 @@ function whenJqReady() {
 	}
 	if (verbose) console.log('colors[]:', colors);
 	var showlegend = jQuery('#showlegend').text();	//	get Paramter from DOM'
-	showlegend = (showlegend !== null) ? showlegend : false;
+	showlegend = (showlegend > 0) ? showlegend : false;
 	if (verbose)	console.log('showlegend:', showlegend);
 	var cfg_tz_offset = jQuery('#tzoffset').text();	//	get Paramter from DOM'
 	var default_tz_offset = 0;	// Default
