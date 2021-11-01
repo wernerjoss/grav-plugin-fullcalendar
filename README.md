@@ -46,7 +46,7 @@ showlegend: false   # set to true to show calendar File Name(s) as Legend below 
 weekNumbers: false  # set to true to show Week Numbers
 cors_api_url: # the default value is now empty as the formerly used external proxy, https://cors-anywhere.herokuapp.com/ , will no longer work
 addJquery: false # Add Jquery asset in case your Theme does not do this
-
+useCustomPageTemplate: false    # Use another Template than 'calendar' for Calendar Page (e.g. in case of modular Page)
 ```
 
 ## Usage
