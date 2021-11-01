@@ -1,7 +1,19 @@
 // this is now a standalone javascript file, formerly embedded in fullcalendar.html.twig (ugly)
 // gets Parameters via DOM, see below
 
-jQuery(document).ready(function () {
+// Load jQuery when it is not loaded already by the theme
+if (typeof jQuery=='undefined') {
+    var headTag = document.getElementsByTagName("head")[0];
+    var jqTag = document.createElement('script');
+    jqTag.type = 'text/javascript';
+    jqTag.src = 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js';
+    jqTag.onload = whenJqReady;
+    headTag.appendChild(jqTag);
+} else {
+     whenJqReady();
+}
+
+function whenJqReady() {
 	var verbose = false;
 	var defaultLocale = 'en';
 	var cfgWeekNums = jQuery('#weeknums').text();	//	get Paramter from DOM
@@ -33,25 +45,28 @@ jQuery(document).ready(function () {
 
 	var cfgFilestring = jQuery('#cfgFilestring').text();	//	get Paramter from DOM
 	if (verbose) console.log('cfgfilestring:', cfgFilestring);
-	var cfgfiles = cfgFilestring.split(','); // split string into multiple ics files, if appropriate, see note above
-	
+    // split string into multiple ics files, if appropriate, see note above
+    var cfgfiles = cfgFilestring.split(",").map(function(item) {
+      return item.trim();
+    });
 	if (verbose) console.log('cfgfiles[]:', cfgfiles);
 	var BgColstring = jQuery('#BgColstring').text();	//	get Paramter from DOM'
 	if (verbose) console.log('BgColstring:', BgColstring);
-	var default_cors_api_url = 'http://localhost/user/plugins/fullcalendar/proxy.php/';	// set cors_api_url in config if you prefer another CORS proxy !
-	if (verbose) console.log('default CORS Url:', default_cors_api_url);
+
+    // get CORS api url from default Paramter from DOM'
+    // set cors_api_url in config if you prefer another CORS proxy !
+    var linktags = document.head.getElementsByTagName("link");
+    var linktagurl = [...linktags].find(tag => tag.href.includes("fullcalendar"));
+    var cors_api_url = linktagurl.href.split("fullcalendar", 1)[0] + "fullcalendar/proxy.php/";
+    if (verbose) console.log('CORS API URL:', cors_api_url);
+
 	var cfg_cors_api_url = jQuery('#CorsUrl').text();	//	get Paramter from DOM'
 	if (verbose)	console.log(cfg_cors_api_url.length);
-	var origin = window.location.protocol + '//' + window.location.host;
-	if (verbose) console.log('Origin:' + origin);
-	var auto_cors_api_url = origin + '/user/plugins/fullcalendar/proxy.php/';	// derive CORS URL from Site URL, no more config needed ! 13.05.21		
-
-	var cors_api_url = (auto_cors_api_url !== '/') ? auto_cors_api_url : default_cors_api_url;
 	if (cfg_cors_api_url.length > 8)	{	// use this if it has a reasonable lenth
 		if (!cfg_cors_api_url.endsWith('/')) cfg_cors_api_url = cfg_cors_api_url + '/'; // add trailing slash if not present
 		cors_api_url = cfg_cors_api_url;
 	}
-	
+
 	if (verbose) console.log('CORS Url:', cors_api_url);
 	var cfgUrls = [];
 	cfgfiles.forEach(function(value, index) {
@@ -62,7 +77,7 @@ jQuery(document).ready(function () {
 			// allow remote ics files, these are handeled by local CORS proxy now
 			if (cfgFile.startsWith("https://") || cfgFile.startsWith("http://")) {	// calendar URL is remote
 				// automatically add CORS proxy URL for remote calendars, if not yet done 06.04.20 - this is obsolete from v 0.2.8 - local proxy
-				
+
 				calendarUrl = cfgFile;	// always :-)	-	see axjax proxy below 12.05.21
 				var index = cfgFile.lastIndexOf("/") + 1;
 				calName = cfgFile.substr(index);	// calName is used for Legend, should be only Name, NOT full Url !
@@ -86,7 +101,7 @@ jQuery(document).ready(function () {
 	}
 	if (verbose) console.log('colors[]:', colors);
 	var showlegend = jQuery('#showlegend').text();	//	get Paramter from DOM'
-	showlegend = (showlegend !== null) ? showlegend : false;
+	showlegend = (showlegend > 0) ? showlegend : false;
 	if (verbose)	console.log('showlegend:', showlegend);
 	var cfg_tz_offset = jQuery('#tzoffset').text();	//	get Paramter from DOM'
 	var default_tz_offset = 0;	// Default
@@ -170,14 +185,14 @@ jQuery(document).ready(function () {
 						if (entry !== null)	fcevents["description"] = entry;
 						var entry = item.getFirstPropertyValue("color");	// add color from ics
 						if (entry !== null)	fcevents["color"] = entry;
-						
+
 						// not used options go here
-						
+
 						var rrules = item.getFirstPropertyValue("rrule");
 						var fcrrules = {};	// extra object for rrules
 						if (rrules !== null)	{
 							if (rrules.freq !== null)	{	//	freq is required, do not continue if null
-								if (verbose)	console.log('rrules:', rrules);	
+								if (verbose)	console.log('rrules:', rrules);
 								fcrrules["freq"] = rrules.freq;
 								// fcrrules["tzid"] = "W. Europe Standard Time";	// test strixos, Fehler: Using TZID without Luxon available is unsupported. Returned times are in UTC, not the requested time zone
 								if (verbose)	console.log('tz_offset:', tz_offset);
@@ -196,8 +211,8 @@ jQuery(document).ready(function () {
 								var bysetpos = [];
 								if (Array.isArray(byweekday))	{
 									byweekday = parts["BYDAY"];
-									for (i = 0; i < byweekday.length; i++) { 
-										//	DONE: implement BYDAY n+ or n- 
+									for (i = 0; i < byweekday.length; i++) {
+										//	DONE: implement BYDAY n+ or n-
 										if (byweekday[i].match(/\d+/g))	{	// entry contains digits, save them to setpos, strip from weekdays
 											var daynum = parseInt(byweekday[i]).toString();
 											//	console.log('daynum: ' + daynum) ;
@@ -231,7 +246,7 @@ jQuery(document).ready(function () {
 								if (rrules.count != null) { fcrrules["count"] = rrules.count;}
 								if (rrules.wkst != null) { fcrrules["wkst"] = rrules.wkst;}
 								if (rrules.until != null) { fcrrules["until"] = rrules.until.toJSDate();}
-								
+
 								fcevents["rrule"] = fcrrules;
 								if (verbose)	console.log('fcrrules:', fcrrules);
 							}
@@ -242,7 +257,7 @@ jQuery(document).ready(function () {
 							return null;
 						} else {
 							return fcevents;
-						} 
+						}
 					})
 					jQuery.merge(allevents, events);
 					if (verbose) console.log('index,do_callback:', index, do_callback);
@@ -251,7 +266,7 @@ jQuery(document).ready(function () {
 						successCallback(allevents);	// wichtig !!
 						if (verbose) console.log('allevents:', allevents);
 					}
-				}, 
+				},
 				'text');
 			})
 		}
@@ -262,7 +277,7 @@ jQuery(document).ready(function () {
 		// Add the contents of cfgfiles to #legend:
 		document.getElementById('legend').appendChild(makeUL(calNames, colors));
 	}
-})
+}
 
 function makeUL(array, colors) {
     // Create the list element:
@@ -272,11 +287,11 @@ function makeUL(array, colors) {
     for (var i = 0; i < array.length; i++) {
         // Create the list item:
         var item = document.createElement('li');
-        
+
         // Set its contents:
         item.appendChild(document.createTextNode(array[i]));
         item.style.color = colors[i];
-        
+
         // Add it to the list:
         list.appendChild(item);
     }

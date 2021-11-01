@@ -45,23 +45,8 @@ form:
         colors:
             type: text
             size: large
-            label: Calendar(s) Colors 
+            label: Calendar(s) Colors
             help: Comma separated List of valid html Colors, e.g. Red,LightBlue or '#DEFFAB,#GADEEF'
-        cors_api_url:
-            type: text
-            size: large
-            label: local Cors API URL
-            default: 
-            help: leave this empty if you are not sure - it will be evaluated automatically and mostly work ! - see README
-        addJquery:
-            type: toggle
-            label: Add Jquery
-            help: Add Jquery asset in case your Theme does not do this
-            highlight: 1
-            default: 0
-            options:
-                1: Enabled
-                0: Disabled
         useCustomPageTemplate:
             type: toggle
             label: Use custom Page Template
@@ -71,4 +56,3 @@ form:
             options:
                 1: Enabled
                 0: Disabled
-        
