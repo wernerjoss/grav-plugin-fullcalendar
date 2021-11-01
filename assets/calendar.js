@@ -3,18 +3,18 @@
 
 // Load jQuery when it is not loaded already by the theme
 if (typeof jQuery=='undefined') {
-    var headTag = document.getElementsByTagName("head")[0];
-    var jqTag = document.createElement('script');
-    jqTag.type = 'text/javascript';
-    jqTag.src = 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js';
-    jqTag.onload = whenJqReady;
-    headTag.appendChild(jqTag);
+	var headTag = document.getElementsByTagName("head")[0];
+	var jqTag = document.createElement('script');
+	jqTag.type = 'text/javascript';
+	jqTag.src = 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js';
+	jqTag.onload = whenJqReady;
+	headTag.appendChild(jqTag);
 } else {
-     whenJqReady();
+	whenJqReady();
 }
 
 function whenJqReady() {
-	var verbose = true;
+	var verbose = false;
 	var defaultLocale = 'en';
 	var cfgWeekNums = jQuery('#weeknums').text();	//	get Paramter from DOM
 	weekNums = false;
@@ -41,28 +41,29 @@ function whenJqReady() {
 		}
 	})
 
-	if (verbose)    console.log('pagecalendars:', pagecalendars);
+	if (verbose)	console.log('pagecalendars:', pagecalendars);
 
 	var cfgFilestring = jQuery('#cfgFilestring').text();	//	get Paramter from DOM
 	if (verbose) console.log('cfgfilestring:', cfgFilestring);
-    // split string into multiple ics files, if appropriate, see note above
-    var cfgfiles = cfgFilestring.split(",").map(function(item) {
-      return item.trim();
-    });
+	// split string into multiple ics files, if appropriate, see note above
+	var cfgfiles = cfgFilestring.split(",").map(function(item) {
+	  return item.trim();
+	});
 	if (verbose) console.log('cfgfiles[]:', cfgfiles);
 	var BgColstring = jQuery('#BgColstring').text();	//	get Paramter from DOM'
 	if (verbose) console.log('BgColstring:', BgColstring);
 
-    /* this approach from @aloxe does not seem to work for me (linktagurl is undefined)
-    var linktags = document.head.getElementsByTagName("link");
-    if (verbose) console.log('linktags:', linktags);
-    var linktagurl = [...linktags].find(tag => tag.href.includes("fullcalendar"));
-    if (verbose) console.log('linktagurl:', linktagurl);
-    var cors_api_url = linktagurl.href.split("fullcalendar", 1)[0] + "fullcalendar/proxy.php/";
-    */
-    // automatically detect CORS api url from Absolute Path
-    var cors_api_url = getAbsolutePath() + 'plugins/fullcalendar/proxy.php/';
-    if (verbose) console.log('CORS API URL:', cors_api_url);
+	/* this approach from @aloxe does not seem to work for me (linktagurl is undefined)
+	var linktags = document.head.getElementsByTagName("link");
+	if (verbose) console.log('linktags:', linktags);
+	var linktagurl = [...linktags].find(tag => tag.href.includes("fullcalendar"));
+	if (verbose) console.log('linktagurl:', linktagurl);
+	var cors_api_url = linktagurl.href.split("fullcalendar", 1)[0] + "fullcalendar/proxy.php/";
+	*/
+
+	// automatically detect CORS api url from Absolute Path
+	var cors_api_url = getAbsolutePath() + 'plugins/fullcalendar/proxy.php/';
+	if (verbose) console.log('CORS API URL:', cors_api_url);
 
 	var cfg_cors_api_url = jQuery('#CorsUrl').text();	//	get Paramter from DOM'
 	if (verbose)	console.log(cfg_cors_api_url.length);
@@ -85,7 +86,7 @@ function whenJqReady() {
 				calendarUrl = cfgFile;	// always :-)	-	see axjax proxy below 12.05.21
 				var index = cfgFile.lastIndexOf("/") + 1;
 				calName = cfgFile.substr(index);	// calName is used for Legend, should be only Name, NOT full Url !
-			}   else    {
+			}   else	{
 				calendarUrl = getAbsolutePath() + 'user/data/calendars/' + cfgFile;
 			}
 			if (verbose) console.log('Calendar URL:' + calendarUrl);
@@ -284,28 +285,28 @@ function whenJqReady() {
 }
 
 function makeUL(array, colors) {
-    // Create the list element:
-    var list = document.createElement('ul');
-    // assign css class
-    list.classList.add('cal_legend');
-    for (var i = 0; i < array.length; i++) {
-        // Create the list item:
-        var item = document.createElement('li');
+	// Create the list element:
+	var list = document.createElement('ul');
+	// assign css class
+	list.classList.add('cal_legend');
+	for (var i = 0; i < array.length; i++) {
+		// Create the list item:
+		var item = document.createElement('li');
 
-        // Set its contents:
-        item.appendChild(document.createTextNode(array[i]));
-        item.style.color = colors[i];
+		// Set its contents:
+		item.appendChild(document.createTextNode(array[i]));
+		item.style.color = colors[i];
 
-        // Add it to the list:
-        list.appendChild(item);
-    }
-    // Finally, return the constructed list:
-    return list;
+		// Add it to the list:
+		list.appendChild(item);
+	}
+	// Finally, return the constructed list:
+	return list;
 }
 
 function getAbsolutePath() { // see https://www.sitepoint.com/jquery-current-page-url/
-    var loc = window.location;
-    //  console.log('window.location:', loc);
-    var pathName = loc.pathname.substring(0, loc.pathname.lastIndexOf('/') + 1);
-    return loc.href.substring(0, loc.href.length - ((loc.pathname + loc.search + loc.hash).length - pathName.length));
+	var loc = window.location;
+	//  console.log('window.location:', loc);
+	var pathName = loc.pathname.substring(0, loc.pathname.lastIndexOf('/') + 1);
+	return loc.href.substring(0, loc.href.length - ((loc.pathname + loc.search + loc.hash).length - pathName.length));
 }
