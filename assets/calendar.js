@@ -14,7 +14,7 @@ if (typeof jQuery=='undefined') {
 }
 
 function whenJqReady() {
-	var verbose = false;
+	var verbose = true;
 	var defaultLocale = 'en';
 	var cfgWeekNums = jQuery('#weeknums').text();	//	get Paramter from DOM
 	weekNums = false;
@@ -53,11 +53,15 @@ function whenJqReady() {
 	var BgColstring = jQuery('#BgColstring').text();	//	get Paramter from DOM'
 	if (verbose) console.log('BgColstring:', BgColstring);
 
-    // get CORS api url from default Paramter from DOM'
-    // set cors_api_url in config if you prefer another CORS proxy !
+    /* this approach from @aloxe does not seem to work for me (linktagurl is undefined)
     var linktags = document.head.getElementsByTagName("link");
+    if (verbose) console.log('linktags:', linktags);
     var linktagurl = [...linktags].find(tag => tag.href.includes("fullcalendar"));
+    if (verbose) console.log('linktagurl:', linktagurl);
     var cors_api_url = linktagurl.href.split("fullcalendar", 1)[0] + "fullcalendar/proxy.php/";
+    */
+    // automatically detect CORS api url from Absolute Path
+    var cors_api_url = getAbsolutePath() + 'plugins/fullcalendar/proxy.php/';
     if (verbose) console.log('CORS API URL:', cors_api_url);
 
 	var cfg_cors_api_url = jQuery('#CorsUrl').text();	//	get Paramter from DOM'
