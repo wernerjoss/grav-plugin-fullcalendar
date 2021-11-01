@@ -1,3 +1,10 @@
+# v0.2.11
+##  10/31/2021
+
+1. [](#new)
+    * Added Color support from ics files (merge pull request #33 from Johannes Loose)
+    * Add config Option useCustomPageTemplate - useful e.g. for modular Calendar Pages (caution: affects page speed if set to true !)
+
 # v0.2.10
 ##  06/14/2021
 

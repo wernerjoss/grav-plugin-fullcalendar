@@ -1,5 +1,5 @@
 name: FullCalendar
-version: 0.2.10
+version: 0.2.11
 description: show Calendar Widget from ICS File(s), based on fullcalendar.io
 icon: calendar
 author:
@@ -47,3 +47,12 @@ form:
             size: large
             label: Calendar(s) Colors
             help: Comma separated List of valid html Colors, e.g. Red,LightBlue or '#DEFFAB,#GADEEF'
+        useCustomPageTemplate:
+            type: toggle
+            label: Use custom Page Template
+            help: Use another Template than 'calendar' for Calendar Page (e.g. in case of modular Page)
+            highlight: 1
+            default: 0
+            options:
+                1: Enabled
+                0: Disabled
