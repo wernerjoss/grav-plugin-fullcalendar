@@ -76,7 +76,7 @@ As of Begin 2021, I realized, that the recommended external CORS Proxy (herokuap
 So I decided to implement a local CORS Proxy, which is available from v 0.2.8.
 For most use cases, the empty cors_api_url in the settings should be ok, as the included internal Proxy will be used, if required.
 Only in case you really prefer to use an external CORS Proxy, you will need to adapt this.
-Hint: the automatically evaluated CORS Proxy URL (created when cors_api_url is empty - so, when updating, be sure to delete the old herokuapp URL if present) is normally http://yourdomain/user/plugins/fullcalendar/proxy.php/ but will be evaluatedautomatically even if Grav is e.g.installed in Subdirectory grav (ore else) !
+Hint: the automatically evaluated CORS Proxy URL (created when cors_api_url is empty - so, when updating, be sure to delete the old herokuapp URL if present) is normally http://yourdomain/user/plugins/fullcalendar/proxy.php/ but will be evaluated automatically even if Grav is e.g. installed in Subdirectory grav (or else) !
 
 ## Credits
 
