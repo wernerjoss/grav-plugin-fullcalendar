@@ -15,7 +15,7 @@ class FullcalendarPlugin extends Plugin
 		];
 	}
 
-    public function onPluginsInitialized()
+	public function onPluginsInitialized()
 	{
 		// Don't proceed if we are in the admin plugin
 		if ($this->isAdmin()) {
@@ -57,19 +57,18 @@ class FullcalendarPlugin extends Plugin
 		$assets->addJs('plugins://' . $this->name . '/fc4/packages/rrule/main.js', ['group' => 'bottom']); // connector to the vendor/rrule.js Lib
 		$assets->addJs('plugins://' . $this->name . '/fc4/packages/interaction/main.js', ['group' => 'bottom']);
 		$assets->addJs('plugins://' . $this->name . '/fc4/packages/daygrid/main.js', ['group' => 'bottom']);
-		// do not load a predefined language, use system setting instead
 		$assets->addJs('plugins://' . $this->name . '/assets/monthpic.js', ['group' => 'bottom']);
 		$assets->addJs('plugins://' . $this->name . '/assets/calendar.js', ['group' => 'bottom']);
 		$assets->addCss('plugins://' . $this->name . '/assets/daygrid.css');	// default CSS for #calendar
+		// do not load a predefined language, use system setting instead
 		$language = $this->grav['language']->getLanguage();
-        // TODO find a (better) fallback for when $language is not set in grav
-        if (!isset($language)) $language = "en";
+		// TODO find a (better) fallback for when $language is not set in grav
+		if (!isset($language)) $language = "en";
 		$assets->addJs('plugins://' . $this->name . '/fc4/packages/core/locales/'.$language.'.js', ['group' => 'bottom']);
 		$languages = $this->config->get('system.languages.supported');
-        if (!isset($languages)) $languages = ['en'];
+		if (!isset($languages)) $languages = ['en'];
 		foreach ($languages as $lang)	{
 			if ($lang != $language)	{
-				//	$asset = 'plugins://' . $this->name . '/fc4/packages/core/locales/'.$lang.'.js';
 				$assets->addJs('plugins://' . $this->name . '/fc4/packages/core/locales/'.$lang.'.js', ['group' => 'bottom']);
 			}
 		}

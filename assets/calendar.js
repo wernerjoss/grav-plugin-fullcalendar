@@ -53,7 +53,7 @@ function whenJqReady() {
 	var BgColstring = jQuery('#BgColstring').text();	//	get Paramter from DOM'
 	if (verbose) console.log('BgColstring:', BgColstring);
 
-	/* this approach from @aloxe does not seem to work for me (linktagurl is undefined)
+	/* this approach from @aloxe's pull request #36 does not seem to work for me (linktagurl is undefined)
 	var linktags = document.head.getElementsByTagName("link");
 	if (verbose) console.log('linktags:', linktags);
 	var linktagurl = [...linktags].find(tag => tag.href.includes("fullcalendar"));
@@ -82,7 +82,6 @@ function whenJqReady() {
 			// allow remote ics files, these are handeled by local CORS proxy now
 			if (cfgFile.startsWith("https://") || cfgFile.startsWith("http://")) {	// calendar URL is remote
 				// automatically add CORS proxy URL for remote calendars, if not yet done 06.04.20 - this is obsolete from v 0.2.8 - local proxy
-
 				calendarUrl = cfgFile;	// always :-)	-	see axjax proxy below 12.05.21
 				var index = cfgFile.lastIndexOf("/") + 1;
 				calName = cfgFile.substr(index);	// calName is used for Legend, should be only Name, NOT full Url !
@@ -100,7 +99,6 @@ function whenJqReady() {
 	var colors = BgColstring.split(',');
 	var ncolors = colors.length;
 	if (ncolors < len)	{	// populate colors with default color
-		//	colors = ['#3a87ad'];
 		for (i=ncolors; i<(len);i++)
 			colors.push('#3a87ad');
 	}

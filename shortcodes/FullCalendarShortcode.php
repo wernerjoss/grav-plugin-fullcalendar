@@ -17,7 +17,7 @@ class FullCalendarShortcode extends Shortcode {
                 [
                     'icsfile' => $icsfile
                 ]);
-			return $output;
+            return $output;
         });
     }
 }
