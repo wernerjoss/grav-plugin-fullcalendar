@@ -34,8 +34,17 @@ class FullcalendarPlugin extends Plugin
 		/** @var Page */
 		$page = $event['page'];
 
-		$config = $this->config->get('plugins.fullcalendar');
-		if (($page->template() === 'calendar') || ($config['useCustomPageTemplate'])) {
+        $http = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on'? "https://" : "http://";
+        $host  = $_SERVER['HTTP_HOST'];
+        $path   = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
+        $baseurl = $http . $host . $path . "/";
+        //  dump($baseurl);
+        $config = $this->config->get('plugins.fullcalendar');
+        $this->grav['config']->set('plugins.fullcalendar.base_url', $baseurl);
+        $this->saveConfig('fullcalendar');
+        //  dump($this->config->get('plugins.fullcalendar'));
+
+        if (($page->template() === 'calendar') || ($config['useCustomPageTemplate'])) {
 			$this->addAssets();
 		}
 	}

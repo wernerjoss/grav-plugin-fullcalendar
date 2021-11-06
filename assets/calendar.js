@@ -53,17 +53,12 @@ function whenJqReady() {
 	var BgColstring = jQuery('#BgColstring').text();	//	get Paramter from DOM'
 	if (verbose) console.log('BgColstring:', BgColstring);
 
-	/* this approach from @aloxe's pull request #36 does not seem to work for me (linktagurl is undefined)
-	var linktags = document.head.getElementsByTagName("link");
-	if (verbose) console.log('linktags:', linktags);
-	var linktagurl = [...linktags].find(tag => tag.href.includes("fullcalendar"));
-	if (verbose) console.log('linktagurl:', linktagurl);
-	var cors_api_url = linktagurl.href.split("fullcalendar", 1)[0] + "fullcalendar/proxy.php/";
-	*/
-
+	verbose = true;    // test 05.11.21 !!!
 	// automatically detect CORS api url from Absolute Path
-	var cors_api_url = getAbsolutePath() + 'plugins/fullcalendar/proxy.php/';
-	if (verbose) console.log('CORS API URL:', cors_api_url);
+	var BaseUrl = jQuery('#BaseUrl').text();	//	06.11.21   get Paramter from DOM'
+	var cors_api_url = BaseUrl + 'plugins/fullcalendar/proxy.php/';
+	if (verbose)	console.log('CORS API URL:', cors_api_url);
+	verbose = false;
 
 	var cfg_cors_api_url = jQuery('#CorsUrl').text();	//	get Paramter from DOM'
 	if (verbose)	console.log(cfg_cors_api_url.length);
