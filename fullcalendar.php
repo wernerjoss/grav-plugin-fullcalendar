@@ -34,14 +34,6 @@ class FullcalendarPlugin extends Plugin
 		/** @var Page */
 		$page = $event['page'];
 
-		$http = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on'? "https://" : "http://";
-		$host  = $_SERVER['HTTP_HOST'];
-		$path   = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
-		$baseurl = $http . $host . $path . "/";
-		$config = $this->config->get('plugins.fullcalendar');
-		$this->grav['config']->set('plugins.fullcalendar.base_url', $baseurl);
-		$this->saveConfig('fullcalendar');
-
 		if (($page->template() === 'calendar') || ($config['useCustomPageTemplate'])) {
 			$this->addAssets();
 		}
@@ -66,7 +58,7 @@ class FullcalendarPlugin extends Plugin
 		$assets->addJs('plugins://' . $this->name . '/fc4/packages/daygrid/main.js', ['group' => 'bottom']);
 		$assets->addJs('plugins://' . $this->name . '/assets/monthpic.js', ['group' => 'bottom']);
 		$assets->addJs('plugins://' . $this->name . '/assets/calendar.js', ['group' => 'bottom']);
-		$assets->addCss('plugins://' . $this->name . '/assets/daygrid.css');	// default CSS for #calendar
+		$assets->addCss('plugins://' . $this->name . '/assets/daygrid.css'); // default CSS for #calendar
 		// do not load a predefined language, use system setting instead
 		$language = $this->grav['language']->getLanguage();
 		// TODO find a (better) fallback for when $language is not set in grav

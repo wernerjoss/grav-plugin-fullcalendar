@@ -56,7 +56,7 @@ function whenJqReady() {
 	verbose = true;    // Test 06.11.21 !!!
 	// automatically detect CORS api url from Absolute Path
 	var BaseUrl = jQuery('#BaseUrl').text();	//	06.11.21   get Parameter from DOM
-	var cors_api_url = BaseUrl + 'plugins/fullcalendar/proxy.php/';
+	var cors_api_url = BaseUrl + '/user/plugins/fullcalendar/proxy.php/';
 	if (verbose)	console.log('CORS API URL:', cors_api_url);
 	verbose = false;
 
