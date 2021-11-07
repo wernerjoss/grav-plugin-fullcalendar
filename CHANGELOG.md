@@ -1,5 +1,5 @@
 # v0.2.12
-##  11/02/2021
+##  11/07/2021
 
 1. [](#new)
     * merged pull request #36 from @aloxe:
@@ -8,6 +8,8 @@
     * respect user provided CORS Url if present
     * fix Legend display toggle
     * fix error when Language not set in Grav
+2. [](#new)
+    * merged pull request #37 from @aloxe
 
 # v0.2.11
 ##  10/31/2021
