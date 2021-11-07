@@ -61,7 +61,6 @@ class FullcalendarPlugin extends Plugin
 		$assets->addCss('plugins://' . $this->name . '/assets/daygrid.css'); // default CSS for #calendar
 		// do not load a predefined language, use system setting instead
 		$language = $this->grav['language']->getLanguage();
-		// TODO find a (better) fallback for when $language is not set in grav
 		if (!isset($language)) $language = "en";
 		$assets->addJs('plugins://' . $this->name . '/fc4/packages/core/locales/'.$language.'.js', ['group' => 'bottom']);
 		$languages = $this->config->get('system.languages.supported');
