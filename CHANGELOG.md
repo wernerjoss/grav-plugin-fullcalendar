@@ -1,3 +1,9 @@
+# v0.2.13
+##  11/11/2021
+
+1. [](#bugfix)
+    * fix issue #38 ($config undefined when using custom page template)
+
 # v0.2.12
 ##  11/07/2021
 
