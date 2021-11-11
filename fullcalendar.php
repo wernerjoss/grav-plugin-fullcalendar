@@ -34,6 +34,7 @@ class FullcalendarPlugin extends Plugin
 		/** @var Page */
 		$page = $event['page'];
 
+		$config = $this->config->get('plugins.fullcalendar'); // see https://github.com/wernerjoss/grav-plugin-fullcalendar/issues/38
 		if (($page->template() === 'calendar') || ($config['useCustomPageTemplate'])) {
 			$this->addAssets();
 		}
