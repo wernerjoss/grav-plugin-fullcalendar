@@ -49,7 +49,8 @@ Once installed and enabled, you can use this Plugin to parse ICS Calendar File(s
     [fullcalendar icsfile="example0.ics,example1.ics,..."][/fullcalendar]
 
 in the appropriate page (note the double quotes " surrounding the file name - single quotes ' will not work !)
-You can also provide absolute URL's to ICS Files, in which case a CORS proxy will be used to access them.  
+You can also provide absolute URL's to ICS Files, in which case a CORS proxy will be used to access them.
+See also [this Document]("ExternalCalendars.md") on how to use external Calendars.  
 As an addition, you can show a Picture for the current month above the calendar widget.  
 Just put 12 Image Files named 'January.jpg', 'February.jpg', ... , 'December.jpg' in the Folder for your Page where the Calendar will be placed.  
 (Note that Image File names must match Month names according to your locale setting, so, for locale: de, use 'Januar.jpg' ...).  
