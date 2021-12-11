@@ -24,6 +24,8 @@ form:
             options:
                 1: Enabled
                 0: Disabled
+            validate:
+                type: bool
         showlegend:
             type: toggle
             label: Show Legend(s)
@@ -33,6 +35,8 @@ form:
             options:
                 1: Enabled
                 0: Disabled
+            validate:
+                type: bool
         weekNumbers:
             type: toggle
             label: Show Week Numbers
@@ -42,6 +46,8 @@ form:
             options:
                 1: Enabled
                 0: Disabled
+            validate:
+                type: bool
         colors:
             type: text
             size: large
@@ -62,3 +68,6 @@ form:
             options:
                 1: Enabled
                 0: Disabled
+            validate:
+                type: bool
+                    
