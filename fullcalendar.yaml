@@ -1,1 +1,4 @@
 enabled: true
+showlegend: false
+weekNumbers: false
+useCustomPageTemplate: false
