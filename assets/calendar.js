@@ -102,11 +102,41 @@ function whenJqReady() {
 	var cfg_tz_offset = jQuery('#tzoffset').text();	//	get Paramter from DOM'
 	var default_tz_offset = 0;	// Default
 	var tz_offset = (cfg_tz_offset !== null) ? cfg_tz_offset : default_tz_offset;
+	
+	var firstTimezone = 'Europe/Berlin';	// Default
+	// determine Time Zone form 1st Calendar in List - others will be ignored because time zone is a single setting for the whole calendar Object !
+	if (len > 0) {
+		calendarUrl = calUrls[0];
+		//	console.log(calendarUrl);
+		jQuery.ajax({
+			crossOrigin: true,
+			proxy: cors_api_url,
+			url: calendarUrl,
+			async: false,	// important !
+			context: {},
+			success: function(data) {
+			}
+		})
+		.done(function( data, textStatus, jqXHR ) {
+			//	console.log(data);
+			var jcalData = ICAL.parse(data);	//	directly parse data, no need to split to lines first ! 14.02.20
+			var comp = new ICAL.Component(jcalData);
+			
+			var tzComps = comp.getAllSubcomponents("vtimezone");
+			tzids = jQuery.map(tzComps, function(item) {
+				var entry = item.getFirstPropertyValue("tzid");
+				//	console.log('TZID',entry);
+				if (entry !== null)	firstTimezone = entry;
+			});
+		},'text');
+		//	console.log('firstTimeZone: ', firstTimezone);
+	}
+
 	// page is now ready, initialize the calendar...
 	var calendarEl = document.getElementById('calendar');
 	var calendar = new FullCalendar.Calendar(calendarEl, {
-		plugins: [ 'interaction', 'dayGrid', 'rrule' ],
-		//	timezone: 'W. Europe Standard Time',
+		plugins: [ 'interaction', 'dayGrid', 'rrule', 'moment', 'momentTimezone' ],	// docs on plugin names are wrong !!
+		timeZone: firstTimezone,	//	'Australia/Sydney',	// TODO: determine this from ICS Data !
 		locale: LocaleCode,
 		weekNumbers: weekNums,
 		header: {
@@ -159,10 +189,25 @@ function whenJqReady() {
 					if (verbose)	console.log(data);
 					var jcalData = ICAL.parse(data);	//	directly parse data, no need to split to lines first ! 14.02.20
 					var comp = new ICAL.Component(jcalData);
+					
+					var tzComps = comp.getAllSubcomponents("vtimezone");
+					var tzid = null;
+					tzids = jQuery.map(tzComps, function(item) {
+						var entry = item.getFirstPropertyValue("tzid");
+						if (entry !== null)	tzid = entry;
+						var entry = item.getFirstPropertyValue("tzoffsetfrom");
+						if (entry !== null)	tz_offset = entry;
+					});
+					if (verbose) console.log('TZID:', tzid);	// looks like tzid is not really necessary, see below... 12.12.21
+					//	this.timeZone = timeZ(tzid);
+					//	console.log('timezone: ', this.timeZone);
+					
+					var comp = new ICAL.Component(jcalData);
 					var eventComps = comp.getAllSubcomponents("vevent");
 					//	map them to FullCalendar events Objects
 					events = jQuery.map(eventComps, function(item) {
 						var fcevents = {};
+						fcevents["tzid"] = tzid;
 						var entry = item.getFirstPropertyValue("summary");
 						if (entry !== null)	fcevents["title"] = entry;
 						var entry = item.getFirstPropertyValue("location");
@@ -171,6 +216,13 @@ function whenJqReady() {
 						if (entry !== null)	fcevents["url"] = entry;
 						var entry = item.getFirstPropertyValue("dtstart");
 						if (entry !== null)	{ fcevents["start"] = entry.toJSDate(); var start = entry;}
+						
+						/*
+						if (tzid == "Europe/London")	tz_offsetr = 0;	//	might be -1 too ?? ugly hack :-)
+						start["hour"] = (start["hour"] + Number(tz_offsetr)) % 24;
+						fcevents["start"] = start.toJSDate();
+						*/
+						
 						var entry = item.getFirstPropertyValue("dtend");
 						if (entry !== null)	{ fcevents["end"] = entry.toJSDate(); var end = entry; }
 						duration = fcevents["end"] - fcevents["start"];	// calculate event duration 29.08.20
@@ -190,13 +242,18 @@ function whenJqReady() {
 							if (rrules.freq !== null)	{	//	freq is required, do not continue if null
 								if (verbose)	console.log('rrules:', rrules);
 								fcrrules["freq"] = rrules.freq;
-								// fcrrules["tzid"] = "W. Europe Standard Time";	// test strixos, Fehler: Using TZID without Luxon available is unsupported. Returned times are in UTC, not the requested time zone
-								if (verbose)	console.log('tz_offset:', tz_offset);
-								start["hour"] = start["hour"] + Number(tz_offset);	// add hours from config, type conversion mandatory ! :)
-								if (verbose)	console.log('newstart', start);
-								fcevents["start"] = start.toJSDate();
+								if (verbose) console.log('start', start["_time"]);
+								/*								*/
+								tz_offsetr = 1;	//	works for most timezones
+								if (tzid == "Europe/London")	tz_offsetr = 2;	//	ugly hack, only needed here !!?? :-)
+								if (verbose) console.log('tz_offset:', tz_offsetr);
+								if (tz_offsetr > 0) {
+									start["hour"] = (start["hour"] + Number(tz_offsetr)) % 24;	// add hours from config, type conversion mandatory ! :)
+									fcevents["start"] = start.toJSDate();
+									if (verbose) console.log('newstart', start);
+								}
 								/* not needed
-								end["hour"] = end["hour"] + tz_offset;	// TODO: add configurable Offset, implement housekeeping (24/0h overflow)
+								end["hour"] = end["hour"] + tz_offset;
 								if (verbose)	console.log('newend', end);
 								fcevents["end"] = end.toJSDate();
 								*/
@@ -244,7 +301,7 @@ function whenJqReady() {
 								if (rrules.until != null) { fcrrules["until"] = rrules.until.toJSDate();}
 
 								fcevents["rrule"] = fcrrules;
-								if (verbose)	console.log('fcrrules:', fcrrules);
+								if (verbose) console.log('fcrrules:', fcrrules);
 							}
 						}
 						if(fcevents["color"] == null) { fcevents["backgroundColor"] = colors[index];}
@@ -260,7 +317,7 @@ function whenJqReady() {
 					if (verbose) console.log('events:', events);
 					if (do_callback) {
 						successCallback(allevents);	// wichtig !!
-						if (verbose) console.log('allevents:', allevents);
+						if (verbose)	console.log('allevents:', allevents);
 					}
 				},
 				'text');

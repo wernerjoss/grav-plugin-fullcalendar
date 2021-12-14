@@ -47,16 +47,24 @@ class FullcalendarPlugin extends Plugin
 		$config = $this->config->get('plugins.fullcalendar');
 		$assets->addJs('plugins://' . $this->name . '/assets/jquery.ajax-cross-origin.min.js', ['group' => 'bottom']);   // 12.05.21  -   so gehts !!!
 		$assets->addJs('plugins://' . $this->name . '/assets/ical.js/build/ical.min.js', ['group' => 'bottom']);   // see also reamde.txt file there
-		// for Tooltip:
+		// Tooltip:
 		$assets->addJs('plugins://' . $this->name . '/assets/popper.min.js', ['group' => 'bottom']);
 		$assets->addJs('plugins://' . $this->name . '/assets/tippy-bundle.umd.min.js', ['group' => 'bottom']);
+		// standard plugins + core:
 		$assets->addCss('plugins://' . $this->name . '/fc4/packages/core/main.css');
-		$assets->addCss('plugins://' . $this->name . '/fc4/packages/daygrid/main.css');
 		$assets->addJs('plugins://' . $this->name . '/fc4/packages/core/main.js', ['group' => 'bottom']);
-		$assets->addJs('plugins://' . $this->name . '/fc4/vendor/rrule.js', ['group' => 'bottom']);   // see also reamde.txt file there
-		$assets->addJs('plugins://' . $this->name . '/fc4/packages/rrule/main.js', ['group' => 'bottom']); // connector to the vendor/rrule.js Lib
+		$assets->addCss('plugins://' . $this->name . '/fc4/packages/daygrid/main.css');
 		$assets->addJs('plugins://' . $this->name . '/fc4/packages/interaction/main.js', ['group' => 'bottom']);
 		$assets->addJs('plugins://' . $this->name . '/fc4/packages/daygrid/main.js', ['group' => 'bottom']);
+		// timezone stuff:
+		$assets->addJs('plugins://' . $this->name . '/fc4/vendor/moment.js', ['group' => 'bottom']);	// moment lib ! 13.12.21
+		$assets->addJs('plugins://' . $this->name . '/fc4/packages/moment/main.js', ['group' => 'bottom']);	// connector to the moment.js lib ! 13.12.21
+		$assets->addJs('plugins://' . $this->name . '/fc4/vendor/moment-timezone-with-data-10-year-range.js', ['group' => 'bottom']);	// moment-timezone lib ! 13.12.21
+		$assets->addJs('plugins://' . $this->name . '/fc4/packages/moment-timezone/main.js', ['group' => 'bottom']);	// connector to the moment-timezone lib plugin ! 13.12.21
+		// rrule:
+		$assets->addJs('plugins://' . $this->name . '/fc4/vendor/rrule-tz.js', ['group' => 'bottom']);   // see also reamde.txt file there rrule.js <-> rrule-tz.js
+		$assets->addJs('plugins://' . $this->name . '/fc4/packages/rrule/main.js', ['group' => 'bottom']); // connector to the vendor/rrule.js (rrule-tz.js) Lib
+		// template:
 		$assets->addJs('plugins://' . $this->name . '/assets/monthpic.js', ['group' => 'bottom']);
 		$assets->addJs('plugins://' . $this->name . '/assets/calendar.js', ['group' => 'bottom']);
 		$assets->addCss('plugins://' . $this->name . '/assets/daygrid.css'); // default CSS for #calendar
