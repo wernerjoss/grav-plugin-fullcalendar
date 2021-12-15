@@ -14,7 +14,7 @@ if (typeof jQuery=='undefined') {
 }
 
 function whenJqReady() {
-	var verbose = false;
+	var verbose = true;
 	var defaultLocale = 'en';
 	var cfgWeekNums = jQuery('#weeknums').text();	//	get Paramter from DOM
 	weekNums = false;
@@ -125,18 +125,17 @@ function whenJqReady() {
 			var tzComps = comp.getAllSubcomponents("vtimezone");
 			tzids = jQuery.map(tzComps, function(item) {
 				var entry = item.getFirstPropertyValue("tzid");
-				//	console.log('TZID',entry);
 				if (entry !== null)	firstTimezone = entry;
 			});
 		},'text');
-		//	console.log('firstTimeZone: ', firstTimezone);
 	}
-
+	if (verbose)	console.log('firstTimeZone: ', firstTimezone);
+	
 	// page is now ready, initialize the calendar...
 	var calendarEl = document.getElementById('calendar');
 	var calendar = new FullCalendar.Calendar(calendarEl, {
 		plugins: [ 'interaction', 'dayGrid', 'rrule', 'moment', 'momentTimezone' ],	// docs on plugin names are wrong !!
-		timeZone: firstTimezone,	//	'Australia/Sydney',	// TODO: determine this from ICS Data !
+		timeZone: firstTimezone,	//	DONE: determine this from ICS Data !
 		locale: LocaleCode,
 		weekNumbers: weekNums,
 		header: {
@@ -190,24 +189,12 @@ function whenJqReady() {
 					var jcalData = ICAL.parse(data);	//	directly parse data, no need to split to lines first ! 14.02.20
 					var comp = new ICAL.Component(jcalData);
 					
-					var tzComps = comp.getAllSubcomponents("vtimezone");
-					var tzid = null;
-					tzids = jQuery.map(tzComps, function(item) {
-						var entry = item.getFirstPropertyValue("tzid");
-						if (entry !== null)	tzid = entry;
-						var entry = item.getFirstPropertyValue("tzoffsetfrom");
-						if (entry !== null)	tz_offset = entry;
-					});
-					if (verbose) console.log('TZID:', tzid);	// looks like tzid is not really necessary, see below... 12.12.21
-					//	this.timeZone = timeZ(tzid);
-					//	console.log('timezone: ', this.timeZone);
-					
 					var comp = new ICAL.Component(jcalData);
 					var eventComps = comp.getAllSubcomponents("vevent");
 					//	map them to FullCalendar events Objects
 					events = jQuery.map(eventComps, function(item) {
 						var fcevents = {};
-						fcevents["tzid"] = tzid;
+						fcevents["tzid"] = firstTimezone;
 						var entry = item.getFirstPropertyValue("summary");
 						if (entry !== null)	fcevents["title"] = entry;
 						var entry = item.getFirstPropertyValue("location");
@@ -216,12 +203,6 @@ function whenJqReady() {
 						if (entry !== null)	fcevents["url"] = entry;
 						var entry = item.getFirstPropertyValue("dtstart");
 						if (entry !== null)	{ fcevents["start"] = entry.toJSDate(); var start = entry;}
-						
-						/*
-						if (tzid == "Europe/London")	tz_offsetr = 0;	//	might be -1 too ?? ugly hack :-)
-						start["hour"] = (start["hour"] + Number(tz_offsetr)) % 24;
-						fcevents["start"] = start.toJSDate();
-						*/
 						
 						var entry = item.getFirstPropertyValue("dtend");
 						if (entry !== null)	{ fcevents["end"] = entry.toJSDate(); var end = entry; }
@@ -245,7 +226,7 @@ function whenJqReady() {
 								if (verbose) console.log('start', start["_time"]);
 								/*								*/
 								tz_offsetr = 1;	//	works for most timezones
-								if (tzid == "Europe/London")	tz_offsetr = 2;	//	ugly hack, only needed here !!?? :-)
+								if (firstTimezone == "Europe/London")	tz_offsetr = 2;	//	ugly hack, only needed here !!?? :-)
 								if (verbose) console.log('tz_offset:', tz_offsetr);
 								if (tz_offsetr > 0) {
 									start["hour"] = (start["hour"] + Number(tz_offsetr)) % 24;	// add hours from config, type conversion mandatory ! :)
