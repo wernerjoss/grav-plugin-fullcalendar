@@ -57,6 +57,8 @@ class FullcalendarPlugin extends Plugin
 		$assets->addJs('plugins://' . $this->name . '/fc4/packages/interaction/main.js', ['group' => 'bottom']);
 		$assets->addJs('plugins://' . $this->name . '/fc4/packages/daygrid/main.js', ['group' => 'bottom']);
 		// timezone stuff:
+		/* test 29.12.21
+		*/
 		$assets->addJs('plugins://' . $this->name . '/fc4/vendor/moment.js', ['group' => 'bottom']);	// moment lib ! 13.12.21
 		$assets->addJs('plugins://' . $this->name . '/fc4/packages/moment/main.js', ['group' => 'bottom']);	// connector to the moment.js lib ! 13.12.21
 		$assets->addJs('plugins://' . $this->name . '/fc4/vendor/moment-timezone-with-data-10-year-range.js', ['group' => 'bottom']);	// moment-timezone lib ! 13.12.21

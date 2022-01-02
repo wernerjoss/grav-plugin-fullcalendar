@@ -1,5 +1,5 @@
 name: FullCalendar
-version: 0.2.14
+version: 0.3.0
 description: show Calendar Widget from ICS File(s), based on fullcalendar.io
 icon: calendar
 author:
@@ -70,4 +70,39 @@ form:
                 0: Disabled
             validate:
                 type: bool
-                    
+        enableDescPopup:
+            type: toggle
+            label: enable onClick Popup for Event Description
+            help: as said :-) - simple alert() Popup if enabled (so you can copy from it). Default is disabled, which means a nice Tip is shown on hover
+            highlight: 1
+            default: 0
+            options:
+                1: Enabled
+                0: Disabled
+            validate:
+                type: bool
+        useIcsTimezone:
+            type: toggle
+            label: Use ICS Timezone
+            help: Use Timezone from ICS Calendar, if available (Default=false, which means Timezone=local). Only applicable if Timzone Info is stored in ICS File, AND Times are stored in UTC !
+            highlight: 1
+            default: 0
+            options:
+                1: Enabled
+                0: Disabled
+            validate:
+                type: bool
+        tz_offset_single:
+            type: number
+            size: small
+            label: Time Offset (hours) to correct single Events
+            help: only use this if you encounter a Time shift on displayed single Events
+            default: 0
+        tz_offset_rec:
+            type: number
+            size: small
+            label: Time Offset (hours) to correct recurring Events
+            help: only use this if you encounter a Time shift on displayed recurring Events
+            default: 0
+            
+                             

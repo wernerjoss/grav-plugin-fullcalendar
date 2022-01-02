@@ -14,7 +14,7 @@ if (typeof jQuery=='undefined') {
 }
 
 function whenJqReady() {
-	var verbose = true;
+	var verbose = false;//true;
 	var defaultLocale = 'en';
 	var cfgWeekNums = jQuery('#weeknums').text();	//	get Paramter from DOM
 	weekNums = false;
@@ -99,12 +99,25 @@ function whenJqReady() {
 	var showlegend = jQuery('#showlegend').text();	//	get Paramter from DOM'
 	showlegend = (showlegend > 0) ? showlegend : false;
 	if (verbose)	console.log('showlegend:', showlegend);
-	var cfg_tz_offset = jQuery('#tzoffset').text();	//	get Paramter from DOM'
-	var default_tz_offset = 0;	// Default
-	var tz_offset = (cfg_tz_offset !== null) ? cfg_tz_offset : default_tz_offset;
 	
-	var firstTimezone = 'Europe/Berlin';	// Default
-	// determine Time Zone form 1st Calendar in List - others will be ignored because time zone is a single setting for the whole calendar Object !
+	var defaultEnableDescPopup = false;	// DONE: make this configurable via admin
+	var cfg_enableDescPopup = jQuery('#enableDescPopup').text();
+	var enableDescPopup = (cfg_enableDescPopup !== null) ? cfg_enableDescPopup : defaultEnableDescPopup;
+	
+	var cfg_tz_offset_single = jQuery('#tzoffset_single').text();	//	Offset for single Events
+	var default_tz_offset_single = 0;	// Default
+	var tz_offset_single = (cfg_tz_offset_single !== null) ? cfg_tz_offset_single : default_tz_offset_single;
+	
+	var cfg_tz_offset_rec = jQuery('#tzoffset_recur').text();	//	Offset for single Events
+	var default_tz_offset_rec = 0;	// Default
+	var tz_offset_rec = (cfg_tz_offset_rec !== null) ? cfg_tz_offset_rec : default_tz_offset_rec;
+	
+	var useIcsTimezone = jQuery('#useIcsTimezone').text();	//	get Paramter from DOM'
+	useIcsTimezone = (useIcsTimezone > 0) ? useIcsTimezone : false;
+	var icsTimezone = 'Europe/Berlin';	// Default
+	var dlstart = 0;
+	var dlend = 0;
+	// determine Time Zone from 1st Calendar in List - others will be ignored because time zone is a single setting for the whole calendar Object !
 	if (len > 0) {
 		calendarUrl = calUrls[0];
 		//	console.log(calendarUrl);
@@ -125,17 +138,49 @@ function whenJqReady() {
 			var tzComps = comp.getAllSubcomponents("vtimezone");
 			tzids = jQuery.map(tzComps, function(item) {
 				var entry = item.getFirstPropertyValue("tzid");
-				if (entry !== null)	firstTimezone = entry;
+				if (entry !== null)	icsTimezone = entry;
+				// now evaluate Daylight saving time period (months):
+				var dlComps = item.getAllSubcomponents("daylight");
+					dlids = jQuery.map(dlComps, function(item) {
+					var entry = item.getFirstPropertyValue("rrule");
+					if (entry !== null)	{
+						var parts = entry["parts"];
+						//	console.log(parts);
+						var bymo = parts["BYMONTH"];	// uppercase !!
+						//	console.log(bymo);
+						dlstart = parseInt(bymo[0]);
+					}
+				});
+				dlComps = item.getAllSubcomponents("standard");
+					dlids = jQuery.map(dlComps, function(item) {
+					var entry = item.getFirstPropertyValue("rrule");
+					if (entry !== null)	{
+						var parts = entry["parts"];
+						//	console.log(parts);
+						var bymo = parts["BYMONTH"];	// uppercase !!
+						//	console.log(bymo);
+						dlend = parseInt(bymo[0]);
+					}
+				});
 			});
+			if (dlstart > dlend) {	// swap dlstart, dlend if necessary
+				temp = dlstart;
+				dlstart = dlend;
+				dlend = temp;
+			}
+			//	console.log("daylight start:", dlstart);	console.log("daylight end:", dlend);
 		},'text');
 	}
-	if (verbose)	console.log('firstTimeZone: ', firstTimezone);
+	if (verbose)	console.log('icsTimezone: ', icsTimezone);
+	var calTimezone = 'local';	// Default
+	if (useIcsTimezone)	calTimezone = icsTimezone;
+	if (verbose)	console.log('calTimezone: ', calTimezone);
 	
 	// page is now ready, initialize the calendar...
 	var calendarEl = document.getElementById('calendar');
 	var calendar = new FullCalendar.Calendar(calendarEl, {
 		plugins: [ 'interaction', 'dayGrid', 'rrule', 'moment', 'momentTimezone' ],	// docs on plugin names are wrong !!
-		timeZone: firstTimezone,	//	DONE: determine this from ICS Data !
+		timeZone: calTimezone,	//	setting from config, default is 'local'
 		locale: LocaleCode,
 		weekNumbers: weekNums,
 		header: {
@@ -143,22 +188,30 @@ function whenJqReady() {
 			center: 'title',
 		},
 		navLinks: false, // can click day/week names to navigate views
-		editable: true,
+		editable: false,
 		eventLimit: false, // allow "more" link when too many events
 		fixedWeekCount: false,
 		eventClick: function(info) {
 			info.jsEvent.preventDefault(); // don't let the browser navigate
+			//	console.log(info.event.extendedProps["description"]);
 			if (info.event.url) {
 				window.open(info.event.url);	// open url in new Window/Tab
+			}
+			if (enableDescPopup)	{	// show alert popup with description, if enabled
+				if (info.event.extendedProps["description"]) {
+					alert(info.event.extendedProps["description"]);
+				}
 			}
 		},
 		//	Description as Tooltip (tippy.js) :
 		eventRender: function(info) {
-			if (info.event.extendedProps.description) {
-				tippy (info.el, {
-					content: info.event.extendedProps.description,
-					allowHTML: true,	// see https://github.com/wernerjoss/grav-plugin-fullcalendar/issues/29
-				});
+			if (!enableDescPopup) {	// tippy hover only if click popup is disabled
+				if (info.event.extendedProps.description) {
+					tippy (info.el, {
+						content: info.event.extendedProps.description,
+						allowHTML: true,	// see https://github.com/wernerjoss/grav-plugin-fullcalendar/issues/29
+					});
+				}
 			}
 		},
 		events: function(info, successCallback, failureCallback) {
@@ -184,7 +237,7 @@ function whenJqReady() {
 						//	$( '#test' ).html(data);
 					}
 				})
-				.done(function( data, textStatus, jqXHR ) {	//	jQuery.get(calendarUrl, function(data) {
+				.done(function( data, textStatus, jqXHR ) {	
 					if (verbose)	console.log(data);
 					var jcalData = ICAL.parse(data);	//	directly parse data, no need to split to lines first ! 14.02.20
 					var comp = new ICAL.Component(jcalData);
@@ -194,7 +247,7 @@ function whenJqReady() {
 					//	map them to FullCalendar events Objects
 					events = jQuery.map(eventComps, function(item) {
 						var fcevents = {};
-						fcevents["tzid"] = firstTimezone;
+						//	fcevents["tzid"] = icsTimezone;
 						var entry = item.getFirstPropertyValue("summary");
 						if (entry !== null)	fcevents["title"] = entry;
 						var entry = item.getFirstPropertyValue("location");
@@ -203,6 +256,14 @@ function whenJqReady() {
 						if (entry !== null)	fcevents["url"] = entry;
 						var entry = item.getFirstPropertyValue("dtstart");
 						if (entry !== null)	{ fcevents["start"] = entry.toJSDate(); var start = entry;}
+						
+						//	tz_offset_single = 0;	//		now from plugin config 01.01.22
+						if (verbose) console.log('tz_offset_single:', tz_offset_single);
+						if (tz_offset_single != 0) {
+							start["hour"] = (start["hour"] + Number(tz_offset_single)) % 24;	// add hours from config, type conversion mandatory ! :)
+							fcevents["start"] = start.toJSDate();
+							if (verbose) console.log('newstart', start);
+						}
 						
 						var entry = item.getFirstPropertyValue("dtend");
 						if (entry !== null)	{ fcevents["end"] = entry.toJSDate(); var end = entry; }
@@ -224,12 +285,14 @@ function whenJqReady() {
 								if (verbose)	console.log('rrules:', rrules);
 								fcrrules["freq"] = rrules.freq;
 								if (verbose) console.log('start', start["_time"]);
-								/*								*/
-								tz_offsetr = 1;	//	works for most timezones
-								if (firstTimezone == "Europe/London")	tz_offsetr = 2;	//	ugly hack, only needed here !!?? :-)
-								if (verbose) console.log('tz_offset:', tz_offsetr);
-								if (tz_offsetr > 0) {
-									start["hour"] = (start["hour"] + Number(tz_offsetr)) % 24;	// add hours from config, type conversion mandatory ! :)
+								if (verbose) console.log('tz_offset_rec:', tz_offset_rec);	//	now from plugin config 01.01.22
+								var tz_offset_dl = parseInt(tz_offset_rec);	// default
+								M = parseInt(start["month"]);
+								//	console.log('Month:', M);	//	start["month"]);
+								if ((M > dlstart) && (M < dlend)) {	tz_offset_dl = tz_offset_dl + 1; 	}	// DONE: get DAYLIGHT Start/Endmonth from ICS
+								//	console.log(tz_offset_dl);
+								if (tz_offset_dl != 0) {
+									start["hour"] = (start["hour"] + Number(tz_offset_dl)) % 24;	// add hours from config, type conversion mandatory ! :)
 									fcevents["start"] = start.toJSDate();
 									if (verbose) console.log('newstart', start);
 								}
@@ -305,6 +368,7 @@ function whenJqReady() {
 			})
 		}
 	});
+	//	console.log(calendar);
 	calendar.render();
 	// show legend, if enabled
 	if (showlegend) {

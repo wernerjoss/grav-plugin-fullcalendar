@@ -1,11 +1,12 @@
-# v0.2.14
-##  12/xx/2021
+# v0.3.0
+##  01/xx/2022
 
 1. [](#bugfix)
     * fix issue #44 (Incorrect time shown for recurring items)
 2. [](#new)
-    * add external calendar usage documentation
-    * provide default more values in fullcalendar.yaml
+    * improve external calendar usage documentation
+    * provide more default values in fullcalendar.yaml
+    * add Event Description Popup Option
 
 # v0.2.13
 ##  11/11/2021
