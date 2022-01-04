@@ -289,7 +289,9 @@ function whenJqReady() {
 								var tz_offset_dl = parseInt(tz_offset_rec);	// default
 								M = parseInt(start["month"]);
 								//	console.log('Month:', M);	//	start["month"]);
-								if ((M > dlstart) && (M < dlend)) {	tz_offset_dl = tz_offset_dl + 1; 	}	// DONE: get DAYLIGHT Start/Endmonth from ICS
+								if ((M > dlstart) && (M <= dlend)) {	
+									tz_offset_dl = tz_offset_dl + 1;	// add 1h during DAYLIGHT saving period 	
+								}	// DONE: get DAYLIGHT Start/Endmonth from ICS
 								//	console.log(tz_offset_dl);
 								if (tz_offset_dl != 0) {
 									start["hour"] = (start["hour"] + Number(tz_offset_dl)) % 24;	// add hours from config, type conversion mandatory ! :)
