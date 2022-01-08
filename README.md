@@ -44,29 +44,15 @@ useCustomPageTemplate: false    # Use another Template than 'calendar' for Calen
 
 ## Usage
 
-Once installed and enabled, you can use this Plugin to parse ICS Calendar File(s) (these must be found in user/data/calendars. e.g. like this:  
-
-user/data/calendars  
-├── events.ics  
-└── holidays.ics  
-
+Once installed and enabled, you can use this Plugin to parse ICS Calendar File(s) (these must be found in user/data/calendars
 and set as parameter in Plugin shortcode, without Path !) and display Events from that Calendar(s) anywhere on your Site using this shortcode:
 
     [fullcalendar icsfile="events.ics,holidays.ics,..."][/fullcalendar]
 
 in the appropriate page (note the double quotes " surrounding the file name - single quotes ' will not work !)  
-This is the Standard method to show Calendars, but you can also provide absolute URL's to (remote) ICS Files, in which case a CORS proxy will be used to access them.
+This is the Standard method to show Calendars, but you can also provide absolute URL's to (remote) ICS Files, in which case a CORS proxy will be used to access them.  
 See also [this Document](ExternalCalendars.md) on how to use external Calendars.  
-From Version 0.2.6, it is also possible to just drop .ics Calendar Files into your page folder, they will be picked up automatically and used like those in /user/data/calendars:
-
-user/pages  
-├── 01.home  
-├── 02.typography  
-└── 03.events  
-    ├── calendar.md  
-    ├── events.ics  
-    └── holidays.ics  
-
+From Version 0.2.6, it is also possible to just drop .ics Calendar Files into your page folder, they will be picked up automatically and used like those in /user/data/calendars.  
 In case you only use calendar files in the page folder, be sure to include an empty shortcut:  
 ` [fullcalendar][/fullcalendar]`
 in your page content, otherwise it will not work !  
@@ -75,8 +61,8 @@ From v0.3.0, the Plugin can also be enabled on a per-page base via frontmatter: 
 This Option is useful in case the calendar.html.twig template cannot be used, e.g. for a calendar in a modular page or in a blog.  
 Alternatively, there is still the Configuration Option useCustomPageTemplate, which, if set to true, will enable the Plugin globally on each and every page,
 but be aware, this is not recommendend, due to the heavy usage of javascript Librarys from fullcalendar.io - these will slow down the whole site.  
-For that reason, the useCustomPageTemplate is no more available in the Admin Backend (but still working if set manually in the config file).
-So, in short, the use of the Default page template is recommended for most use cases, as otherwise, you will not be able to use the monthly picture feature nor the handy calendar page drop-in for ics files.  
+For that reason, the useCustomPageTemplate is no more available in the Admin Backend (but still working if set manually in the config file).  
+In short, the use of the Default page template is recommended for most use cases, as only this way, you will be able to use the monthly picture feature or the handy calendar page drop-in for ics files.  
 As mentioned, you can also show a Picture for the current month above the calendar widget, if using the standard template.  
 Just put 12 Image Files named 'January.jpg', 'February.jpg', ... , 'December.jpg' in the Folder for your Page where the Calendar will be placed.  
 (Note that Image File names must match Month names according to your locale setting, so, for locale: de, use 'Januar.jpg' ...).  
