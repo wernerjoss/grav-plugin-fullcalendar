@@ -23,7 +23,8 @@ class FullcalendarPlugin extends Plugin
 		}
 		// Enable the main events we are interested in
 		$this->enable([
-			'onShortcodeHandlers' => ['onShortcodeHandlers', 0],
+			'onGetPageTemplates' => ['onGetPageTemplates', 0],	// see https://github.com/wernerjoss/grav-plugin-fullcalendar/issues/45
+    		'onShortcodeHandlers' => ['onShortcodeHandlers', 0],
 			'onTwigTemplatePaths' => ['onTwigTemplatePaths',0],
 			'onPageInitialized' => ['onPageInitialized', 0],
 		]);
@@ -34,8 +35,9 @@ class FullcalendarPlugin extends Plugin
 		/** @var Page */
 		$page = $event['page'];
 
-		$useCustomPageTemplate = $this->config->get('plugins.fullcalendar.useCustomPageTemplate', false);
-		if (($page->template() === 'calendar') || ($useCustomPageTemplate)) {
+		$useCustomPageTemplate = $this->config->get('plugins.fullcalendar.useCustomPageTemplate', false);	// keep this for backwards compatibility
+		$enableByPageHeader = (isset($page->header()->fullcalendar) && $page->header()->fullcalendar === true);
+		if (($page->template() === 'calendar') || ($useCustomPageTemplate) || ($enableByPageHeader)) {	// see https://github.com/wernerjoss/grav-plugin-fullcalendar/issues/45
 			$this->addAssets();
 		}
 	}

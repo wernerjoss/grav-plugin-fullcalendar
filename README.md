@@ -39,26 +39,47 @@ colors: "#3a87ad" # see additional Note on custom colors in the Changelog, be su
 showlegend: false   # set to true to show calendar File Name(s) as Legend below grid
 weekNumbers: false  # set to true to show Week Numbers
 cors_api_url:   # leave this empty if you are not sure - included local CORS proxy will be evaluated automatically !
-useCustomPageTemplate: false    # Use another Template than 'calendar' for Calendar Page (e.g. in case of modular Page)
+useCustomPageTemplate: false    # Use another Template than 'calendar' for Calendar Page (e.g. in case of modular Page) - obsolete from v0.3.0, see Usage !
 ```
 
 ## Usage
 
-Once installed and enabled, you can use this Plugin to parse ICS Calendar File(s) (these must be found in user/data/calendars and set as parameter in Plugin shortcode, without Path !) and display Events from that Calendar(s) anywhere on your Site using this shortcode:
+Once installed and enabled, you can use this Plugin to parse ICS Calendar File(s) (these must be found in user/data/calendars. e.g. like this:  
 
-    [fullcalendar icsfile="example0.ics,example1.ics,..."][/fullcalendar]
+user/data/calendars
+├── events.ics
+└── holidays.ics
 
-in the appropriate page (note the double quotes " surrounding the file name - single quotes ' will not work !)
-You can also provide absolute URL's to ICS Files, in which case a CORS proxy will be used to access them.
+and set as parameter in Plugin shortcode, without Path !) and display Events from that Calendar(s) anywhere on your Site using this shortcode:
+
+    [fullcalendar icsfile="events.ics,holidays.ics,..."][/fullcalendar]
+
+in the appropriate page (note the double quotes " surrounding the file name - single quotes ' will not work !)  
+This is the Standard method to show Calendars, but you can also provide absolute URL's to (remote) ICS Files, in which case a CORS proxy will be used to access them.
 See also [this Document](ExternalCalendars.md) on how to use external Calendars.  
-As an addition, you can show a Picture for the current month above the calendar widget.  
-Just put 12 Image Files named 'January.jpg', 'February.jpg', ... , 'December.jpg' in the Folder for your Page where the Calendar will be placed.  
-(Note that Image File names must match Month names according to your locale setting, so, for locale: de, use 'Januar.jpg' ...).  
-From Version 0.2.6, it is also possible to just drop .ics Calendar Files into your page folder, they will be picked up and used like those in /user/data/calendars.  
+From Version 0.2.6, it is also possible to just drop .ics Calendar Files into your page folder, they will be picked up automatically and used like those in /user/data/calendars:
+
+user/pages
+├── 01.home
+├── 02.typography
+└── 03.events
+    ├── calendar.md
+    ├── events.ics
+    └── holidays.ics
+
 In case you only use calendar files in the page folder, be sure to include an empty shortcut:  
 ` [fullcalendar][/fullcalendar]`
 in your page content, otherwise it will not work !  
 Also note, that from v 0.2.8, the Plugin will only work if you use the calendar.html.twig template from the plugin (or a modified copy in your Theme Folder) for the calendar page - this can be done manually or in the admin backend by choosing 'Calendar' in the dropdown for the page template.  
+From v0.3.0, the Plugin can also be enabled on a per-page base via frontmatter: just set `fullcalendar: true` in the page header.  
+This Option is useful in case the calendar.html.twig template cannot be used, e.g. for a calendar in a modular page or in a blog.  
+Alternatively, there is still the Configuration Option useCustomPageTemplate, which, if set to true, will enable the Plugin globally on each and every page,
+but be aware, this is not recommendend, due to the heavy usage of javascript Librarys from fullcalendar.io - these will slow down the whole site.  
+For that reason, the useCustomPageTemplate is no more available in the Admin Backend (but still working if set manually in the config file).
+So, in short, the use of the Default page template is recommended for most use cases, as otherwise, you will not be able to use the monthly picture feature nor the handy calendar page drop-in for ics files.  
+As mentioned, you can also show a Picture for the current month above the calendar widget, if using the standard template.  
+Just put 12 Image Files named 'January.jpg', 'February.jpg', ... , 'December.jpg' in the Folder for your Page where the Calendar will be placed.  
+(Note that Image File names must match Month names according to your locale setting, so, for locale: de, use 'Januar.jpg' ...).  
 Additionally, it should be noted that this Plugin relies on jquery beeing loaded by the Theme (most Themes do this) - in case you are using a Theme that does not do this, jquery is now (from v 0.2.12) automatically loaded, no more config Option needed for that.  
 ## Advanced Usage
 As an addition to the standard use case, there is an elegant way to automatically update your .ics Files from remote Calendars in case those are hosted on a CalDav Server (e.g. Owncloud, Nextcloud...):
@@ -73,7 +94,7 @@ Hint: the automatically evaluated CORS Proxy URL (created when cors_api_url is e
 ## Timezone Issues:
 This refers to [issue #44](https://github.com/wernerjoss/grav-plugin-fullcalendar/issues/44) which has recently come up and turned out to be a major mess with fullcalendar.io v4 (referred to fc4 in the following).  
 Although having added the timezone-aware js Librarys from the fc4 packages, I could not find a way to automatically adjust for the diverse practical use cases/calendar incarnations.  
-So I decided to implement some additional settings for the plugin, which can be used to correct for date/time shifts for single/recurring events (yes, it is unfortunately necessary to handle those searately, even w.r. to Daylight Saving Times).  
+So I decided to implement some additional settings for the plugin, which can be used to correct for date/time shifts for single/recurring events (yes, it is unfortunately necessary to handle those separately, even w.r. to Daylight Saving Times).  
 Anyone having issues with incorrectly displayed Events Times, can now fiddle with these settings until everything looks ok - see the Hints in the admin backend.  
 Of course, this is not a really satisfactory Solution, I think the real cause is buried in some bugs of the fc4 release. Maybe (hopefully) the fc5 incarnations are better suited to this - porting this Plugin to fc5 is planned anyway, but will probably not happen in the near future.  
 So, for the time beeing, I hope most users can live with the workarounds presented here from Plugin Version 0.3.0.

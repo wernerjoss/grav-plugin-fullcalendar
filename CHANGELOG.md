@@ -7,6 +7,7 @@
     * improve external calendar usage documentation
     * provide more default values in fullcalendar.yaml
     * add Event Description Popup Option
+    * add Option to enable Plugin via page frontmatter (instead of useCustomPageTemplate)
 
 # v0.2.13
 ##  11/11/2021

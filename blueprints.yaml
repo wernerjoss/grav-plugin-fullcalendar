@@ -59,17 +59,18 @@ form:
             label: local Cors API URL
             default: null
             help: leave this empty if you are not sure - it will be evaluated automatically and mostly work ! - see README
-        useCustomPageTemplate:
-            type: toggle
-            label: Use custom Page Template
-            help: Use another Template than 'calendar' for Calendar Page (e.g. in case of modular Page)
-            highlight: 1
-            default: 0
-            options:
-                1: Enabled
-                0: Disabled
-            validate:
-                type: bool
+        #   disable this in admin backend - new approach is to enable Plugin via page frontmatter 05.01.22
+        #useCustomPageTemplate:
+        #    type: toggle
+        #    label: Use custom Page Template
+        #    help: Use another Template than 'calendar' for Calendar Page (e.g. in case of modular Page)
+        #    highlight: 1
+        #    default: 0
+        #    options:
+        #        1: Enabled
+        #        0: Disabled
+        #    validate:
+        #        type: bool
         enableDescPopup:
             type: toggle
             label: enable onClick Popup for Event Description
@@ -96,7 +97,7 @@ form:
             type: number
             size: small
             label: Time Offset (hours) to correct single Events
-            help: only use this if you encounter a Time shift on displayed single Events
+            help: only use this if you encounter a Time shift on displayed single Events (be aware that a change here will also effect recurring Events !)
             default: 0
         tz_offset_rec:
             type: number
