@@ -46,9 +46,9 @@ useCustomPageTemplate: false    # Use another Template than 'calendar' for Calen
 
 Once installed and enabled, you can use this Plugin to parse ICS Calendar File(s) (these must be found in user/data/calendars. e.g. like this:  
 
-user/data/calendars
-├── events.ics
-└── holidays.ics
+user/data/calendars  
+├── events.ics  
+└── holidays.ics  
 
 and set as parameter in Plugin shortcode, without Path !) and display Events from that Calendar(s) anywhere on your Site using this shortcode:
 
@@ -59,13 +59,13 @@ This is the Standard method to show Calendars, but you can also provide absolute
 See also [this Document](ExternalCalendars.md) on how to use external Calendars.  
 From Version 0.2.6, it is also possible to just drop .ics Calendar Files into your page folder, they will be picked up automatically and used like those in /user/data/calendars:
 
-user/pages
-├── 01.home
-├── 02.typography
-└── 03.events
-    ├── calendar.md
-    ├── events.ics
-    └── holidays.ics
+user/pages  
+├── 01.home  
+├── 02.typography  
+└── 03.events  
+    ├── calendar.md  
+    ├── events.ics  
+    └── holidays.ics  
 
 In case you only use calendar files in the page folder, be sure to include an empty shortcut:  
 ` [fullcalendar][/fullcalendar]`
