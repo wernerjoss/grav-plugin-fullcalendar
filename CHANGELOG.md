@@ -1,5 +1,5 @@
 # v0.3.0
-##  01/xx/2022
+##  01/10/2022
 
 1. [](#bugfix)
     * fix issue #44 (Incorrect time shown for recurring items)
@@ -7,7 +7,7 @@
     * improve external calendar usage documentation
     * provide more default values in fullcalendar.yaml
     * add Event Description Popup Option
-    * add Option to enable Plugin via page frontmatter (instead of useCustomPageTemplate)
+    * add Option to enable Plugin selective via page frontmatter (instead of global)
 
 # v0.2.13
 ##  11/11/2021
