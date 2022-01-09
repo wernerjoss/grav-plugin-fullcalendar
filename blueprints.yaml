@@ -59,18 +59,6 @@ form:
             label: local Cors API URL
             default: null
             help: leave this empty if you are not sure - it will be evaluated automatically and mostly work ! - see README
-        #   disable this in admin backend - new approach is to enable Plugin via page frontmatter 05.01.22
-        #useCustomPageTemplate:
-        #    type: toggle
-        #    label: Use custom Page Template
-        #    help: Use another Template than 'calendar' for Calendar Page (e.g. in case of modular Page)
-        #    highlight: 1
-        #    default: 0
-        #    options:
-        #        1: Enabled
-        #        0: Disabled
-        #    validate:
-        #        type: bool
         enableDescPopup:
             type: toggle
             label: enable onClick Popup for Event Description

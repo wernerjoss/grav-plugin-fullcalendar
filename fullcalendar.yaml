@@ -6,3 +6,4 @@ useIcsTimezone: false
 enableDescPopup: false
 tz_offset_single: 0
 tz_offset_rec: 0
+enableOnAllPages: false
