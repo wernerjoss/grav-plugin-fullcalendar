@@ -44,7 +44,12 @@ useCustomPageTemplate: false    # Use another Template than 'calendar' for Calen
 
 ## Usage
 
-Once installed and enabled, you can use this Plugin to parse ICS Calendar File(s) (these must be found in user/data/calendars
+Once installed and enabled, you can use this Plugin to parse ICS Calendar File(s) (these must be found in user/data/calendars e.g. like this:
+```
+user/data/calendars
+├── events.ics
+└── holidays.ics
+```
 and set as parameter in Plugin shortcode, without Path !) and display Events from that Calendar(s) anywhere on your Site using this shortcode:
 
     [fullcalendar icsfile="events.ics,holidays.ics,..."][/fullcalendar]
