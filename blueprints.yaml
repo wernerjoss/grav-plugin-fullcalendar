@@ -1,5 +1,5 @@
 name: FullCalendar
-version: 0.3.0
+version: 0.3.1
 description: show Calendar Widget from ICS File(s), based on fullcalendar.io
 icon: calendar
 author:
@@ -87,6 +87,14 @@ form:
             label: Time Offset (hours) to correct single Events
             help: only use this if you encounter a Time shift on displayed single Events (be aware that a change here will also effect recurring Events !)
             default: 0
+        tz_offset_minutes:
+            type: number
+            size: small
+            label: Time Offset (minutes) to correct single Events
+            help: only use this if you encounter a Time shift on displayed single Events (be aware that a change here will also effect recurring Events !)
+            default: 0
+            validate:
+                pattern: "[0-5][0-9]*"
         tz_offset_rec:
             type: number
             size: small

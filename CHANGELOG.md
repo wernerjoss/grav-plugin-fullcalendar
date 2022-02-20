@@ -1,3 +1,9 @@
+# v0.3.1
+##  02/20/2022
+
+1. [](#new)
+    * add minutes Timezone Offset config Option
+
 # v0.3.0
 ##  01/10/2022
 

@@ -108,6 +108,10 @@ function whenJqReady() {
 	var default_tz_offset_single = 0;	// Default
 	var tz_offset_single = (cfg_tz_offset_single !== null) ? cfg_tz_offset_single : default_tz_offset_single;
 	
+	var cfg_tz_offset_minutes = jQuery('#tzoffset_minutes').text();	//	minutes Offset for single Events
+	var default_tz_offset_minutes = 0;	// Default
+	var tz_offset_minutes = (cfg_tz_offset_minutes !== null) ? cfg_tz_offset_minutes : default_tz_offset_minutes;
+	
 	var cfg_tz_offset_rec = jQuery('#tzoffset_recur').text();	//	Offset for single Events
 	var default_tz_offset_rec = 0;	// Default
 	var tz_offset_rec = (cfg_tz_offset_rec !== null) ? cfg_tz_offset_rec : default_tz_offset_rec;
@@ -261,6 +265,13 @@ function whenJqReady() {
 						if (verbose) console.log('tz_offset_single:', tz_offset_single);
 						if (tz_offset_single != 0) {
 							start["hour"] = (start["hour"] + Number(tz_offset_single)) % 24;	// add hours from config, type conversion mandatory ! :)
+							fcevents["start"] = start.toJSDate();
+							if (verbose) console.log('newstart', start);
+						}
+						//	tz_offset_minutes = 15;	//
+						if (verbose) console.log('tz_offset_minutes:', tz_offset_minutes);
+						if (tz_offset_minutes != 0) {
+							start["minute"] = (start["minute"] + Number(tz_offset_minutes));	// add minutes from config, do NOT use modulo 60 !
 							fcevents["start"] = start.toJSDate();
 							if (verbose) console.log('newstart', start);
 						}
