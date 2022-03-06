@@ -1,8 +1,10 @@
 # v0.3.1
-##  02/20/2022
+##  03/06/2022
 
 1. [](#new)
     * add minutes Timezone Offset config Option
+2. [](#bugfix)
+    * fix day shift for recurring all-day events
 
 # v0.3.0
 ##  01/10/2022

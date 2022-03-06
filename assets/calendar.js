@@ -14,7 +14,7 @@ if (typeof jQuery=='undefined') {
 }
 
 function whenJqReady() {
-	var verbose = false;//true;
+	var verbose = true;//false;//true;
 	var defaultLocale = 'en';
 	var cfgWeekNums = jQuery('#weeknums').text();	//	get Paramter from DOM
 	weekNums = false;
@@ -296,6 +296,13 @@ function whenJqReady() {
 								if (verbose)	console.log('rrules:', rrules);
 								fcrrules["freq"] = rrules.freq;
 								if (verbose) console.log('start', start["_time"]);
+								if (verbose) console.log('start day', start["day"]);
+								// Korrektur f. 1 Tag Versatz nach vorne 06.03.22 - crazy - see https://github.com/wernerjoss/grav-plugin-fullcalendar/issues/44#issuecomment-1057087028
+								if (fcevents["allDay"]) {
+									start["day"] = start["day"] + 1;
+									end["day"] = end["day"] + 1;
+									if (verbose) console.log('start day', start["day"], 'end day', end["day"]);
+								}
 								if (verbose) console.log('tz_offset_rec:', tz_offset_rec);	//	now from plugin config 01.01.22
 								var tz_offset_dl = parseInt(tz_offset_rec);	// default
 								M = parseInt(start["month"]);
@@ -306,9 +313,10 @@ function whenJqReady() {
 								//	console.log(tz_offset_dl);
 								if (tz_offset_dl != 0) {
 									start["hour"] = (start["hour"] + Number(tz_offset_dl)) % 24;	// add hours from config, type conversion mandatory ! :)
-									fcevents["start"] = start.toJSDate();
+									//	fcevents["start"] = start.toJSDate();
 									if (verbose) console.log('newstart', start);
 								}
+								fcevents["start"] = start.toJSDate();	// move here 06.03.22 !
 								/* not needed
 								end["hour"] = end["hour"] + tz_offset;
 								if (verbose)	console.log('newend', end);
