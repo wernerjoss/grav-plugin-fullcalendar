@@ -14,7 +14,7 @@ if (typeof jQuery=='undefined') {
 }
 
 function whenJqReady() {
-	var verbose = true;//false;//true;
+	var verbose = false;//true;
 	var defaultLocale = 'en';
 	var cfgWeekNums = jQuery('#weeknums').text();	//	get Paramter from DOM
 	weekNums = false;
