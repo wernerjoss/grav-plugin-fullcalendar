@@ -12,6 +12,8 @@ docs: https://github.com/wernerjoss/grav-plugin-fullcalendar
 license: MIT
 
 dependencies:
+    - problems
+    - error
     - shortcode-core
 
 form:
