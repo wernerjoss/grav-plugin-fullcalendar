@@ -21,7 +21,7 @@ You should now have all the plugin files under
 
     /your/site/grav/user/plugins/fullcalendar
 
-> NOTE: This plugin is a modular component for Grav which requires [Grav](http://github.com/getgrav/grav) and the [Error](https://github.com/getgrav/grav-plugin-error) and [Problems](https://github.com/getgrav/grav-plugin-problems) Plugins to operate.  
+> NOTE: This plugin is a modular component for [Grav](http://github.com/getgrav/grav) and requires the [Error](https://github.com/getgrav/grav-plugin-error), [Problems](https://github.com/getgrav/grav-plugin-problems) and [Shortcode Core](https://github.com/getgrav/grav-plugin-shortcode-core) Plugins to operate.  
 ### Admin Plugin
 
 If you use the admin plugin, you can install directly through the admin plugin by browsing the `Plugins` tab and clicking on the `Add` button.  
