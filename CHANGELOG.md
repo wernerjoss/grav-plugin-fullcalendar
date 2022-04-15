@@ -1,10 +1,14 @@
-# v0.3.1
-##  03/06/2022
+# v0.3.2
+##  04/15/2022
 
 1. [](#new)
     * add minutes Timezone Offset config Option
 2. [](#bugfix)
     * fix day shift for recurring all-day events
+3. [](#new)
+    * merge docs improvement pull requests #48 + #49 from elgandoz
+3. [](#bugfix)
+    * fix issue #50, calendar file not found for non-root calendar page
 
 # v0.3.0
 ##  01/10/2022

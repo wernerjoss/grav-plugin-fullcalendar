@@ -14,7 +14,7 @@ if (typeof jQuery=='undefined') {
 }
 
 function whenJqReady() {
-	var verbose = false;//true;
+	var verbose = false;
 	var defaultLocale = 'en';
 	var cfgWeekNums = jQuery('#weeknums').text();	//	get Paramter from DOM
 	weekNums = false;
@@ -79,7 +79,8 @@ function whenJqReady() {
 				var index = cfgFile.lastIndexOf("/") + 1;
 				calName = cfgFile.substr(index);	// calName is used for Legend, should be only Name, NOT full Url !
 			}   else	{
-				calendarUrl = getAbsolutePath() + 'user/data/calendars/' + cfgFile;
+				//	calendarUrl = getAbsolutePath() + 'user/data/calendars/' + cfgFile;	// does not work for non-root calendar pages, see issue #50
+				calendarUrl = BaseUrl + '/user/data/calendars/' + cfgFile;	// 15.04.22
 			}
 			if (verbose) console.log('Calendar URL:' + calendarUrl);
 			cfgUrls.push(calendarUrl);
