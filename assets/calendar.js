@@ -236,6 +236,7 @@ function whenJqReady() {
 					url: calendarUrl,
 					//dataType: "json", //no need. if you use crossOrigin, the dataType will be override with "json"
 					//charset: 'ISO-8859-1', //use it to define the charset of the target url
+					//contentType: "application/json; charset=ISO-8859-1",	// test encoding, geht nicht 31.08.22
 					context: {},
 					success: function(data) {
 						//	alert(data);
@@ -254,6 +255,13 @@ function whenJqReady() {
 						var fcevents = {};
 						//	fcevents["tzid"] = icsTimezone;
 						var entry = item.getFirstPropertyValue("summary");
+						//	console.log('Entry: ', entry);
+						//	fix badly encoded Text from remote google calendars 01.09.22
+						try	{	// see https://stackoverflow.com/questions/5396560/how-do-i-convert-special-utf-8-chars-to-their-iso-8859-1-equivalent-using-javasc
+							entry = decodeURIComponent(escape(entry));
+						}	catch(e)	{
+							entry = entry;
+						}
 						if (entry !== null)	fcevents["title"] = entry;
 						var entry = item.getFirstPropertyValue("location");
 						if (entry !== null)	fcevents["location"] = entry;
@@ -284,6 +292,11 @@ function whenJqReady() {
 						fcevents["allDay"] = true;	// default value -> span .fc-time in grid is NOT created
 						if (duration < 86400000)	fcevents["allDay"] = false;	// duration less than 1 day: allDay = false
 						var entry = item.getFirstPropertyValue("description");	// add description 22.06.20
+						try	{	// see https://stackoverflow.com/questions/5396560/how-do-i-convert-special-utf-8-chars-to-their-iso-8859-1-equivalent-using-javasc
+							entry = decodeURIComponent(escape(entry));
+						}	catch(e)	{
+							entry = entry;
+						}
 						if (entry !== null)	fcevents["description"] = entry;
 						var entry = item.getFirstPropertyValue("color");	// add color from ics
 						if (entry !== null)	fcevents["color"] = entry;

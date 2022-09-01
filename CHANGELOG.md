@@ -1,3 +1,9 @@
+# v0.3.3
+##  09/01/2022
+
+1. [](#bugfix)
+    * fix issue #53, google-ics german Umlaut not converted
+
 # v0.3.2
 ##  04/15/2022
 
