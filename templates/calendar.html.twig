@@ -10,21 +10,23 @@
 			{% set num_mpics = 0  %}
 			{% set calendars = []   %}  {# empty array  #}
 			{% for file in page.media %}
-				{% if debug %}  {{ dump(file|print_r) }}  {% endif %}
+				{#
+				{% if debug %}  {{ dump('file:',file|print_r) }}  {% endif %}
+				#}
 				{% if (file.filename|ends_with('.ics')) %}
-					{% if (debug) %}    {{ dump(file.filename|string) }}    {% endif %}
+					{% if (debug) %}    {{ dump('calendarfile:',file.filename|string) }}    {% endif %}
 					{% set calendars = calendars|merge([file.filename|string])  %}
 					{% set numcalendars = numcalendars + 1 %}
 				{% endif %}
 				{% if (file.filename|ends_with('.jpg')) %}
-					{% if (debug) %}    {{ dump(file.filename|string) }}    {% endif %}
+					{% if (debug) %}    {{ dump('monthpic:',file.filename|string) }}    {% endif %}
 					{% set num_mpics = num_mpics + 1 %}
 				{% endif %}
 			{% endfor %}
-			{% if (debug) %}    
-				{{ dump(numcalendars) }}
-				{{ dump(num_mpics) }}
-				{{ dump(calendars|print_r) }}
+			{% if (debug) %}
+				{{ dump('numcalendars:',numcalendars) }}
+				{{ dump('num_pics:',num_mpics) }}
+				{{ dump('calendars:',calendars|print_r) }}
 			{% endif %}
 			{% if (num_mpics|int) >= 12 %} {# 12 pics sollten für 1 Jahr reichen :-) #}
 				<div id='actMonth'></div>

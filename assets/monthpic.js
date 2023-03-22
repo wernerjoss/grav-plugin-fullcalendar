@@ -7,7 +7,7 @@
 $(document).ready(function() {
 	var debug = false;
 	var lastmonthname = null;
-	
+
 	if($('#actMonth').length){	// do not setup image load/change when div actMonth does not exist
 		setInterval(function() {    // statt setTimeout() - siehe https://www.w3schools.com/jsref/met_win_settimeout.asp
 			function fileExists(filename) {
@@ -15,7 +15,7 @@ $(document).ready(function() {
 					url: filename,
 					type: 'HEAD',
 					async: false	// does not work with true :-/
-				}).status;	
+				}).status;
 				if (debug)	console.log('response:',response);
 				return (response != "200") ? false : true;
 			}

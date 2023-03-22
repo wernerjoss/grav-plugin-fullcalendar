@@ -18,6 +18,10 @@ function whenJqReady() {
 	var defaultLocale = 'en';
 	var cfgWeekNums = jQuery('#weeknums').text();	//	get Paramter from DOM
 	weekNums = false;
+	var firstWeekDay = 0;	// Default, new 20.03.23
+	var cfgfirstWeekDay = jQuery('#1stweekday').text();	//	get Paramter from DOM
+	if (Number(cfgfirstWeekDay) > 0)	firstWeekDay = Number(cfgfirstWeekDay);
+	if (verbose)	console.log("1st Weekday: ", firstWeekDay);
 	if (cfgWeekNums > 0)	weekNums = true;
 	if (verbose)	console.log('Weeknums:', weekNums);
 	var cfgLocale = jQuery('#cfgLocale').text();	//	get Paramter from DOM
@@ -100,23 +104,23 @@ function whenJqReady() {
 	var showlegend = jQuery('#showlegend').text();	//	get Paramter from DOM'
 	showlegend = (showlegend > 0) ? showlegend : false;
 	if (verbose)	console.log('showlegend:', showlegend);
-	
+
 	var defaultEnableDescPopup = false;	// DONE: make this configurable via admin
 	var cfg_enableDescPopup = jQuery('#enableDescPopup').text();
 	var enableDescPopup = (cfg_enableDescPopup !== null) ? cfg_enableDescPopup : defaultEnableDescPopup;
-	
+
 	var cfg_tz_offset_single = jQuery('#tzoffset_single').text();	//	Offset for single Events
 	var default_tz_offset_single = 0;	// Default
 	var tz_offset_single = (cfg_tz_offset_single !== null) ? cfg_tz_offset_single : default_tz_offset_single;
-	
+
 	var cfg_tz_offset_minutes = jQuery('#tzoffset_minutes').text();	//	minutes Offset for single Events
 	var default_tz_offset_minutes = 0;	// Default
 	var tz_offset_minutes = (cfg_tz_offset_minutes !== null) ? cfg_tz_offset_minutes : default_tz_offset_minutes;
-	
+
 	var cfg_tz_offset_rec = jQuery('#tzoffset_recur').text();	//	Offset for single Events
 	var default_tz_offset_rec = 0;	// Default
 	var tz_offset_rec = (cfg_tz_offset_rec !== null) ? cfg_tz_offset_rec : default_tz_offset_rec;
-	
+
 	var useIcsTimezone = jQuery('#useIcsTimezone').text();	//	get Paramter from DOM'
 	useIcsTimezone = (useIcsTimezone > 0) ? useIcsTimezone : false;
 	var icsTimezone = 'Europe/Berlin';	// Default
@@ -139,7 +143,7 @@ function whenJqReady() {
 			//	console.log(data);
 			var jcalData = ICAL.parse(data);	//	directly parse data, no need to split to lines first ! 14.02.20
 			var comp = new ICAL.Component(jcalData);
-			
+
 			var tzComps = comp.getAllSubcomponents("vtimezone");
 			tzids = jQuery.map(tzComps, function(item) {
 				var entry = item.getFirstPropertyValue("tzid");
@@ -180,7 +184,7 @@ function whenJqReady() {
 	var calTimezone = 'local';	// Default
 	if (useIcsTimezone)	calTimezone = icsTimezone;
 	if (verbose)	console.log('calTimezone: ', calTimezone);
-	
+
 	// page is now ready, initialize the calendar...
 	var calendarEl = document.getElementById('calendar');
 	var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -196,6 +200,7 @@ function whenJqReady() {
 		editable: false,
 		eventLimit: false, // allow "more" link when too many events
 		fixedWeekCount: false,
+        firstDay: firstWeekDay,    // new 20.03.23 - DONE: make this configurable !
 		eventClick: function(info) {
 			info.jsEvent.preventDefault(); // don't let the browser navigate
 			//	console.log(info.event.extendedProps["description"]);
@@ -243,11 +248,11 @@ function whenJqReady() {
 						//	$( '#test' ).html(data);
 					}
 				})
-				.done(function( data, textStatus, jqXHR ) {	
+				.done(function( data, textStatus, jqXHR ) {
 					if (verbose)	console.log(data);
 					var jcalData = ICAL.parse(data);	//	directly parse data, no need to split to lines first ! 14.02.20
 					var comp = new ICAL.Component(jcalData);
-					
+
 					var comp = new ICAL.Component(jcalData);
 					var eventComps = comp.getAllSubcomponents("vevent");
 					//	map them to FullCalendar events Objects
@@ -269,7 +274,7 @@ function whenJqReady() {
 						if (entry !== null)	fcevents["url"] = entry;
 						var entry = item.getFirstPropertyValue("dtstart");
 						if (entry !== null)	{ fcevents["start"] = entry.toJSDate(); var start = entry;}
-						
+
 						//	tz_offset_single = 0;	//		now from plugin config 01.01.22
 						if (verbose) console.log('tz_offset_single:', tz_offset_single);
 						if (tz_offset_single != 0) {
@@ -284,7 +289,7 @@ function whenJqReady() {
 							fcevents["start"] = start.toJSDate();
 							if (verbose) console.log('newstart', start);
 						}
-						
+
 						var entry = item.getFirstPropertyValue("dtend");
 						if (entry !== null)	{ fcevents["end"] = entry.toJSDate(); var end = entry; }
 						duration = fcevents["end"] - fcevents["start"];	// calculate event duration 29.08.20
@@ -321,8 +326,8 @@ function whenJqReady() {
 								var tz_offset_dl = parseInt(tz_offset_rec);	// default
 								M = parseInt(start["month"]);
 								//	console.log('Month:', M);	//	start["month"]);
-								if ((M > dlstart) && (M <= dlend)) {	
-									tz_offset_dl = tz_offset_dl + 1;	// add 1h during DAYLIGHT saving period 	
+								if ((M > dlstart) && (M <= dlend)) {
+									tz_offset_dl = tz_offset_dl + 1;	// add 1h during DAYLIGHT saving period
 								}	// DONE: get DAYLIGHT Start/Endmonth from ICS
 								//	console.log(tz_offset_dl);
 								if (tz_offset_dl != 0) {

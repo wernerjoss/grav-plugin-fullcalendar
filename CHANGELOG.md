@@ -1,3 +1,9 @@
+# v0.3.4
+##  03/20/2023
+
+1. [](#new)
+    * make first Weekday configurable
+
 # v0.3.3
 ##  09/01/2022
 

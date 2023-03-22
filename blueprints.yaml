@@ -1,5 +1,5 @@
 name: FullCalendar
-version: 0.3.3
+version: 0.3.4
 description: show Calendar Widget from ICS File(s), based on fullcalendar.io
 icon: calendar
 author:
@@ -102,6 +102,12 @@ form:
             size: small
             label: Time Offset (hours) to correct recurring Events
             help: only use this if you encounter a Time shift on displayed recurring Events
+            default: 0
+        firstWeekDay:
+            type: number
+            size: small
+            label: first Day of Week
+            help: 0 for Sunday, 1 for Monday, 2 for Tuesday ...
             default: 0
             
                              
