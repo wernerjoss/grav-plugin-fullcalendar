@@ -11,7 +11,6 @@ class FullcalendarPlugin extends Plugin
 	{
 		return [
 			'onPluginsInitialized' => ['onPluginsInitialized', 0],
-			'onGetPageTemplates' => ['onGetPageTemplates',0]
 		];
 	}
 
