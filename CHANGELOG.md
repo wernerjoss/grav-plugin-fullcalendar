@@ -1,3 +1,9 @@
+# v0.3.5
+##  07/18/2023
+
+1. [](#new)
+    * fix template Selection from Grav Admin
+
 # v0.3.4
 ##  03/20/2023
 

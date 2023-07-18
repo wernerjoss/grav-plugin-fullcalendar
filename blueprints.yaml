@@ -1,5 +1,5 @@
 name: FullCalendar
-version: 0.3.4
+version: 0.3.5
 description: show Calendar Widget from ICS File(s), based on fullcalendar.io
 icon: calendar
 author:
@@ -109,5 +109,5 @@ form:
             label: first Day of Week
             help: 0 for Sunday, 1 for Monday, 2 for Tuesday ...
             default: 0
-            
-                             
+
+
