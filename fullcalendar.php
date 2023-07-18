@@ -11,7 +11,9 @@ class FullcalendarPlugin extends Plugin
 	{
 		return [
 			'onPluginsInitialized' => ['onPluginsInitialized', 0],
-		];
+            'onGetPageTemplates' => ['onGetPageTemplates', 0],	// see https://github.com/wernerjoss/grav-plugin-fullcalendar/issues/45
+            // must be here, NOT in onPluginsInitialized() ! 18.07.23
+        ];
 	}
 
 	public function onPluginsInitialized()
@@ -22,8 +24,7 @@ class FullcalendarPlugin extends Plugin
 		}
 		// Enable the main events we are interested in
 		$this->enable([
-			'onGetPageTemplates' => ['onGetPageTemplates', 0],	// see https://github.com/wernerjoss/grav-plugin-fullcalendar/issues/45
-    		'onShortcodeHandlers' => ['onShortcodeHandlers', 0],
+			'onShortcodeHandlers' => ['onShortcodeHandlers', 0],
 			'onTwigTemplatePaths' => ['onTwigTemplatePaths',0],
 			'onPageInitialized' => ['onPageInitialized', 0],
 		]);
