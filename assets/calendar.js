@@ -187,6 +187,25 @@ function whenJqReady() {
 
 	// page is now ready, initialize the calendar...
 	var calendarEl = document.getElementById('calendar');
+	switch (LocaleCode) {
+        case 'de':
+            now = "Heute";
+            break;
+        case 'es':
+            now = "Hoy";
+            break
+        case 'fr':
+            now = "Aujourd'hui";
+            break
+        case 'it':
+            now = "Oggi";
+            break
+        case 'nl':
+            now = "Vandaag";
+            break
+        default:
+            now = "today";
+    }
 	var calendar = new FullCalendar.Calendar(calendarEl, {
 		plugins: [ 'interaction', 'dayGrid', 'rrule', 'moment', 'momentTimezone' ],	// docs on plugin names are wrong !!
 		timeZone: calTimezone,	//	setting from config, default is 'local'
@@ -196,6 +215,9 @@ function whenJqReady() {
 			left: 'prevYear,nextYear',
 			center: 'title',
 		},
+		buttonText: {  // neu 30.07.23, Today Button Language
+            today: now
+        },
 		navLinks: false, // can click day/week names to navigate views
 		editable: false,
 		eventLimit: false, // allow "more" link when too many events
