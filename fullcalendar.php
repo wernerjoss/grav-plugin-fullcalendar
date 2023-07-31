@@ -78,6 +78,7 @@ class FullcalendarPlugin extends Plugin
         $assets->addJs('plugins://' . $this->name . '/assets/calendar.js', ['group' => 'bottom']);
         $assets->addCss('plugins://' . $this->name . '/assets/daygrid.css'); // default CSS for #calendar
         // do not load a predefined language, use system setting instead
+        /* skip loading locales, they don't seem to work anyway :-/ 31.07.23
         $language = $this->grav['language']->getLanguage();
         if (!isset($language)) {
             $language = "en";
@@ -94,6 +95,7 @@ class FullcalendarPlugin extends Plugin
                 $assets->addJs('plugins://' . $this->name . '/fc4/packages/core/locales/' . $lang . '.js', ['group' => 'bottom']);
             }
         }
+        */
     }
 
     public function onTwigTemplatePaths()
