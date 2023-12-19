@@ -122,9 +122,9 @@ class FullcalendarPlugin extends Plugin
 
     private function serveProxy(): void
     {
-        $endpoint_url = '/_cors/proxy'; // TODO: make this configurable
+        $endpoint_url = $this->config->get("plugins.{$this->name}.local_cors_proxy");
 
-        if (str_starts_with(strtolower($this->grav['uri']->uri()), $endpoint_url)) {
+        if ($endpoint_url && str_starts_with(strtolower($this->grav['uri']->uri()), $endpoint_url)) {
 
             $proxy_url = $this->config->get("plugins.{$this->name}.cors_api_url");
             if (!empty($proxy_url)) {
