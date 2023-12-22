@@ -45,6 +45,8 @@ class FullcalendarPlugin extends Plugin
         if (($page->template() === 'calendar') || ($enableOnAllPages) || ($enableByPageHeader)) { // see https://github.com/wernerjoss/grav-plugin-fullcalendar/issues/45
             $this->addAssets();
         }
+
+        $this->serveProxy();
     }
 
     private function addAssets()
@@ -117,4 +119,75 @@ class FullcalendarPlugin extends Plugin
         $types->register('calendar');
         $types->scanTemplates(__DIR__ . '/templates');
     }
+
+    private function serveProxy(): void
+    {
+        $endpoint_url = $this->config->get("plugins.{$this->name}.local_cors_proxy");
+
+        if ($endpoint_url && str_starts_with(strtolower($this->grav['uri']->uri()), $endpoint_url)) {
+
+            $proxy_url = $this->config->get("plugins.{$this->name}.cors_api_url");
+            if (!empty($proxy_url)) {
+                return;
+            }
+
+            if (!(isset($_SERVER['HTTP_REFERER']) && str_starts_with(strtolower($_SERVER['HTTP_REFERER']), strtolower($_SERVER['HTTP_REFERER'])))) {
+                self::endpointRespond(401, [
+                    'status' => 'error',
+                    'message' => 'Unauthorized request',
+                ]);
+            }
+
+            if(!isset($_GET['url'])) {
+                self::endpointRespond(400, [ // 422??
+                    'status' => 'undefined',
+                    'message' => 'Missing URL parameter',
+                    // 'debug' => $hook_properties,
+                ]);
+            }
+
+            $result = utf8_encode(file_get_contents($_GET['url']));
+
+            if($result) {
+                $json = json_encode($result);
+                try {
+                    if(isset($_GET['callback'])) {
+                        self::endpointRespond(200, "{$_GET['callback']}($json)", 'application/javascript');
+                    }
+                    self::endpointRespond(200, $json);
+                }
+                catch (\Exception $e) {
+                    self::endpointRespond(500, [
+                        'status' => 'error',
+                        'message' => "Calendar request failed",
+                        // 'debug' => $hook_properties,
+                    ]);
+                }
+            }
+            else {
+                self::endpointRespond(500, [
+                    'status' => 'error',
+                    'message' => "Calendar request failed",
+                    // 'debug' => $hook_properties,
+                ]);
+            }
+        }
+    }
+
+    /**
+     * Provide a HTTP status and response (default JSON) and exit
+     * @param  int    $http_status   HTTP status number to return
+     * @param  string|array  $payload Payload as string or array (encoded to JSON) to be served
+     * @return void
+     */
+    private static function endpointRespond(int $http_status, string|array $payload, $content_type='application/json'): void {
+        if(is_array($payload)) {
+            $payload = json_encode($payload);
+        }
+        header("Content-Type: $content_type");
+        http_response_code($http_status);
+        echo $payload;
+        exit;
+    }
+
 }
