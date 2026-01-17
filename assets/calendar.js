@@ -59,7 +59,7 @@ function whenJqReady() {
 
 	// automatically detect CORS api url from Absolute Path
 	var BaseUrl = jQuery('#BaseUrl').text();	//	06.11.21   get Parameter from DOM
-	var cors_api_url = BaseUrl + '/user/plugins/fullcalendar/proxy.php/';
+	var cors_api_url = BaseUrl + jQuery('#LocalCorsProxy').text();
 	if (verbose) console.log('CORS API URL:', cors_api_url);
 
 	var cfg_cors_api_url = jQuery('#CorsUrl').text();	//	get Paramter from DOM

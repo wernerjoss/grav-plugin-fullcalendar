@@ -2,6 +2,7 @@ enabled: true
 showlegend: false
 weekNumbers: false
 cors_api_url: null
+local_cors_proxy: /_cors/proxy
 useIcsTimezone: false
 enableDescPopup: false
 tz_offset_single: 0

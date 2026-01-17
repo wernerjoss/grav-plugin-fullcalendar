@@ -58,9 +58,15 @@ form:
         cors_api_url:  # delete this from blueprint, so no entry in admin (but keep in config if set by hand)
             type: text
             size: large
-            label: local Cors API URL
-            default: null
+            label: Remote Cors API URL
             help: leave this empty if you are not sure - it will be evaluated automatically and mostly work ! - see README
+        local_cors_proxy:
+            type: text
+            size: large
+            label: Local CORS proxy path
+            default: /_cors/proxy
+            help: leave this unchanged if you are not sure - it will be evaluated automatically and mostly work ! - see README
+            toggleable: true
         enableDescPopup:
             type: toggle
             label: enable onClick Popup for Event Description
