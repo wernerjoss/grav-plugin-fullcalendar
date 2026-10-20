@@ -1,5 +1,5 @@
 name: FullCalendar
-version: 0.3.5
+version: 0.3.7
 description: show Calendar Widget from ICS File(s), based on fullcalendar.io
 icon: calendar
 author:
@@ -15,6 +15,11 @@ dependencies:
     - problems
     - error
     - shortcode-core
+
+compatibility:
+  grav:
+    - '1.7'
+    - '2.0'
 
 form:
     fields:

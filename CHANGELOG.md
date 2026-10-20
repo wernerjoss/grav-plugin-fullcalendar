@@ -1,3 +1,25 @@
+# v0.3.7
+##  08/06/2026
+
+1. [](#improved)
+    * Show event location and description when hovered.
+    * Use ical.js version 1.5.0, clean up ical.js files.
+2. [](#bugfix)
+    * Fix repeated events not showing correct time and not showing up
+    * Use `var` for local variables
+    * Fix jquery undefined errors.
+
+# v0.3.6
+##  07/22/2026
+
+1. [](#bugfix)
+    * Change template loading to work with Grav 2.0 and Grav 1.7
+    * Apply upstream changes from plugin on getgrav.org
+2. [](#improved)
+    * Remove page.header.title above Calendar
+    * Fix typo
+    * Add compatibility for Grav 2.0 and 1.7
+
 # v0.3.5
 ##  07/18/2023
 

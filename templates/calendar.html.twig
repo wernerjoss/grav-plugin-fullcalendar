@@ -1,11 +1,10 @@
 {% extends 'partials/base.html.twig' %}
-{% set debug = false  %}
+{# % set debug = false  % #}
 {% block content %}
 	<article class="post-2 page type-page status-publish hentry">
 		<header class="entry-header">
 		</header>
 		<div class="entry-content">
-			<h2>{{ page.header.title }}</h2>
 			{% set numcalendars = 0  %} {# DONE: find number of ics files, put them in invisible div for automatic processing by calendar.js #}
 			{% set num_mpics = 0  %}
 			{% set calendars = []   %}  {# empty array  #}

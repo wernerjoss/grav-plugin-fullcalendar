@@ -10,6 +10,7 @@ class FullcalendarPlugin extends Plugin
     {
         return [
             'onPluginsInitialized' => ['onPluginsInitialized', 0],
+            'onGetPageTemplates' => ['onGetPageTemplates', 0],
         ];
     }
 
@@ -17,9 +18,6 @@ class FullcalendarPlugin extends Plugin
     {
         // Don't proceed if we are in the admin plugin
         if ($this->isAdmin()) {
-            $this->enable([
-                'onGetPageTemplates' => ['onGetPageTemplates', 0], // this is finally the right place :-) 18.07.23
-            ]);
             return;
         }
         // Enable the main events we are interested in
@@ -52,8 +50,9 @@ class FullcalendarPlugin extends Plugin
         /** @var Assets */
         $assets = $this->grav['assets'];
         $config = $this->config->get('plugins.fullcalendar');
+        $assets->addJs('plugins://' . $this->name . '/assets/jquery-4.0.0.min.js', ['group' => 'bottom']);
         $assets->addJs('plugins://' . $this->name . '/assets/jquery.ajax-cross-origin.min.js', ['group' => 'bottom']); // 12.05.21  -   so gehts !!!
-        $assets->addJs('plugins://' . $this->name . '/assets/ical.js/build/ical.min.js', ['group' => 'bottom']); // see also reamde.txt file there
+        $assets->addJs('plugins://' . $this->name . '/assets/ical.min.js', ['group' => 'bottom']);
         // Tooltip:
         $assets->addJs('plugins://' . $this->name . '/assets/popper.min.js', ['group' => 'bottom']);
         $assets->addJs('plugins://' . $this->name . '/assets/tippy-bundle.umd.min.js', ['group' => 'bottom']);
@@ -115,6 +114,5 @@ class FullcalendarPlugin extends Plugin
         /** @var Types $types */
         $types = $event->types;
         $types->register('calendar');
-        $types->scanTemplates(__DIR__ . '/templates');
     }
 }
